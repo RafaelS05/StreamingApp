@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<!--
+<a class="dropdown-item" th:href="@{/asesoria/asesoria}">Asesorías</a>
+-->
+<html>
+    <body>
+        <main>
+            <!--Formulario de registro-->
+            <div th:fragment="form-login" class="page-container">
+                <div class="form-container">
+                    <div class="form-content">
+                        <h1 class="form-title" th:text="#{app.logo}">🎬 Rafa+</h1>
+                        <p class="form-subtitle" th:text="#{hero.subtitle}">El mejor entretenimiento a tu alcance</p>
+                        <form id="login-form" th:action="@{/usuario/login}" method="post">
+
+                            <div class="input-group">
+                                <div class="input-wrapper">
+                                    <div class="input-icon">📧</div>
+                                    <input type="email" name="correo" class="form-input" placeholder=" " required 
+                                           th:value="${correo}">
+                                    <label class="input-floating-label">Correo electrónico</label>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <div class="input-wrapper">
+                                    <div class="input-icon">🔒</div>
+                                    <input type="password" name="password" class="form-input" placeholder=" " required>
+                                    <label class="input-floating-label">Contraseña</label>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-primary" th:text="#{usuario.boton.login}">Iniciar Sesión</button>
+                        </form>
+                    </div>
+                </div>
+                <a th:href="@{/}" class="a-primary" th:text="#{volver.inicio}">️</a>
+            </div>
+
+
+            <!--Formulario de registro-->
+            <div th:fragment="form-registro" class="page-container">
+                
+                <div class="form-container">
+                    <div class="form-content">
+                        <h1 class="form-title" th:text="#{app.logo}"></h1>
+                        <p class="form-subtitle" th:text="#{hero.subtitle}"></p>
+                        <!-- Formulario de Registro -->
+                        <form id="register-form" th:action="@{/usuario/registro}" method="post" th:object="${usuario}">
+
+                            <!--Div input Nombre-->
+                            <div class="input-group">
+                                <div class="input-wrapper">
+                                    <div class="input-icon">👤</div>
+                                    <input type="text" th:field="*{nombre}" class="form-input" placeholder=" " required>
+                                    <label class="input-floating-label">Nombre</label>
+                                </div>
+                            </div>
+
+                            <!--Div input apellido1-->
+                            <div class="input-group">
+                                <div class="input-wrapper">
+                                    <div class="input-icon">👤</div>
+                                    <input type="text" th:field="*{apellido_1}" class="form-input" placeholder=" " required>
+                                    <label class="input-floating-label">Primer apellido</label>
+                                </div>
+                            </div>
+
+                            <!--Div input apellido2-->
+                            <div class="input-group">
+                                <div class="input-wrapper">
+                                    <div class="input-icon">👤</div>
+                                    <input type="text" th:field="*{apellido_2}" class="form-input" placeholder=" " required>
+                                    <label class="input-floating-label">Segundo apellido</label>
+                                </div>
+                            </div>
+
+                            <!--Div Texta Telefono-->
+                            <div class="input-group">
+                                <div class="input-wrapper">
+                                    <div class="input-icon">📞</div>
+                                    <input type="text" th:field="*{telefono}" class="form-input" placeholder=" " required>
+                                    <label class="input-floating-label">telefono</label>
+                                </div>
+                            </div>
+
+                            <!--Div input Correo-->
+                            <div class="input-group">
+                                <div class="input-wrapper">
+                                    <div class="input-icon">📧</div>
+                                    <input type="email" th:field="*{correo}" class="form-input" placeholder=" " required>
+                                    <label class="input-floating-label">Correo electrónico</label>
+                                </div>
+                            </div>
+
+                            <!--Div input Password-->
+                            <div class="input-group">
+                                <div class="input-wrapper">
+                                    <div class="input-icon">🔒</div>
+                                    <input type="password" th:field="*{password}" class="form-input" placeholder=" " required>
+                                    <label class="input-floating-label">Contraseña</label>
+                                </div>
+                            </div>
+
+                            <!--Div TextArea Direccion-->
+                            <div class="input-group">
+                                <div class="input-wrapper">
+                                    <div class="input-icon">📍</div>
+                                    <input type="text" th:field="*{direccion}" class="form-input" placeholder=" " required>
+                                    <label class="input-floating-label">Dirección</label>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-secondary" th:text="#{usuario.boton.registro}"></button>
+                        </form>
+                    </div>
+                </div>
+                <a th:href="@{/}" class="a-primary" th:text="#{volver.inicio}">️</a>
+            </div>
+        </main>  
+    </body>
+</html>
