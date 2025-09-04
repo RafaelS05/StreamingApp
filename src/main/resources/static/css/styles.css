@@ -30,9 +30,8 @@ a {
     text-decoration: none;
 }
 
-/* Header y Navbar */
 .navbar {
-    background: linear-gradient(90deg, #1E90FF, #8A2BE2);
+    background: linear-gradient(135deg, var(--bg-color) 0%, #1E90FF 100%);
     padding: 1rem 4rem;
     display: flex;
     justify-content: space-between;
@@ -742,4 +741,41 @@ footer {
     .form-title {
         font-size: 2rem;
     }
+}
+
+.fab {
+  font-size: 24px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.fa-whatsapp {
+  color: #25D366;
+}
+
+.fa-whatsapp:hover {
+  color: #128C7E;
+  transform: scale(1.1);
+}
+
+.fa-instagram {
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.fab.pulse:hover {
+  animation: pulse 0.6s ease-in-out;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.fab.rotate:hover {
+  transform: rotate(360deg);
+  transition: transform 0.5s ease;
 }

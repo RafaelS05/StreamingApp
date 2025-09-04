@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+
+
+
+
+        <!--Tarjeta de peliculas-->
+        <section class="content-section" th:fragment="tarjetaPeliculas">
+            <div class="content-row">
+                <h2 class="section-title" th:text="#{content.peliculas.populares}"></h2>
+                <div class="content-slider">
+                    <div class="content-card" th:each="p : ${peliculas}">
+                        <figure>
+                            <div class="d-flex justify-content-center">
+                                <img th:src="${p.ruta_imagen}" alt="..." width="200"/>
+                            </div>
+                            <figcaption class="d-flex justify-content-between">
+                                <span>Titulo [[${p.titulo}]]</span>
+                                <span>(Publicación: [[${p.año}]])</span>
+                            </figcaption>
+                        </figure>
+                        
+                        <div class="card-content">
+                            <h3 class="card-title" th:text="#{pelicula.accion.titulo}"></h3>
+                            <p class="card-description" th:text="#{pelicula.accion.descripcion}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>
