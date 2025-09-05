@@ -5,142 +5,198 @@
     <head th:fragment="head">
         <title th:text="#{app.title}"></title>
         <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
-                <link th:href="@{/webjars/font-awesome/css/all.css}" rel="stylesheet"/>
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-                    <link rel="stylesheet" href="/css/styles.css">
-                        <script src="/js/nav.js"></script>
-                        <script src="/js/forms.js"></script>
-                        </head>
-                        <!--th:if="${session.usuarioLogueado != null}"-->
-                        <body>
-                            <header th:fragment="header" class="navbar" th:if="${session.usuarioLogueado != null}">
-                                <div class="logo" th:text="#{app.logo}"></div>
-                                <nav class="navbar">
-                                    <div class="logo" th:text="#{app.logo}"></div>
-                                    <div class="nav-links">
-                                        <a th:href="@{/index}" th:text="#{nav.inicio}"></a>
-                                        <a th:href="@{/serie/serie}" th:text="#{nav.series}"></a>
-                                        <a th:href="@{/pelicula/pelicula}" th:text="#{nav.peliculas}"></a>
-                                        <a href="#perfil" th:text="#{nav.perfil}"></a>
-                                        <a href="#contacto" th:text="#{nav.contacto}"></a>
-                                        <a th:href="@{/usuario/logout}" th:text="#{nav.logout}"></a>
-                                    </div>
-                                </nav>
-                            </header>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+        
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        
+        <!-- Custom CSS (después de Bootstrap para sobrescribir) -->
+        <link rel="stylesheet" href="/css/styles.css">
+        
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+        <script src="/js/nav.js"></script>
+        <script src="/js/forms.js"></script>
+    </head>
 
-                            <section class="hero" th:fragment="contenidoSuperior">
-                                <div class="floating-elements">
-                                    <div class="floating-element"></div>
-                                    <div class="floating-element"></div>
-                                    <div class="floating-element"></div>
-                                </div>
-                                <div class="hero-content">
-                                    <h1 class="hero-title" th:text="#{hero.title}"></h1>
-                                    <p class="hero-subtitle" th:text="#{hero.subtitle}"></p>
-                                    <p class="hero-description" th:text="#{hero.description}">
-                                    </p>
-                                    <div class="hero-buttons" th:if="${session.usuarioLogueado == null}">
-                                        <a th:href="@{/usuario/login}" class="a-login" th:text="#{usuario.boton.login}"></a>
-                                        <a th:href="@{/usuario/registro}" class="a-registro" th:text="#{usuario.boton.registro}"></a>
-                                    </div>
-                                </div>
-                            </section>
+    <body>
+        <!-- Header/Navbar -->
+        <header th:fragment="header">
+            <nav class="navbar navbar-expand-lg fixed-top custom-navbar">
+                <div class="container-fluid">
+                    <a class="navbar-brand logo" th:text="#{app.logo}" href="#"></a>
+                    
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/index}" th:text="#{nav.inicio}"></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/serie/serie}" th:text="#{nav.series}"></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/pelicula/pelicula}" th:text="#{nav.peliculas}"></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#perfil" th:text="#{nav.perfil}"></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#contacto" th:text="#{nav.contacto}"></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/usuario/logout}" th:text="#{nav.logout}"></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
 
-                            <section class="content-section" th:fragment="contenidoPrincipal">
-                                <!-- Películas Populares -->
-                                <div class="content-row">
-                                    <h2 class="section-title" th:text="#{content.peliculas.populares}"></h2>
-                                    <div class="content-slider">
-                                        <div class="content-card">
-                                            <div class="card-image">🎬</div>
-                                            <div class="card-content">
-                                                <h3 class="card-title" th:text="#{pelicula.accion.titulo}"></h3>
-                                                <p class="card-description" th:text="#{pelicula.accion.descripcion}"></p>
-                                            </div>
-                                        </div>
-                                        <div class="content-card">
-                                            <div class="card-image">🚀</div>
-                                            <div class="card-content">
-                                                <h3 class="card-title" th:text="#{pelicula.espacial.titulo}"></h3>
-                                                <p class="card-description" th:text="#{pelicula.espacial.descripcion}"></p>
-                                            </div>
-                                        </div>
-                                        <div class="content-card">
-                                            <div class="card-image">💎</div>
-                                            <div class="card-content">
-                                                <h3 class="card-title" th:text="#{pelicula.diamante.titulo}"></h3>
-                                                <p class="card-description" th:text="#{pelicula.diamante.descripcion}"></p>
-                                            </div>
-                                        </div>
-                                        <div class="content-card">
-                                            <div class="card-image">🌊</div>
-                                            <div class="card-content">
-                                                <h3 class="card-title" th:text="#{pelicula.oceano.titulo}"></h3>
-                                                <p class="card-description" th:text="#{pelicula.oceano.descripcion}"></p>
-                                            </div>
-                                        </div>
-                                        <div class="content-card">
-                                            <div class="card-image">🔥</div>
-                                            <div class="card-content">
-                                                <h3 class="card-title" th:text="#{pelicula.fuego.titulo}"></h3>
-                                                <p class="card-description" th:text="#{pelicula.fuego.descripcion}"></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+        <!-- Hero Section -->
+        <section class="hero d-flex align-items-center" th:fragment="contenidoSuperior">
+            <div class="floating-elements">
+                <div class="floating-element"></div>
+                <div class="floating-element"></div>
+                <div class="floating-element"></div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="hero-content">
+                            <h1 class="hero-title mb-3" th:text="#{hero.title}"></h1>
+                            <p class="hero-subtitle mb-3" th:text="#{hero.subtitle}"></p>
+                            <p class="hero-description mb-4" th:text="#{hero.description}"></p>
+                            <div class="hero-buttons d-flex gap-3" th:if="${session.usuarioLogueado == null}">
+                                <a th:href="@{/usuario/login}" class="btn btn-custom-primary" th:text="#{usuario.boton.login}"></a>
+                                <a th:href="@{/usuario/registro}" class="btn btn-custom-secondary" th:text="#{usuario.boton.registro}"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-                                <!-- Series Trending -->
-                                <div class="content-row">
-                                    <h2 class="section-title" th:text="#{content.series.trending}"></h2>
-                                    <div class="content-slider">
-                                        <div class="content-card">
-                                            <div class="card-image">👑</div>
-                                            <div class="card-content">
-                                                <h3 class="card-title" th:text="#{serie.reino.titulo}"></h3>
-                                                <p class="card-description" th:text="#{serie.reino.descripcion}"></p>
-                                            </div>
-                                        </div>
-                                        <div class="content-card">
-                                            <div class="card-image">🕵️</div>
-                                            <div class="card-content">
-                                                <h3 class="card-title" th:text="#{serie.detective.titulo}"></h3>
-                                                <p class="card-description" th:text="#{serie.detective.descripcion}"></p>
-                                            </div>
-                                        </div>
-                                        <div class="content-card">
-                                            <div class="card-image">🌟</div>
-                                            <div class="card-content">
-                                                <h3 class="card-title" th:text="#{serie.estrellas.titulo}"></h3>
-                                                <p class="card-description" th:text="#{serie.estrellas.descripcion}"></p>
-                                            </div>
-                                        </div>
-                                        <div class="content-card">
-                                            <div class="card-image">⚡</div>
-                                            <div class="card-content">
-                                                <h3 class="card-title" th:text="#{serie.heroes.titulo}"></h3>
-                                                <p class="card-description" th:text="#{serie.heroes.descripcion}"></p>
-                                            </div>
-                                        </div>
-                                        <div class="content-card">
-                                            <div class="card-image">🏠</div>
-                                            <div class="card-content">
-                                                <h3 class="card-title" th:text="#{serie.familia.titulo}"></h3>
-                                                <p class="card-description" th:text="#{serie.familia.descripcion}"></p>
-                                            </div>
-                                        </div>
-                                    </div>
+        <!-- Content Section -->
+        <section class="content-section py-5" th:fragment="contenidoPrincipal">
+            <div class="container">
+                <!-- Películas Populares -->
+                <div class="content-row mb-5">
+                    <h2 class="section-title mb-4" th:text="#{content.peliculas.populares}"></h2>
+                    <div class="row g-4">
+                        <!-- Películas estáticas -->
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card content-card h-100">
+                                <div class="card-body text-center">
+                                    <div class="card-image mb-3">🎬</div>
+                                    <h5 class="card-title" th:text="#{pelicula.accion.titulo}"></h5>
+                                    <p class="card-text" th:text="#{pelicula.accion.descripcion}"></p>
                                 </div>
-                            </section>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card content-card h-100">
+                                <div class="card-body text-center">
+                                    <div class="card-image mb-3">🚀</div>
+                                    <h5 class="card-title" th:text="#{pelicula.espacial.titulo}"></h5>
+                                    <p class="card-text" th:text="#{pelicula.espacial.descripcion}"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card content-card h-100">
+                                <div class="card-body text-center">
+                                    <div class="card-image mb-3">💎</div>
+                                    <h5 class="card-title" th:text="#{pelicula.diamante.titulo}"></h5>
+                                    <p class="card-text" th:text="#{pelicula.diamante.descripcion}"></p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Películas dinámicas -->
+                        <div th:each="p : ${peliculas}" class="col-lg-3 col-md-6">
+                            <div class="card content-card h-100">
+                                <div class="text-center p-3">
+                                    <img th:src="${p.ruta_imagen}" alt="Película" class="img-fluid rounded" style="max-height: 200px; object-fit: cover;">
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">[[${p.titulo}]]</h5>
+                                    <p class="card-text">[[${p.descripcion}]]</p>
+                                    <small class="text-muted">Publicación: [[${p.año}]]</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                            <footer th:fragment="footer">
-                                <p th:text="#{footer.derechos}"></p>
-                                <p th:text="#{footer.contexto}"></p>
-                                <p th:text="#{nav.contacto}"></p>
-                                <a class="a-login" href="https://www.instagram.com/_rafita.s_/" target="_blank">
-                                    <i class="fab fa-instagram medium pulse"></i></a>
-                                
-                                <a class="a-login" href="https://wa.me/+50689739749" target="_blank">
-                                    <i class="fab fa-whatsapp medium pulse"></i></a>
-                            </footer>
+                <!-- Series Trending -->
+                <div class="content-row">
+                    <h2 class="section-title mb-4" th:text="#{content.series.trending}"></h2>
+                    <div class="row g-4">
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card content-card h-100">
+                                <div class="card-body text-center">
+                                    <div class="card-image mb-3">👑</div>
+                                    <h5 class="card-title" th:text="#{serie.reino.titulo}"></h5>
+                                    <p class="card-text" th:text="#{serie.reino.descripcion}"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card content-card h-100">
+                                <div class="card-body text-center">
+                                    <div class="card-image mb-3">🕵️</div>
+                                    <h5 class="card-title" th:text="#{serie.detective.titulo}"></h5>
+                                    <p class="card-text" th:text="#{serie.detective.descripcion}"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card content-card h-100">
+                                <div class="card-body text-center">
+                                    <div class="card-image mb-3">🌟</div>
+                                    <h5 class="card-title" th:text="#{serie.estrellas.titulo}"></h5>
+                                    <p class="card-text" th:text="#{serie.estrellas.descripcion}"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card content-card h-100">
+                                <div class="card-body text-center">
+                                    <div class="card-image mb-3">⚡</div>
+                                    <h5 class="card-title" th:text="#{serie.heroes.titulo}"></h5>
+                                    <p class="card-text" th:text="#{serie.heroes.descripcion}"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer th:fragment="footer" class="custom-footer text-center py-4 mt-5">
+            <div class="container">
+                <p th:text="#{footer.derechos}" class="mb-2"></p>
+                <p th:text="#{footer.contexto}" class="mb-2"></p>
+                <p th:text="#{nav.contacto}" class="mb-3"></p>
+                <div class="social-links">
+                    <a class="btn btn-custom-primary me-2" href="https://www.instagram.com/_rafita.s_/" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                        Instagram
+                    </a>
+                    <a class="btn btn-custom-primary" href="https://wa.me/+50689739749" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                        WhatsApp
+                    </a>
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>

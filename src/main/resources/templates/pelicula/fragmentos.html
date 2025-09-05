@@ -7,28 +7,20 @@
     </head>
     <body>
 
-
-
-
         <!--Tarjeta de peliculas-->
-        <section class="content-section" th:fragment="tarjetaPeliculas">
-            <div class="content-row">
-                <h2 class="section-title" th:text="#{content.peliculas.populares}"></h2>
-                <div class="content-slider">
-                    <div class="content-card" th:each="p : ${peliculas}">
-                        <figure>
-                            <div class="d-flex justify-content-center">
-                                <img th:src="${p.ruta_imagen}" alt="..." width="200"/>
+        <section class="py-2 pt-5" th:fragment="tarjetaPeliculas">
+            <div class="container">
+                <div class="row g-4">
+                    <div th:each="p : ${peliculas}" class="col-lg-4 col-md-12">
+                        <div class="card content-card h-100">
+                            <div class="text-center p-3">
+                                <img th:src="${p.ruta_imagen}" alt="Película" class="img-fluid rounded" style="max-height: 200px; object-fit: cover;">
                             </div>
-                            <figcaption class="d-flex justify-content-between">
-                                <span>Titulo [[${p.titulo}]]</span>
-                                <span>(Publicación: [[${p.año}]])</span>
-                            </figcaption>
-                        </figure>
-                        
-                        <div class="card-content">
-                            <h3 class="card-title" th:text="#{pelicula.accion.titulo}"></h3>
-                            <p class="card-description" th:text="#{pelicula.accion.descripcion}"></p>
+                            <div class="card-body">
+                                <h5 class="card-title">[[${p.titulo}]]</h5>
+                                <p class="card-text">[[${p.descripcion}]]</p>
+                                <small class="text-muted">Publicación: [[${p.año}]]</small>
+                            </div>
                         </div>
                     </div>
                 </div>

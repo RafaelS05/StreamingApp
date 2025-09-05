@@ -2,24 +2,24 @@
 <html>
 
     <body>
-        <section class="content-section" th:fragment="tarjetaPeliculas">
-            <div class="content-row">
-                <h2 class="section-title" th:text="#{content.peliculas.populares}"></h2>
-                <div class="content-slider">
-                    <div class="content-card" th:each="s : ${series}">
-                        <figure>
-                            <div class="d-flex justify-content-center">
-                                <img th:src="${s.ruta_imagen}" alt="..." width="200"/>
+        <section class="py-5" th:fragment="tarjetaSeries">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="section-title mb-4" th:text="#{content.series.trending}">Series Populares</h2>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-3 col-md-6" th:each="s : ${series}">
+                        <div class="card content-card h-100">
+                            <div class="text-center p-3">
+                                <img th:src="${s.ruta_imagen}" alt="Serie" class="img-fluid rounded" style="max-height: 200px; object-fit: cover;">
                             </div>
-                            <figcaption class="d-flex justify-content-between">
-                                <span>Titulo [[${s.titulo}]]</span>
-                                <span>(Publicación: [[${s.año}]])</span>
-                            </figcaption>
-                        </figure>
-
-                        <div class="card-content">
-                            <h3 class="card-title" th:text="#{pelicula.accion.titulo}"></h3>
-                            <p class="card-description" th:text="#{pelicula.accion.descripcion}"></p>
+                            <div class="card-body">
+                                <h5 class="card-title">[[${s.titulo}]]</h5>
+                                <p class="card-text">[[${s.descripcion}]]</p>
+                                <small class="text-muted">Publicación: [[${s.año}]]</small>
+                            </div>
                         </div>
                     </div>
                 </div>

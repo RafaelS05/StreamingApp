@@ -24,6 +24,9 @@ public class Serie {
     @Column(name = "ruta_imagen")
     private String ruta_imagen;
 
+    @Column(name = "descripcion")
+    private String descripcion;
+
     @Column(name = "id_categoria")
     private String categoria;
 
