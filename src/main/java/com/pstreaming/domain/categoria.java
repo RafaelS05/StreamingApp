@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "categoria")
-public class categoria {
+public class Categoria {
 
     private static final long serialVersionUID = 1L;
 
@@ -19,5 +19,5 @@ public class categoria {
     private String nombre;
 
     @Column(name = "descripcion")
-    private int descripcion;
+    private String descripcion;
 }

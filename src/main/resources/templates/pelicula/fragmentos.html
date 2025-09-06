@@ -4,22 +4,29 @@
         <title>TODO supply a title</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
     <body>
 
         <!--Tarjeta de peliculas-->
-        <section class="py-2 pt-5" th:fragment="tarjetaPeliculas">
+        <section class="py-5" th:fragment="tarjetaPeliculas">
             <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="section-title mb-4" th:text="#{peliculas.catalogo}"></h2>
+                    </div>
+                </div>
                 <div class="row g-4">
-                    <div th:each="p : ${peliculas}" class="col-lg-4 col-md-12">
+                    <div class="col-lg-3 col-md-6" th:each="p : ${peliculas}">
                         <div class="card content-card h-100">
                             <div class="text-center p-3">
-                                <img th:src="${p.ruta_imagen}" alt="Película" class="img-fluid rounded" style="max-height: 200px; object-fit: cover;">
+                                <img th:src="${p.ruta_imagen}" alt="Serie" class="img-fluid rounded" style="max-height: 200px; object-fit: cover;">
                             </div>
                             <div class="card-body">
-                                <h5 class="card-title">[[${p.titulo}]]</h5>
-                                <p class="card-text">[[${p.descripcion}]]</p>
-                                <small class="text-muted">Publicación: [[${p.año}]]</small>
+                                <h5 class="card-title" th:text="${p.titulo}">Título</h5>
+                                <p class="card-text" th:text="${p.descripcion}">Descripción</p>
+                                <small class="text-muted">Publicación: <span th:text="${p.año}"></span></small><br>
+                                <small class="text-muted">Categoría: <span th:text="${categoriasMap[p.categoria]}"></span></small>
                             </div>
                         </div>
                     </div>

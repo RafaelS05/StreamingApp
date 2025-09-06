@@ -12,20 +12,22 @@ import org.springframework.stereotype.Service;
 public class PeliculaService {
     
     @Autowired
-    private PeliculaRepository PeliculaRepository;
+    private PeliculaRepository peliculaRepository;
     
     @Transactional(readOnly = true)
     public List<Pelicula> listaPeliculas() {
-        return PeliculaRepository.findAll();
+        return peliculaRepository.findAll();
     }
+    
     
     @Transactional(readOnly = true)
     public Pelicula getPeliculaByTitulo(String titulo) {
         if (titulo == null || titulo.trim().isEmpty()) {
             return null;
         }
-        return PeliculaRepository.findByTitulo(titulo);
+        return peliculaRepository.findByTitulo(titulo);
     }
+    
     
     @Transactional
     public Pelicula save(Pelicula Pelicula) {
@@ -37,7 +39,7 @@ public class PeliculaService {
             Pelicula.setTitulo(Pelicula.getTitulo().trim().toLowerCase());
         }
         
-        return PeliculaRepository.save(Pelicula);
+        return peliculaRepository.save(Pelicula);
     }
     
     @Transactional
@@ -47,7 +49,7 @@ public class PeliculaService {
         }
         
         try {
-            PeliculaRepository.delete(Pelicula);
+            peliculaRepository.delete(Pelicula);
             return true;
         } catch (Exception e) {
             System.err.println("Error al eliminar Pelicula: " + e.getMessage());
@@ -62,11 +64,11 @@ public class PeliculaService {
         }
         
         try {
-            if (!PeliculaRepository.existsById(id)) {
+            if (!peliculaRepository.existsById(id)) {
                 return false;
             }
             
-            PeliculaRepository.deleteById(id);
+            peliculaRepository.deleteById(id);
             return true;
         } catch (Exception e) {
             System.err.println("Error al eliminar Pelicula por ID: " + e.getMessage());
@@ -79,7 +81,7 @@ public class PeliculaService {
             throw new IllegalArgumentException("El Pelicula y su ID no pueden ser null");
         }
         
-        Optional<Pelicula> PeliculaExistente = PeliculaRepository.findById(Pelicula.getId_pelicula());
+        Optional<Pelicula> PeliculaExistente = peliculaRepository.findById(Pelicula.getId_pelicula());
         if (PeliculaExistente.isEmpty()) {
             throw new IllegalArgumentException("Pelicula no encontrado con ID: " + Pelicula.getId_pelicula());
         }
@@ -88,6 +90,6 @@ public class PeliculaService {
             Pelicula.setTitulo(Pelicula.getTitulo().trim().toLowerCase());
         }
         
-        return PeliculaRepository.save(Pelicula);
+        return peliculaRepository.save(Pelicula);
     }
 }

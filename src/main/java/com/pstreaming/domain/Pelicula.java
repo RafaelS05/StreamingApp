@@ -29,6 +29,6 @@ public class Pelicula {
     private String descripcion;
 
     @Column(name = "id_categoria")
-    private String categoria;
+    private Long categoria;
 
 }

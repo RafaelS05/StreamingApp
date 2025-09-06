@@ -6,7 +6,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <h2 class="section-title mb-4" th:text="#{content.series.trending}">Series Populares</h2>
+                        <h2 class="section-title mb-4" th:text="#{serie.catalogo}"></h2>
                     </div>
                 </div>
                 <div class="row g-4">
@@ -16,15 +16,15 @@
                                 <img th:src="${s.ruta_imagen}" alt="Serie" class="img-fluid rounded" style="max-height: 200px; object-fit: cover;">
                             </div>
                             <div class="card-body">
-                                <h5 class="card-title">[[${s.titulo}]]</h5>
-                                <p class="card-text">[[${s.descripcion}]]</p>
-                                <small class="text-muted">Publicación: [[${s.año}]]</small>
+                                <h5 class="card-title" th:text="${s.titulo}">Título</h5>
+                                <p class="card-text" th:text="${s.descripcion}">Descripción</p>
+                                <small class="text-muted">Publicación: <span th:text="${s.año}"></span></small><br>
+                                <small class="text-muted">Categoría: <span th:text="${categoriasMap[s.categoria]}"></span></small>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-
     </body>
 </html>

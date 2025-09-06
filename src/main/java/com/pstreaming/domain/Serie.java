@@ -28,6 +28,6 @@ public class Serie {
     private String descripcion;
 
     @Column(name = "id_categoria")
-    private String categoria;
+    private Long categoria;
 
 }
