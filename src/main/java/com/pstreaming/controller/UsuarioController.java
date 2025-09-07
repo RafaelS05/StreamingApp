@@ -46,7 +46,7 @@ public class UsuarioController {
             }
 
             usuario.setPassword(aEncoder.encode(usuario.getPassword()));
-            
+
             usuario.setFecha_registro(LocalDateTime.now());
 
             usuarioService.save(usuario);
@@ -69,7 +69,7 @@ public class UsuarioController {
         }
         return "usuario/login";
     }
-    
+
     // PROCESAR LOGIN
     @PostMapping("/login")
     public String procesarLogin(@RequestParam String correo,
@@ -80,6 +80,7 @@ public class UsuarioController {
         Usuario u = usuarioService.getUsuarioByCorreo(correo);
 
         if (u != null && aEncoder.matches(password, u.getPassword())) {
+            u.getRoles().size();
             session.setAttribute("usuarioLogueado", u);
             return "redirect:/index";
         }

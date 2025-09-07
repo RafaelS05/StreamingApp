@@ -4,7 +4,7 @@
     <body>
 
         <!--Tarjeta de peliculas-->
-        <section class="py-5" th:fragment="tarjetaPeliculas">
+        <section class="py-5" th:fragment="tarjetaPeliculas" >
             <div class="container">
                 <div class="row">
                     <div class="col-12">
@@ -29,8 +29,9 @@
             </div>
         </section>
 
-        <!--Fragmento para agregar peliculas-->
-        <div class="container" th:fragment="agregarPelicula">
+        <!--FORM para agregar peliculas-->
+        <section class="container pt-5" th:fragment="agregarPelicula" 
+                 th:if="${esAdmin}">
             <div class="card form-container">
                 <div class="card-body p-4">
                     <div class="text-center mb-4">
@@ -79,7 +80,7 @@
                 </div>
             </div>
 
-        </div>
+        </section>
 
     </body>
 </html>
