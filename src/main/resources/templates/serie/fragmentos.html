@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html>
-
+    <head th:replace="~{layout/plantilla :: head}"/>
     <body>
+        <!--FORM para sgregar series-->
+        
+        
+        
+        
+        <!--SECT para tarjetas-->
         <section class="py-5" th:fragment="tarjetaSeries">
             <div class="container">
                 <div class="row">
@@ -19,7 +25,10 @@
                                 <h5 class="card-title" th:text="${s.titulo}">Título</h5>
                                 <p class="card-text" th:text="${s.descripcion}">Descripción</p>
                                 <small class="text-muted">Publicación: <span th:text="${s.año}"></span></small><br>
-                                <small class="text-muted">Categoría: <span th:text="${categoriasMap[s.categoria]}"></span></small>
+                                <small class="text-muted">Categoría: <span th:text="${categoriasMap[s.categoria]}"></span></small><br>
+                                <small class="text-muted">Temporadas: <span th:text="${s.temporadas}"></span> -</small>
+                                <small class="text-muted">Episodios: <span th:text="${s.episodios}"></span></small>
+                                
                             </div>
                         </div>
                     </div>

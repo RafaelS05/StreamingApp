@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    </head>
+    <head th:replace="~{layout/plantilla :: head}"/>
     <body>
 
         <!--Tarjeta de peliculas-->
@@ -26,12 +21,65 @@
                                 <h5 class="card-title" th:text="${p.titulo}">Título</h5>
                                 <p class="card-text" th:text="${p.descripcion}">Descripción</p>
                                 <small class="text-muted">Publicación: <span th:text="${p.año}"></span></small><br>
-                                <small class="text-muted">Categoría: <span th:text="${categoriasMap[p.categoria]}"></span></small>
+                                <small class="text-muted">Categoría: <span th:text="${p.categoria.nombre}"></span></small>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+
+        <!--Fragmento para agregar peliculas-->
+        <div class="container" th:fragment="agregarPelicula">
+            <div class="card form-container">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                    </div>
+                    <form th:action='@{/pelicula/guardar}'
+                          th:object='${pelicula}'
+                          method="post"
+                          enctype="multipart/form-data"
+                          id="login-form">
+                        <div class="card-body p-4">
+
+                            <div class="mb-3">
+                                <h6 class="mb-4 input-group-custom"><label>[[#{pelicula.titulo}]]</label></h6>
+                                <input type="text" class="form-control" name="titulo">
+                            </div>
+
+                            <div class="mb-4 input-group-custom">
+                                <h6 class="card-title"><label>[[#{pelicula.año}]]</label></h6>
+                                <input type="number" class="form-control" name="año">
+                            </div>
+
+                            <div class="mb-4 input-group-custom">
+                                <h6 class="card-title"><label>[[#{pelicula.descripcion}]] </label></h6>
+                                <textarea name="descripcion" class="form-control"></textarea>
+                            </div>
+
+                            <div class="mb-4 input-group-custom">
+                                <h6 class="card-title"><label>[[#{pelicula.imagen}]]</label></h6>
+                                <input type="file" class="form-control" name="imagenFile"
+                                       onchange="cargarImagen(this);">
+                                <img id="blash" src="#" alt="..." height="200"/>
+                            </div>
+
+                            <div class="mb-4 input-group-custom">
+                                <h6 class="card-title"><label>[[#{categoria}]]</label></h6>
+                                <select th:field="*{categoria.id_categoria}" class="form-select" aria-label="Default select example">
+                                    <option th:each="categoria : ${categorias}" 
+                                            th:value="${categoria.id_categoria}" 
+                                            th:text="${categoria.nombre}">
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-custom-primary mb-3" th:text="#{boton.guardar}"></button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
     </body>
 </html>

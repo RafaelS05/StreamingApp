@@ -21,6 +21,12 @@ public class Serie {
     @Column(name = "año")
     private int año;
 
+    @Column(name = "temporadas")
+    private int temporadas;
+    
+    @Column(name = "episodios")
+    private int episodios;
+    
     @Column(name = "ruta_imagen")
     private String ruta_imagen;
 

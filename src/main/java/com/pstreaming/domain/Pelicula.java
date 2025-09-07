@@ -28,7 +28,8 @@ public class Pelicula {
     @Column(name = "descripcion")
     private String descripcion;
 
-    @Column(name = "id_categoria")
-    private Long categoria;
+    @ManyToOne
+    @JoinColumn(name = "id_categoria", nullable = false)
+    private Categoria categoria;
 
 }
