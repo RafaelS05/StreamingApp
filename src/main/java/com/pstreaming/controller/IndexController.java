@@ -10,8 +10,6 @@ public class IndexController {
 //  se rastree una dirección de un archivo html
     @GetMapping("/index")
     public String index(Model model) {
-        model.addAttribute("instagranURL", "https://www.instagram.com/_rafita.s_/");
-        model.addAttribute("whatsappURL", "https://wa.me/+50689739749");
         return "index"; }
     
     @GetMapping("/")

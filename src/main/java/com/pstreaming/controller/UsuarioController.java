@@ -95,4 +95,10 @@ public class UsuarioController {
         session.invalidate();
         return "redirect:/usuario/login?logout";
     }
+    
+    @GetMapping("/perfil")
+    public String perfil(){
+        return "usuario/perfil";
+    }
+    
 }

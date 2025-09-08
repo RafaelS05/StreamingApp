@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.0-M1</version>
+        <version>4.0.0-M2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.pstreaming</groupId>
@@ -30,6 +30,7 @@
         <java.version>24</java.version>
         <maven.compiler.release>17</maven.compiler.release>
         <spring-ai.version>1.0.1</spring-ai.version>
+        <start-class>com.pstreaming.PlataformaStreamingApplication</start-class>
     </properties>
     <dependencies>
         <dependency>
@@ -134,7 +135,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-crypto</artifactId>
-            <version>7.0.0-M1</version>
+            <version>7.0.0-M2</version>
             <type>jar</type>
         </dependency>
         
@@ -145,19 +146,19 @@
         <dependency>
             <groupId>com.google.auth</groupId>
             <artifactId>google-auth-library-credentials</artifactId>
-            <version>1.33.1</version>
+            <version>1.38.0</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>com.google.auth</groupId>
             <artifactId>google-auth-library-oauth2-http</artifactId>
-            <version>1.35.0</version>
+            <version>1.38.0</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>com.google.cloud</groupId>
             <artifactId>google-cloud-storage</artifactId>
-            <version>2.50.0</version>
+            <version>2.56.0</version>
             <type>jar</type>
         </dependency>
     </dependencies>
@@ -175,6 +176,14 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <mainClass>com.pstreaming.PlataformaStreamingApplication</mainClass>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
