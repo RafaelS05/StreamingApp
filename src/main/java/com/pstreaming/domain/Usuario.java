@@ -43,7 +43,7 @@ public class Usuario {
 
     @Column(name = "telefono")
     private String telefono;
-
+   
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "idUsuario", updatable = false)
     private List<Rol> roles;

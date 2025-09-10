@@ -87,24 +87,18 @@
                                 <!-- Content Section -->
                                 <section class="content-section py-5">
                                     <div class="container">
-                                        <!-- Películas Populares -->
+                                        <!-- Películas Trending -->
                                         <div class="content-row mb-5" th:fragment="contenidoPeliculas">
-                                            <h2 class="section-title mb-4" th:text="#{content.peliculas.populares}"></h2>
-                                            <!-- Películas estáticas -->
+                                            <h2 class="section-title mb-4" th:text="#{pelicula.populares}"></h2>
                                         </div>
+                                        </section>
 
                                         <!-- Series Trending -->
-
+                                        <section>
                                         <div class="content-row mb-5" th:fragment="contenidoSeries">
-                                            <h2 class="section-title mb-4" th:text="#{content.peliculas.populares}"></h2>
-                                            <!-- Películas estáticas -->
+                                            <h2 class="section-title mb-4" th:text="#{serie.populares}"></h2>
                                             <section class="py-5" th:fragment="tarjetaSeries">
                                                 <div class="container">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <h2 class="section-title mb-4" th:text="#{serie.catalogo}"></h2>
-                                                        </div>
-                                                    </div>
                                                     <div class="row g-4">
                                                         <div class="col-lg-3 col-md-6" th:each="s : ${series}">
                                                             <div class="card content-card h-100">
@@ -122,7 +116,6 @@
                                                 </div>
                                             </section>
                                         </div>
-
                                     </div>
                                 </section>
 
