@@ -34,5 +34,4 @@ public class ProjectConfig {
         filter.setForceEncoding(true);
         return filter;
     }
-
 }

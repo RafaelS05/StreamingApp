@@ -35,18 +35,35 @@ public class Usuario {
     @Column(name = "direccion")
     private String direccion;
 
+    @Column(name = "telefono")
+    private String telefono;
+
     @Column(name = "ruta_imagen")
     private String ruta_imagen;
 
     @Column(name = "fecha_registro")
     private LocalDateTime fecha_registro;
 
-    @Column(name = "telefono")
-    private String telefono;
-   
+    @Column(name = "google_id")
+    private String googleId;
+
+    @Column(name = "provider")
+    private AuthProvider provider = AuthProvider.LOCAL;
+
+    @Column(name = "totp_secret")
+    private String totpSecret;
+
+    @Column(name = "totp_enable")
+    private boolean totpEnabled = false;
+
+    @Column(name = "backup_codes")
+    private String backupCodes;
+
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "idUsuario", updatable = false)
     private List<Rol> roles;
-    
 
+    public enum AuthProvider {
+        LOCAL, GOOGLE, FACEBOOK, GITHUB
+    }
 }

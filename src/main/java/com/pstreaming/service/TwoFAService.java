@@ -1,18 +1,30 @@
 package com.pstreaming.service;
 
 import com.pstreaming.domain.Usuario;
-import com.pstreaming.repository.UsuarioRepository;
-import org.springframework.transaction.annotation.Transactional;
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class TwoFAService {
+
+
+    public String generarDeCodigoEmail(Usuario usuario) {
+
+        return null;
+    }
+
     
+
+    public String generarQR(Usuario usuario) {
+
+        return null;
+    }
 
 }

@@ -181,7 +181,6 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
         
-        
     </dependencies>
     <dependencyManagement>
         <dependencies>
@@ -192,6 +191,40 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            
+                <!-- Google OAuth2 -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-oauth2-client</artifactId>
+    </dependency>
+    
+    <!-- Google Auth Library -->
+    <dependency>
+        <groupId>com.google.auth</groupId>
+        <artifactId>google-auth-library-oauth2-http</artifactId>
+        <version>1.38.0</version>
+    </dependency>
+    
+    <!-- TOTP Library -->
+    <dependency>
+        <groupId>com.warrenstrange</groupId>
+        <artifactId>googleauth</artifactId>
+        <version>1.5.0</version>
+    </dependency>
+    
+    <!-- QR Code Generation -->
+    <dependency>
+        <groupId>com.google.zxing</groupId>
+        <artifactId>core</artifactId>
+        <version>3.5.3</version>
+    </dependency>
+    
+    <dependency>
+        <groupId>com.google.zxing</groupId>
+        <artifactId>javase</artifactId>
+        <version>3.5.3</version>
+    </dependency>
+    
         </dependencies>
     </dependencyManagement>
 

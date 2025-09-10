@@ -1,7 +1,6 @@
 package com.pstreaming.controller;
 
 import com.pstreaming.domain.Usuario;
-import com.pstreaming.service.EmailVerificacionService;
 import com.pstreaming.service.UsuarioService;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDateTime;
@@ -23,8 +22,6 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
     
-     @Autowired
-     private EmailVerificacionService emailVerificacionService;
 
     @Autowired
     private PasswordEncoder aEncoder;
