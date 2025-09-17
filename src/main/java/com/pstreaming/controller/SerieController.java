@@ -1,7 +1,6 @@
 package com.pstreaming.controller;
 
 import com.pstreaming.domain.Categoria;
-import com.pstreaming.domain.Pelicula;
 import com.pstreaming.domain.Serie;
 import com.pstreaming.service.CategoriaService;
 import com.pstreaming.service.FirebaseStorageService;

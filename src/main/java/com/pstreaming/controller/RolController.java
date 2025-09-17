@@ -1,6 +1,5 @@
 package com.pstreaming.controller;
 
-import com.pstreaming.controller.UsuarioController;
 import com.pstreaming.domain.Usuario;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.ControllerAdvice;
