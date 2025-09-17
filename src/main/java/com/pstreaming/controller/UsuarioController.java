@@ -78,11 +78,11 @@ public class UsuarioController {
             HttpSession session,
             RedirectAttributes redirect) {
 
-        Usuario u = usuarioService.getUsuarioByCorreo(correo);
+        Usuario usuario = usuarioService.getUsuarioByCorreo(correo);
 
-        if (u != null && aEncoder.matches(password, u.getPassword())) {
-            u.getRoles().size();
-            session.setAttribute("usuarioLogueado", u);
+        if (usuario!= null && aEncoder.matches(password, usuario.getPassword())) {
+            usuario.getRoles().size();
+            session.setAttribute("usuarioLogueado", usuario);
             return "redirect:/index";
         }
 

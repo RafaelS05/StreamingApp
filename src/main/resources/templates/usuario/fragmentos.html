@@ -37,6 +37,12 @@
                                     </div>
 
                                     <button type="submit" class="btn btn-custom-primary w-100 mb-3" th:text="#{usuario.boton.login}">Iniciar Sesión</button>
+                                    
+                                    <a href="/oauth2/authorization/google" id="google-signin-btn" class="btn btn-outline-danger w-100 mb-3">
+                                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" 
+                                             alt="Google Logo" width="20" class="me-2">
+                                        Ingresar con Google
+                                    </a>
                                 </form>
 
                                 <div class="text-center">
@@ -138,7 +144,7 @@
                 </div>
             </div>
 
-            
+
             <!-- Formulario para página "perfil" -->
             <div th:fragment="form-perfil" class="container-fluid min-vh-100 d-flex align-items-center justify-content-center py-5">
                 <div class="row w-100 justify-content-center">
