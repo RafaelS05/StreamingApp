@@ -1,6 +1,7 @@
 package com.pstreaming.controller;
 
 import com.pstreaming.domain.Usuario;
+import com.pstreaming.service.TwoFAService;
 import com.pstreaming.service.UsuarioService;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDateTime;
@@ -21,10 +22,12 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
-    
 
     @Autowired
     private PasswordEncoder aEncoder;
+    
+    @Autowired
+    private TwoFAService FAService;
 
     // Mapeo del Registro
     @GetMapping("/registro")
@@ -80,14 +83,41 @@ public class UsuarioController {
 
         Usuario usuario = usuarioService.getUsuarioByCorreo(correo);
 
-        if (usuario!= null && aEncoder.matches(password, usuario.getPassword())) {
-            usuario.getRoles().size();
-            session.setAttribute("usuarioLogueado", usuario);
-            return "redirect:/index";
+        if (usuario != null && aEncoder.matches(password, usuario.getPassword())) {
+            String code = FAService.generateVerificationCode();
+            
+            session.setAttribute("2faCode", code);
+            session.setAttribute("2faUser", usuario);
+            
+            FAService.sendVerificationCode(usuario.getTelefono());
+            return "redirect:/usuario/2fa";
         }
 
         redirect.addAttribute("error", true);
-        return "redirect:/usuario/login";
+        return "redirect:/usuario/";
+    }
+    
+    @GetMapping("/2fa")
+    public String mostrar2FA(){
+        return "usuario/2fa";
+        
+    }
+    
+    @PostMapping("/2fa")
+    public String verificar2FA(@RequestParam String correo,
+            @RequestParam String password,
+            HttpSession session,
+            RedirectAttributes redirect) {
+        Usuario usuario = usuarioService.getUsuarioByCorreo(correo);
+        if (usuario != null && aEncoder.matches(password, usuario.getPassword())) {
+            usuario.getRoles().size();
+            session.setAttribute("usuarioLogueado", usuario);
+            session.removeAttribute("2faCode");
+            session.removeAttribute("2faUser");
+            return "redirect:/dsshboard";
+        }
+        redirect.addFlashAttribute("error", "Código incorrecto");
+        return "redirect:/usuario/2fa";
     }
 
     // LOGOUT
@@ -96,10 +126,10 @@ public class UsuarioController {
         session.invalidate();
         return "redirect:/usuario/login?logout";
     }
-    
+
     @GetMapping("/perfil")
-    public String perfil(){
+    public String perfil() {
         return "usuario/perfil";
     }
-    
+
 }

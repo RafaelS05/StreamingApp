@@ -70,6 +70,7 @@
                                                     <div class="hero-buttons d-flex gap-3" th:if="${session.usuarioLogueado == null}">
                                                         <a th:href="@{/usuario/login}" class="btn btn-custom-primary" th:text="#{usuario.boton.login}"></a>
                                                         <a th:href="@{/usuario/registro}" class="btn btn-custom-secondary" th:text="#{usuario.boton.registro}"></a>
+                                                        <a th:href="@{/usuario/2fa}" class="btn btn-custom-secondary">Verificar</a>
                                                     </div>
                                                 </div>
                                             </div>

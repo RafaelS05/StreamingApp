@@ -16,7 +16,7 @@ public class TwoFAService {
     
     public void sendVerificationCode(String phoneNumber){
         String code = generateVerificationCode();
-        smsService.sendSms(phoneNumber, "Su código de verificación es: " + code);
+        smsService.sendSms(phoneNumber, "Your verification code is: " + code);
     }
     
     public boolean verifyCode(String phoneNumber, String inputCode, String actualCode){

@@ -37,7 +37,7 @@
                                     </div>
 
                                     <button type="submit" class="btn btn-custom-primary w-100 mb-3" th:text="#{usuario.boton.login}">Iniciar Sesión</button>
-                                    
+
                                     <a href="/oauth2/authorization/google" id="google-signin-btn" class="btn btn-outline-danger w-100 mb-3">
                                         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" 
                                              alt="Google Logo" width="20" class="me-2">
@@ -48,6 +48,28 @@
                                 <div class="text-center">
                                     <a th:href="@{/}" class="btn btn-outline-light" th:text="#{volver.inicio}">Volver al inicio</a>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--Formulario de 2FA-->
+            <div th:fragment="form-2FA" class="container-fluid vh-100 d-flex align-items-center justify-content-center">
+                <div class="row w-100 justify-content-center">
+                    <div class="col-11 col-sm-8 col-md-6 col-lg-4">
+                        <div class="card form-container">
+                            <div class="card-body p-4">
+                                <form id="login-form" th:action="@{/usuario/2fa}" method="post">
+                                    <div class="mb-3">
+                                        <div class="input-group-custom">
+                                            <span class="input-icon"></span>
+                                            <input type="text" name="codigoIngresado" class="form-control form-input" 
+                                                   required placeholder="Código 6 dígitos" maxlength="6">
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-custom-primary w-100 mb-3">Verificar</button>
+                                </form>
                             </div>
                         </div>
                     </div>
