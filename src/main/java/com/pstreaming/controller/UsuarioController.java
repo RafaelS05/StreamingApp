@@ -25,7 +25,7 @@ public class UsuarioController {
 
     @Autowired
     private PasswordEncoder aEncoder;
-    
+
     @Autowired
     private TwoFAService FAService;
 
@@ -84,38 +84,55 @@ public class UsuarioController {
         Usuario usuario = usuarioService.getUsuarioByCorreo(correo);
 
         if (usuario != null && aEncoder.matches(password, usuario.getPassword())) {
-            String code = FAService.generateVerificationCode();
-            
+            String code = FAService.sendVerificationCode(usuario.getTelefono());
+
             session.setAttribute("2faCode", code);
             session.setAttribute("2faUser", usuario);
-            
-            FAService.sendVerificationCode(usuario.getTelefono());
+
             return "redirect:/usuario/2fa";
         }
 
         redirect.addAttribute("error", true);
-        return "redirect:/usuario/";
+        return "redirect:/usuario/login";
     }
-    
+
     @GetMapping("/2fa")
-    public String mostrar2FA(){
+    public String mostrar2FA() {
         return "usuario/2fa";
-        
+
     }
-    
+
     @PostMapping("/2fa")
-    public String verificar2FA(@RequestParam String correo,
-            @RequestParam String password,
-            HttpSession session,
-            RedirectAttributes redirect) {
-        Usuario usuario = usuarioService.getUsuarioByCorreo(correo);
-        if (usuario != null && aEncoder.matches(password, usuario.getPassword())) {
-            usuario.getRoles().size();
-            session.setAttribute("usuarioLogueado", usuario);
-            session.removeAttribute("2faCode");
-            session.removeAttribute("2faUser");
-            return "redirect:/dsshboard";
+    public String verificar2FA(@RequestParam String codigoIngresado,
+            HttpSession session, RedirectAttributes redirect) {
+
+        String codigoEnviado = (String) session.getAttribute("2faCode");
+        Usuario usuario = (Usuario) session.getAttribute("2faUser");
+
+        if (usuario == null || codigoEnviado == null) {
+            redirect.addFlashAttribute("error", "Sesión expirada. Por favor, inicie sesión nuevamente.");
+            return "redirect:/usuario/login";
         }
+
+        String codigoLimpio = codigoIngresado.trim();
+        boolean codigoValido = FAService.verifyCode(usuario.getTelefono(), codigoLimpio, codigoEnviado);
+
+        if (codigoValido) {
+            try {
+                usuario.getRoles().size();
+                session.setAttribute("usuarioLogueado", usuario);
+                session.removeAttribute("2faCode");
+                session.removeAttribute("2faUser");
+
+                return "redirect:/dashboard";
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                redirect.addFlashAttribute("error", "Error interno. Intente nuevamente.");
+                return "redirect:/usuario/2fa";
+            }
+        }
+
         redirect.addFlashAttribute("error", "Código incorrecto");
         return "redirect:/usuario/2fa";
     }
