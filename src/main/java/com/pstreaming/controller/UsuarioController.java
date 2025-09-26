@@ -102,7 +102,7 @@ public class UsuarioController {
 
     }
 
-    @PostMapping("/2fa")
+ @PostMapping("/2fa")
     public String verificar2FA(@RequestParam String codigoIngresado,
             HttpSession session, RedirectAttributes redirect) {
 

@@ -26,7 +26,7 @@ public class ProjectConfig {
  @Bean
 public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
-2        .authorizeHttpRequests(authz -> authz
+        .authorizeHttpRequests(authz -> authz
             .requestMatchers("/usuario/registro", "/usuario/login", "/usuario/2fa", "/dashboard", "/logout", "/index", "/").permitAll()
             .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
             .anyRequest().authenticated()
@@ -46,6 +46,7 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         );
     return http.build();
 }
+
 
     @Bean
     public CharacterEncodingFilter characterEncodingFilter() {
