@@ -2,13 +2,23 @@
 <html>
     <head th:replace="~{layout/plantilla :: head}"/>
     <body>
-
+<!--th:if="${esAdmin}"-- >
         <!--Tarjeta de peliculas-->
         <section class="py-5" th:fragment="tarjetaPeliculas" >
             <div class="container">
                 <div class="row">
                     <div class="col-12">
                         <h2 class="section-title mb-4" th:text="#{pelicula.catalogo}"></h2>
+                            <div class="col-md-3">
+                                <button type="button" 
+                                        class="btn btn-custom-primary" 
+                                        data-bs-toggle="modal"
+                                        
+                                        data-bs-target="#guardarPeliculaModal"
+                                        th:text="#{pelicula.agregar}">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
+                            </div>
                     </div>
                 </div>
                 <div class="row g-4">
@@ -30,19 +40,6 @@
         </section>
 
         <section th:fragment="agregarPelicula" >
-            <div class="row py-4 mb-2 bg-light">
-                <div class="col-md-1"></div>
-                <div class="col-md-3">
-                    <button type="button" 
-                            class="btn btn-primary" 
-                            data-bs-toggle="modal"
-                            th:if="${esAdmin}"
-                            data-bs-target="#guardarPeliculaModal"
-                            th:text="#{pelicula.agregar}">
-                        <i class="fa-solid fa-plus"></i>
-                    </button>
-                </div>
-            </div>
 
             <div class="modal fade" 
                  id="guardarPeliculaModal" 
@@ -51,23 +48,14 @@
                  aria-hidden="true">
 
                 <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header bg-info text-white">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel" th:text="#{pelicula.agregar}">
-                                <i class="fa-solid fa-layer-group"></i></h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-
                         <!--FORM para agregar peliculas-->
-                        <div class="card form-container">
+                        <div class="card form-container modal-content">
                             <div class="card-body p-4">
-                                <div class="text-center mb-4">
-                                </div>
                                 <form th:action='@{/pelicula/guardar}'
                                       th:object='${pelicula}'
                                       method="post"
                                       enctype="multipart/form-data"
-                                      id="login-form">
+                                      id="pelicula-form">
                                     <div class="card-body p-4">
 
                                         <div class="mb-3">

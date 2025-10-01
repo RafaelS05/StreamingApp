@@ -26,24 +26,25 @@ public class ProjectConfig {
  @Bean
 public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
-        .authorizeHttpRequests(authz -> authz
-            .requestMatchers("/usuario/registro", "/usuario/login", "/usuario/2fa", "/dashboard", "/logout", "/index", "/").permitAll()
-            .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
-            .anyRequest().authenticated()
-        )
-        .oauth2Login(oauth2 -> oauth2
-            .loginPage("/usuario/login")
-            .successHandler(oAuth2LoginSuccessHandler)
-        )
-        .formLogin(form -> form
-            .loginPage("/usuario/login")
-            .loginProcessingUrl("/spring-security-login")
-            .defaultSuccessUrl("/dashboard")
-            .permitAll()
-        )
-        .csrf(csrf -> csrf
-            .ignoringRequestMatchers("/usuario/login", "/usuario/2fa")
-        );
+            .authorizeRequests(auth -> auth.anyRequest().permitAll());
+//        .authorizeHttpRequests(authz -> authz
+//            .requestMatchers("/usuario/registro", "/usuario/login", "/usuario/2fa", "/dashboard", "/logout", "/index", "/").permitAll()
+//            .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+//            .anyRequest().authenticated()
+//        )
+//        .oauth2Login(oauth2 -> oauth2
+//            .loginPage("/usuario/login")
+//            .successHandler(oAuth2LoginSuccessHandler)
+//        )
+//        .formLogin(form -> form
+//            .loginPage("/usuario/login")
+//            .loginProcessingUrl("/spring-security-login")
+//            .defaultSuccessUrl("/dashboard")
+//            .permitAll()
+//        )
+//        .csrf(csrf -> csrf
+//            .ignoringRequestMatchers("/usuario/login", "/usuario/2fa")
+//        );
     return http.build();
 }
 
