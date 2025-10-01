@@ -35,15 +35,17 @@
                 <div class="col-md-3">
                     <button type="button" 
                             class="btn btn-primary" 
+                            data-bs-toggle="modal"
                             th:if="${esAdmin}"
-                            data-bs-toggle="modal">
-                        <i class="fa-solid fa-plus"></i>Agregar
+                            data-bs-target="#guardarPeliculaModal"
+                            th:text="#{pelicula.agregar}">
+                        <i class="fa-solid fa-plus"></i>
                     </button>
                 </div>
             </div>
 
             <div class="modal fade" 
-                 id="agregarProductoModal" 
+                 id="guardarPeliculaModal" 
                  tabindex="-1" 
                  aria-labelledby="exampleModalLabel" 
                  aria-hidden="true">
@@ -51,63 +53,62 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header bg-info text-white">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">
-                                <i class="fa-solid fa-layer-group"></i> [[#{producto.agregar}]]</h1>
+                            <h1 class="modal-title fs-5" id="exampleModalLabel" th:text="#{pelicula.agregar}">
+                                <i class="fa-solid fa-layer-group"></i></h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
 
                         <!--FORM para agregar peliculas-->
-                            <div class="card form-container">
-                                <div class="card-body p-4">
-                                    <div class="text-center mb-4">
-                                    </div>
-                                    <form th:action='@{/pelicula/guardar}'
-                                          th:object='${pelicula}'
-                                          method="post"
-                                          enctype="multipart/form-data"
-                                          id="login-form">
-                                        <div class="card-body p-4">
-
-                                            <div class="mb-3">
-                                                <h6 class="mb-4 input-group-custom"><label>[[#{pelicula.titulo}]]</label></h6>
-                                                <input type="text" class="form-control" name="titulo">
-                                            </div>
-
-                                            <div class="mb-4 input-group-custom">
-                                                <h6 class="card-title"><label>[[#{pelicula.año}]]</label></h6>
-                                                <input type="number" class="form-control" name="año">
-                                            </div>
-
-                                            <div class="mb-4 input-group-custom">
-                                                <h6 class="card-title"><label>[[#{pelicula.descripcion}]] </label></h6>
-                                                <textarea name="descripcion" class="form-control"></textarea>
-                                            </div>
-
-                                            <div class="mb-4 input-group-custom">
-                                                <h6 class="card-title"><label>[[#{pelicula.imagen}]]</label></h6>
-                                                <input type="file" class="form-control" name="imagenFile"
-                                                       onchange="cargarImagen(this);">
-                                                <img id="blash" src="#" alt="..." height="200"/>
-                                            </div>
-
-                                            <div class="mb-4 input-group-custom">
-                                                <h6 class="card-title"><label>[[#{categoria}]]</label></h6>
-                                                <select th:field="*{categoria.id_categoria}" class="form-select" aria-label="Default select example">
-                                                    <option th:each="categoria : ${categorias}" 
-                                                            th:value="${categoria.id_categoria}" 
-                                                            th:text="${categoria.nombre}">
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <button type="submit" class="btn btn-custom-primary mb-3" th:text="#{boton.guardar}"></button>
-                                    </form>
+                        <div class="card form-container">
+                            <div class="card-body p-4">
+                                <div class="text-center mb-4">
                                 </div>
+                                <form th:action='@{/pelicula/guardar}'
+                                      th:object='${pelicula}'
+                                      method="post"
+                                      enctype="multipart/form-data"
+                                      id="login-form">
+                                    <div class="card-body p-4">
+
+                                        <div class="mb-3">
+                                            <h6 class="mb-4 input-group-custom"><label>[[#{pelicula.titulo}]]</label></h6>
+                                            <input type="text" class="form-control" name="titulo">
+                                        </div>
+
+                                        <div class="mb-4 input-group-custom">
+                                            <h6 class="card-title"><label>[[#{pelicula.año}]]</label></h6>
+                                            <input type="number" class="form-control" name="año">
+                                        </div>
+
+                                        <div class="mb-4 input-group-custom">
+                                            <h6 class="card-title"><label>[[#{pelicula.descripcion}]] </label></h6>
+                                            <textarea name="descripcion" class="form-control"></textarea>
+                                        </div>
+
+                                        <div class="mb-4 input-group-custom">
+                                            <h6 class="card-title"><label>[[#{pelicula.imagen}]]</label></h6>
+                                            <input type="file" class="form-control" name="imagenFile"
+                                                   onchange="cargarImagen(this);">
+                                            <img id="blash" src="#" alt="..." height="200"/>
+                                        </div>
+
+                                        <div class="mb-4 input-group-custom">
+                                            <h6 class="card-title"><label>[[#{categoria}]]</label></h6>
+                                            <select th:field="*{categoria.id_categoria}" class="form-select" aria-label="Default select example">
+                                                <option th:each="categoria : ${categorias}" 
+                                                        th:value="${categoria.id_categoria}" 
+                                                        th:text="${categoria.nombre}">
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-custom-primary mb-3" th:text="#{boton.guardar}"></button>
+                                </form>
                             </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
-
     </body>
 </html>

@@ -11,7 +11,7 @@ public class SmsService {
     
 
     private static final String ACCOUNT_SID = "AC7b8b772b7a9d0ce5ddd1fa42498edb6d";
-    private static final String AUTH_TOKEN = "26039c48b87603d2a1a115b56e49cdee";
+    private static final String AUTH_TOKEN = "f8004de04ef2e700006d4e8f0c7e3b94";
     private static final String FROM_PHONE = "+17542548418";
 
     @PostConstruct

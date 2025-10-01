@@ -1,12 +1,19 @@
 package com.pstreaming.controller;
 
+import com.pstreaming.domain.UserDetailsI;
 import com.pstreaming.domain.Usuario;
 import com.pstreaming.service.TwoFAService;
 import com.pstreaming.service.UsuarioService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -83,17 +90,25 @@ public class UsuarioController {
 
         Usuario usuario = usuarioService.getUsuarioByCorreo(correo);
 
-        if (usuario != null && aEncoder.matches(password, usuario.getPassword())) {
-            String code = FAService.sendVerificationCode(usuario.getTelefono());
+        boolean esAdmin = usuario.getRoles().stream()
+                .anyMatch(rol -> "ADMIN".equals(rol.getNombre()));
 
+        if (!esAdmin) {
+            String code = FAService.sendVerificationCode(usuario.getTelefono());
             session.setAttribute("2faCode", code);
             session.setAttribute("2faUser", usuario);
 
             return "redirect:/usuario/2fa";
+        } else {
+            UserDetailsI userDetails = new UserDetailsI(usuario);
+            UsernamePasswordAuthenticationToken auth
+                    = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(auth);
+            session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
+                    SecurityContextHolder.getContext());
+            session.setAttribute("usuarioLogueado", usuario);
+            return "redirect:/dashboard";
         }
-
-        redirect.addAttribute("error", true);
-        return "redirect:/usuario/login";
     }
 
     @GetMapping("/2fa")
@@ -102,27 +117,38 @@ public class UsuarioController {
 
     }
 
- @PostMapping("/2fa")
-    public String verificar2FA(@RequestParam String codigoIngresado,
+    @PostMapping("/2fa")
+    public String verificar2FA(HttpServletRequest request,
+            HttpServletResponse response,
+            @RequestParam String codigoIngresado,
             HttpSession session, RedirectAttributes redirect) {
 
         String codigoEnviado = (String) session.getAttribute("2faCode");
         Usuario usuario = (Usuario) session.getAttribute("2faUser");
 
-        if (usuario == null || codigoEnviado == null) {
+        if (codigoIngresado == null || codigoEnviado == null) {
             redirect.addFlashAttribute("error", "Sesión expirada. Por favor, inicie sesión nuevamente.");
             return "redirect:/usuario/login";
         }
-
         String codigoLimpio = codigoIngresado.trim();
         boolean codigoValido = FAService.verifyCode(usuario.getTelefono(), codigoLimpio, codigoEnviado);
 
         if (codigoValido) {
             try {
-                usuario.getRoles().size();
+                session = request.getSession();
                 session.setAttribute("usuarioLogueado", usuario);
                 session.removeAttribute("2faCode");
                 session.removeAttribute("2faUser");
+
+                UserDetailsI userDetails = new UserDetailsI(usuario);
+
+                UsernamePasswordAuthenticationToken auth
+                        = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
+                SecurityContextHolder.getContext().setAuthentication(auth);
+
+                SecurityContext context = SecurityContextHolder.getContext();
+                session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
 
                 return "redirect:/dashboard";
 
