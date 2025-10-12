@@ -1,31 +1,33 @@
 package com.pstreaming.service;
 
 import org.springframework.stereotype.Service;
+import com.pstreaming.domain.TwilioConfig;
 import com.twilio.Twilio;
+import javax.annotation.PostConstruct;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
-import javax.annotation.PostConstruct;
 
 @Service
 public class SmsService {
-    
 
-    private static final String ACCOUNT_SID = "AC7b8b772b7a9d0ce5ddd1fa42498edb6d";
-    private static final String AUTH_TOKEN = "f8004de04ef2e700006d4e8f0c7e3b94";
-    private static final String FROM_PHONE = "+17542548418";
+    private TwilioConfig twilioConfig;
+    
+    public SmsService(TwilioConfig twilioConfig){
+        this.twilioConfig = twilioConfig;
+    }
 
     @PostConstruct
     public void init() {
-        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+        Twilio.init(twilioConfig.getACCOUNT_SID(), twilioConfig.getAUTH_TOKEN());
     }
 
- public void sendSms(String to, String body) {
+    public void sendSms(String to, String body) {
         try {
             String destino = to.startsWith("+") ? to : "+506" + to;
 
             Message message = Message.creator(
                     new PhoneNumber(destino),
-                    new PhoneNumber(FROM_PHONE),
+                    new PhoneNumber(twilioConfig.getFROM_PHONE()),
                     body
             ).create();
 

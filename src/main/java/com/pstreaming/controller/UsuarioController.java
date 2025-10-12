@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -171,7 +172,12 @@ public class UsuarioController {
     }
 
     @GetMapping("/perfil")
-    public String perfil() {
+    public String perfil(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsI userDetails = (UserDetailsI) auth.getPrincipal();
+        Usuario usuario = userDetails.getUsuario();
+
+        model.addAttribute("usuario", usuario);
         return "usuario/perfil";
     }
 

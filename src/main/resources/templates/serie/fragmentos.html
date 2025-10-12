@@ -2,67 +2,6 @@
 <html>
     <head th:replace="~{layout/plantilla :: head}"/>
     <body>
-        <!--FORM para agregar series-->
-        <!--th:if="${esAdmin}"-->
-        <div class="container pt-5" th:fragment="agregarSerie">
-            <div class="card form-container">
-                <div class="card-body p-4">
-                    <div class="text-center mb-4">
-                    </div>
-                    <form th:action='@{/serie/guardar}'
-                          th:object='${serie}'
-                          method="post"
-                          enctype="multipart/form-data"
-                          id="login-form">
-                        <div class="card-body p-4">
-
-                            <div class="mb-3">
-                                <h6 class="mb-4 input-group-custom"><label>[[#{pelicula.titulo}]]</label></h6>
-                                <input type="text" class="form-control" name="titulo">
-                            </div>
-
-                            <div class="mb-4 input-group-custom">
-                                <h6 class="card-title"><label>[[#{serie.año}]]</label></h6>
-                                <input type="number" class="form-control" name="año">
-                            </div>
-
-                            <div class="mb-4 input-group-custom">
-                                <h6 class="card-title"><label>[[#{serie.temp}]]</label></h6>
-                                <input type="number" class="form-control" name="temporadas">
-                            </div>
-
-                            <div class="mb-4 input-group-custom">
-                                <h6 class="card-title"><label>[[#{serie.epi}]]</label></h6>
-                                <input type="number" class="form-control" name="episodios">
-                            </div>
-
-                            <div class="mb-4 input-group-custom">
-                                <h6 class="card-title"><label>[[#{serie.descripcion}]] </label></h6>
-                                <textarea name="descripcion" class="form-control"></textarea>
-                            </div>
-
-                            <div class="mb-4 input-group-custom">
-                                <h6 class="card-title"><label>[[#{serie.imagen}]]</label></h6>
-                                <input type="file" class="form-control" name="imagenFile"
-                                       onchange="cargarImagen(this);">
-                                <img id="blash" src="#" alt="..." height="200"/>
-                            </div>
-
-                            <div class="mb-4 input-group-custom">
-                                <h6 class="card-title"><label>[[#{categoria}]]</label></h6>
-                                <select th:field="*{categoria.id_categoria}" class="form-select" aria-label="Default select example">
-                                    <option th:each="categoria : ${categorias}" 
-                                            th:value="${categoria.id_categoria}" 
-                                            th:text="${categoria.nombre}">
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-custom-primary mb-3" th:text="#{boton.guardar}"></button>
-                    </form>
-                </div>
-            </div>
-        </div>
 
         <!--SECT para tarjetas-->
         <section class="py-5" th:fragment="tarjetaSeries">
@@ -70,6 +9,16 @@
                 <div class="row">
                     <div class="col-12">
                         <h2 class="section-title mb-4" th:text="#{serie.catalogo}"></h2>
+                        <div class="col-md-3" th:if="${esAdmin}">
+                            <button type="button" 
+                                    class="btn btn-custom-primary" 
+                                    data-bs-toggle="modal"
+
+                                    data-bs-target="#guardarSerieModal"
+                                    th:text="#{serie.agregar}">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="row g-4">
@@ -92,5 +41,76 @@
                 </div>
             </div>
         </section>
+
+        <!--FORM para agregar series-->
+        <div th:fragment="agregarSerie">
+            
+            <div class="modal fade" 
+                 id="guardarSerieModal" 
+                 tabindex="-1" 
+                 aria-labelledby="exampleModalLabel" 
+                 aria-hidden="true">
+
+                <div class="modal-dialog">
+                    <div class="card form-container modal-content">
+                        <div class="card-body p-4">
+                            <div class="text-center mb-4">
+                            </div>
+                            <form th:action='@{/serie/guardar}'
+                                  th:object='${serie}'
+                                  method="post"
+                                  enctype="multipart/form-data"
+                                  id="login-form">
+                                <div class="card-body p-4">
+
+                                    <div class="mb-3">
+                                        <h6 class="mb-4 input-group-custom"><label>[[#{serie.titulo}]]</label></h6>
+                                        <input type="text" class="form-control" name="titulo">
+                                    </div>
+
+                                    <div class="mb-4 input-group-custom">
+                                        <h6 class="card-title"><label>[[#{serie.año}]]</label></h6>
+                                        <input type="number" class="form-control" name="año">
+                                    </div>
+
+                                    <div class="mb-4 input-group-custom">
+                                        <h6 class="card-title"><label>[[#{serie.temp}]]</label></h6>
+                                        <input type="number" class="form-control" name="temporadas">
+                                    </div>
+
+                                    <div class="mb-4 input-group-custom">
+                                        <h6 class="card-title"><label>[[#{serie.epi}]]</label></h6>
+                                        <input type="number" class="form-control" name="episodios">
+                                    </div>
+
+                                    <div class="mb-4 input-group-custom">
+                                        <h6 class="card-title"><label>[[#{serie.descripcion}]] </label></h6>
+                                        <textarea name="descripcion" class="form-control"></textarea>
+                                    </div>
+
+                                    <div class="mb-4 input-group-custom">
+                                        <h6 class="card-title"><label>[[#{serie.imagen}]]</label></h6>
+                                        <input type="file" class="form-control" name="imagenFile"
+                                               onchange="cargarImagen(this);">
+                                        <img id="blash" src="#" alt="..." height="200"/>
+                                    </div>
+
+                                    <div class="mb-4 input-group-custom">
+                                        <h6 class="card-title"><label>[[#{categoria}]]</label></h6>
+                                        <select th:field="*{categoria.id_categoria}" class="form-select" aria-label="Default select example">
+                                            <option th:each="categoria : ${categorias}" 
+                                                    th:value="${categoria.id_categoria}" 
+                                                    th:text="${categoria.nombre}">
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-custom-primary mb-3" th:text="#{boton.guardar}"></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

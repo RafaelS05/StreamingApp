@@ -30,42 +30,53 @@ public class PeliculaController {
     @Autowired
     private CategoriaService categoriaService;
 
+    @Autowired
+    private FirebaseStorageService firebaseStorageService;
+
+    @Autowired
+    private MessageSource messageSource;
+
 //  se rastree una dirección de un archivo html
     @GetMapping("/pelicula")
     public String pelicula(Model model) {
         List<Pelicula> peliculas = peliculaService.listaPeliculas();
         List<Categoria> categorias = categoriaService.listaCategorias();
-        
+
         Map<Long, String> categoriasMap = categorias.stream()
                 .collect(Collectors.toMap(
                         Categoria::getId_categoria,
                         Categoria::getNombre));
-        
+
         model.addAttribute("peliculas", peliculas);
         model.addAttribute("categorias", categorias);
         model.addAttribute("categoriasMap", categoriasMap);
         model.addAttribute("pelicula", new Pelicula());
         return "pelicula/pelicula";
     }
-    
-    @Autowired
-    private FirebaseStorageService firebaseStorageService;
-    
-    @Autowired
-    private MessageSource messageSource;
-    
+
     @PostMapping("/guardar")
-    public String guardar(Pelicula pelicula, 
+    public String guardar(Pelicula pelicula,
             @RequestParam("imagenFile") MultipartFile imagenFile,
-            RedirectAttributes redirectAttributes){
+            RedirectAttributes redirectAttributes) {
         if (!imagenFile.isEmpty()) {
             peliculaService.save(pelicula);
             String ruta_imagen = firebaseStorageService.cargaImagen(imagenFile, "pelicula", pelicula.getId_pelicula());
-                    pelicula.setRuta_imagen(ruta_imagen);
+            pelicula.setRuta_imagen(ruta_imagen);
         }
         peliculaService.save(pelicula);
         redirectAttributes.addFlashAttribute("error", messageSource.getMessage("pelicula.error", null, Locale.getDefault()));
         return "redirect:/pelicula/pelicula";
     }
     
+    @PostMapping("/eliminar")
+    public String eliminar(Pelicula pelicula, RedirectAttributes redirectAttributes){
+        pelicula = peliculaService.getPelicula(pelicula);
+        if (pelicula == null) {
+            
+        }
+        peliculaService.delete(pelicula);
+        return "redirect:/pelicula/pelicula";
+        
+    }
+
 }

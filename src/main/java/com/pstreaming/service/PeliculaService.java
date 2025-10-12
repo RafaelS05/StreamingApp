@@ -19,6 +19,12 @@ public class PeliculaService {
         return peliculaRepository.findAll();
     }
     
+    @Transactional(readOnly = true)
+    public Pelicula getPelicula(Pelicula pelicula){
+        return peliculaRepository.
+                findById(pelicula.getId_pelicula()).orElse(null);
+        
+    }
     
     @Transactional(readOnly = true)
     public Pelicula getPeliculaByTitulo(String titulo) {
