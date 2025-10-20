@@ -115,7 +115,6 @@ public class UsuarioController {
     @GetMapping("/2fa")
     public String mostrar2FA() {
         return "usuario/2fa";
-
     }
 
     @PostMapping("/2fa")
@@ -131,6 +130,7 @@ public class UsuarioController {
             redirect.addFlashAttribute("error", "Sesión expirada. Por favor, inicie sesión nuevamente.");
             return "redirect:/usuario/login";
         }
+        
         String codigoLimpio = codigoIngresado.trim();
         boolean codigoValido = FAService.verifyCode(usuario.getTelefono(), codigoLimpio, codigoEnviado);
 

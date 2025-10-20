@@ -26,7 +26,7 @@
                                             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                                                 <span class="navbar-toggler-icon"></span>
                                             </button>
-                                            
+
                                             <div class="collapse navbar-collapse" id="navbarNav"> <!--th:if="${session.usuarioLogueado != null}"-->
                                                 <ul class="navbar-nav ms-auto">
                                                     <li class="nav-item">
@@ -40,9 +40,6 @@
                                                     </li>
                                                     <li class="nav-item">
                                                         <a class="nav-link" th:href="@{/usuario/perfil}" th:text="#{nav.perfil}"></a>
-                                                    </li>
-                                                    <li class="nav-item">
-                                                        <a class="nav-link" href="#contacto" th:text="#{nav.contacto}"></a>
                                                     </li>
                                                     <li class="nav-item">
                                                         <a class="nav-link" th:href="@{/usuario/logout}" th:text="#{nav.logout}"></a>
@@ -84,31 +81,31 @@
                                         <div class="content-row mb-5" th:fragment="contenidoPeliculas">
                                             <h2 class="section-title mb-4" th:text="#{pelicula.populares}"></h2>
                                         </div>
-                                        </section>
+                                </section>
 
-                                        <!-- Series Trending -->
-                                        <section>
-                                        <div class="content-row mb-5" th:fragment="contenidoSeries">
-                                            <h2 class="section-title mb-4" th:text="#{serie.populares}"></h2>
-                                            <section class="py-5" th:fragment="tarjetaSeries">
-                                                <div class="container">
-                                                    <div class="row g-4">
-                                                        <div class="col-lg-3 col-md-6" th:each="s : ${series}">
-                                                            <div class="card content-card h-100">
-                                                                <div class="text-center p-3">
-                                                                    <img th:src="${s.ruta_imagen}" alt="Serie" class="img-fluid rounded" style="max-height: 200px; object-fit: cover;">
-                                                                </div>
-                                                                <div class="card-body">
-                                                                    <h5 class="card-title">[[${s.titulo}]]</h5>
-                                                                    <p class="card-text">[[${s.descripcion}]]</p>
-                                                                    <small class="text-muted">Publicación: [[${s.año}]]</small>
-                                                                </div>
+                                <!-- Series Trending -->
+                                <section>
+                                    <div class="content-row mb-5" th:fragment="contenidoSeries">
+                                        <h2 class="section-title mb-4" th:text="#{serie.populares}"></h2>
+                                        <section class="py-5" th:fragment="tarjetaSeries">
+                                            <div class="container">
+                                                <div class="row g-4">
+                                                    <div class="col-lg-3 col-md-6" th:each="s : ${series}">
+                                                        <div class="card content-card h-100">
+                                                            <div class="text-center p-3">
+                                                                <img th:src="${s.ruta_imagen}" alt="Serie" class="img-fluid rounded" style="max-height: 200px; object-fit: cover;">
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <h5 class="card-title">[[${s.titulo}]]</h5>
+                                                                <p class="card-text">[[${s.descripcion}]]</p>
+                                                                <small class="text-muted">Publicación: [[${s.año}]]</small>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </section>
-                                        </div>
+                                            </div>
+                                        </section>
+                                    </div>
                                     </div>
                                 </section>
 
@@ -126,6 +123,9 @@
                                             <a class="btn btn-custom-primary" href="https://wa.me/+50689739749" target="_blank">
                                                 <i class="fab fa-whatsapp"></i>
                                                 WhatsApp
+                                            </a>
+                                            <a class="btn btn-custom-primary" href="#contacto" th:text="#{nav.contacto}">
+                                                
                                             </a>
                                         </div>
                                     </div>

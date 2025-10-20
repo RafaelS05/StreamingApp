@@ -176,8 +176,13 @@
                                 <div class="text-center mb-4">
                                     <h1 class="form-title" th:text="#{usuario.pefil}"></h1>
                                 </div>
-                                <h5 class="card-title"><span th:text="${usuario.correo}"></span></h5>
-                                <form action="post"></form>
+                                <div class="col-12 mb-3">
+                                    <div class="input-group-custom">
+                                        <span class="input-icon">📧</span>
+                                        <h2 class="form-input"
+                                            th:text="${usuario.correo}"></h2>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
