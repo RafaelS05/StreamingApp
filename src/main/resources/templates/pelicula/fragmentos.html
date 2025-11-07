@@ -2,77 +2,8 @@
 <html>
     <head th:replace="~{layout/plantilla :: head}"/>
     <body>
-        <!--th:if="${esAdmin}"-- >
-        <!--Tarjeta de peliculas-->
-        <section class="py-5" th:fragment="tarjetaPeliculas" >
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <h2 class="section-title mb-4" th:text="#{pelicula.catalogo}"></h2>
-                        <div class="col-md-3" th:if="${esAdmin}">
-                            <button type="button" 
-                                    class="btn btn-custom-primary" 
-                                    data-bs-toggle="modal"
-
-                                    data-bs-target="#guardarPeliculaModal"
-                                    th:text="#{pelicula.agregar}">
-                                <i class="fa-solid fa-plus"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row g-4">
-                    <div class="col-lg-3 col-md-6" th:each="p : ${peliculas}">
-                        <div class="card content-card h-100">
-                            <div class="text-center p-3">
-                                <img th:src="${p.ruta_imagen}" alt="Serie" class="img-fluid rounded" style="max-height: 200px; object-fit: cover;">
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title" th:text="${p.titulo}">Título</h5>
-                                <p class="card-text" th:text="${p.descripcion}">Descripción</p>
-                                <small class="text-muted">Publicación: <span th:text="${p.año}"></span></small><br>
-                                <small class="text-muted">Categoría: <span th:text="${p.categoria.nombre}"></span></small>
-
-                                <!-- Botón eliminar solo visible si es admin -->
-                                <div class="mt-3" th:if="${esAdmin}">
-                                    <button type="button"
-                                            class="btn btn-danger"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#eliminarPeliculaModal"
-                                            th:data-id="${p.id_pelicula}"
-                                            th:data-titulo="${p.titulo}">
-                                        <i class="fa-solid fa-trash"></i> [[#{pelicula.eliminar}]]
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <div class="modal fade" id="eliminarPeliculaModal" tabindex="-1" aria-labelledby="eliminarPeliculaModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header bg-danger text-white">
-                        <h5 class="modal-title" id="eliminarPeliculaModalLabel">Eliminar Película</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>¿Estás seguro de que deseas eliminar la película <strong id="tituloPeliculaEliminar"></strong>?</p>
-                        <form th:action="@{/pelicula/eliminar}" method="post">
-                            <input type="hidden" name="id_pelicula" id="idPeliculaEliminar">
-                            <div class="d-flex justify-content-end">
-                                <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
-                                <button type="submit" class="btn btn-danger">Eliminar</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+        <!--th:if="${esAdmin}"-->
+        <!--Agegar Peliculas-->
         <section th:fragment="agregarPelicula">
             <div class="modal fade" 
                  id="guardarPeliculaModal" 
@@ -130,5 +61,75 @@
                 </div>
             </div>
         </section>
+
+        <!--Tarjeta de peliculas-->
+        <section class="py-5" th:fragment="tarjetaPeliculas" >
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="section-title mb-4" th:text="#{pelicula.catalogo}"></h2>
+                        <div class="col-md-3" th:if="${esAdmin}">
+                            <button type="button" 
+                                    class="btn btn-custom-primary" 
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#guardarPeliculaModal"
+                                    th:text="#{pelicula.agregar}">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-lg-3 col-md-6" th:each="p : ${peliculas}">
+                        <div class="card content-card h-100">
+                            <div class="text-center p-3">
+                                <img th:src="${p.ruta_imagen}" alt="Serie" class="img-fluid rounded" style="max-height: 200px; object-fit: cover;">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="${p.titulo}">Título</h5>
+                                <p class="card-text" th:text="${p.descripcion}">Descripción</p>
+                                <small class="text-muted">Publicación: <span th:text="${p.año}"></span></small><br>
+                                <small class="text-muted">Categoría: <span th:text="${p.categoria.nombre}"></span></small>
+
+                                <!-- Botón eliminar solo visible si es admin -->
+                                <div class="mt-3" th:if="${esAdmin}">
+                                    <button type="button"
+                                            class="btn btn-danger"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#eliminarPeliculaModal"
+                                            th:data-id="${p.id_pelicula}"
+                                            th:data-titulo="${p.titulo}">
+                                        <i class="fa-solid fa-trash"></i> [[#{pelicula.eliminar}]]
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="eliminarPeliculaModal" tabindex="-1" aria-labelledby="eliminarPeliculaModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header bg-danger text-white">
+                            <h5 class="modal-title" id="eliminarPeliculaModalLabel">Eliminar Película</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>¿Estás seguro de que deseas eliminar la película  <strong id="tituloPeliculaEliminar"></strong>?</p>
+                            <form th:action="@{/pelicula/eliminar}" method="post">
+                                <input type="hidden" name="id_pelicula" id="idPeliculaEliminar">
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

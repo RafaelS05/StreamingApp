@@ -25,7 +25,10 @@ public class PeliculaService {
                 findById(pelicula.getId_pelicula()).orElse(null);
         
     }
-    
+    @Transactional (readOnly = true)
+    public Pelicula getPeliculaByID(Long id){
+        return peliculaRepository.findById(id).orElse(null);
+    }
     @Transactional(readOnly = true)
     public Pelicula getPeliculaByTitulo(String titulo) {
         if (titulo == null || titulo.trim().isEmpty()) {
@@ -49,38 +52,10 @@ public class PeliculaService {
     }
     
     @Transactional
-    public boolean delete(Pelicula Pelicula) {
-        if (Pelicula == null) {
-            return false;
-        }
-        
-        try {
-            peliculaRepository.delete(Pelicula);
-            return true;
-        } catch (Exception e) {
-            System.err.println("Error al eliminar Pelicula: " + e.getMessage());
-            return false;
-        }
+    public void delete(Pelicula Pelicula) {
+        peliculaRepository.delete(Pelicula);
     }
-    
-    @Transactional
-    public boolean deleteById(Long id) {
-        if (id == null) {
-            return false;
-        }
-        
-        try {
-            if (!peliculaRepository.existsById(id)) {
-                return false;
-            }
-            
-            peliculaRepository.deleteById(id);
-            return true;
-        } catch (Exception e) {
-            System.err.println("Error al eliminar Pelicula por ID: " + e.getMessage());
-            return false;
-        }
-    }
+
     @Transactional
     public Pelicula actualizar(Pelicula Pelicula) {
         if (Pelicula == null || Pelicula.getId_pelicula()== null) {

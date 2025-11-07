@@ -69,14 +69,13 @@ public class PeliculaController {
     }
     
     @PostMapping("/eliminar")
-    public String eliminar(Pelicula pelicula, RedirectAttributes redirectAttributes){
-        pelicula = peliculaService.getPelicula(pelicula);
+    public String eliminar(@RequestParam("id_pelicula") Long id, RedirectAttributes redirectAttributes, Pelicula pelicula){
+        pelicula = peliculaService.getPeliculaByID(id);
         if (pelicula == null) {
-            
+            redirectAttributes.addFlashAttribute("error", messageSource.getMessage("pelicula.eliminar.error", null, Locale.getDefault()));
         }
         peliculaService.delete(pelicula);
         return "redirect:/pelicula/pelicula";
-        
     }
 
 }
