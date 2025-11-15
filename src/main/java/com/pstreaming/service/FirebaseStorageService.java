@@ -26,8 +26,8 @@ public class FirebaseStorageService {
     //Ubicación donde se encuentra el archivo de configuración Json
     final String rutaJsonFile = "firebase";
 
-    //El nombre del archivo Json
-    final String archivoJsonFile = "techshop-61b0e-firebase-adminsdk-fbsvc-5cb0f8dec4" + ".json";
+    //El nombre del archivo Json techshop-61b0e-firebase-adminsdk-fbsvc-f239651c89
+    final String archivoJsonFile = "techshop-61b0e-firebase-adminsdk-fbsvc-f239651c89" + ".json";
 
     public String cargaImagen(MultipartFile archivoLocalCliente, String carpeta, Long id) {
         try {

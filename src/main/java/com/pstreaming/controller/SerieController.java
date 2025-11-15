@@ -51,18 +51,28 @@ public class SerieController {
 
     @Autowired
     private MessageSource messageSource;
-    
-        @PostMapping("/guardar")
-    public String guardar(Serie serie, 
+
+    @PostMapping("/guardar")
+    public String guardar(Serie serie,
             @RequestParam("imagenFile") MultipartFile imagenFile,
-            RedirectAttributes redirectAttributes){
+            RedirectAttributes redirectAttributes) {
         if (!imagenFile.isEmpty()) {
             serieService.save(serie);
             String ruta_imagen = firebaseStorageService.cargaImagen(imagenFile, "serie", serie.getId_serie());
-                    serie.setRuta_imagen(ruta_imagen);
+            serie.setRuta_imagen(ruta_imagen);
         }
         serieService.save(serie);
         redirectAttributes.addFlashAttribute("error", messageSource.getMessage("serie.error", null, Locale.getDefault()));
         return "redirect:/serie/serie";
+    }
+
+    @PostMapping("/eliminar")
+    public String eliminar(@RequestParam("id_serie") Long id, RedirectAttributes redirectAttributes, Serie serie) {
+        serie = serieService.getSerieByID(id);
+        if (serie == null) {
+            redirectAttributes.addFlashAttribute("error", messageSource.getMessage("pelicula.eliminar.error", null, Locale.getDefault()));
+        }
+        serieService.delete(serie);
+        return "redirect:/serie/serie"; //XD
     }
 }

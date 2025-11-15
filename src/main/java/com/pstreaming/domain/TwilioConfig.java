@@ -1,9 +1,9 @@
 package com.pstreaming.domain;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
-@Component
+@Configuration
 public class TwilioConfig {
     
     @Value("${twilio.account-sid}")

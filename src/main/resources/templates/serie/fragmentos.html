@@ -2,49 +2,8 @@
 <html>
     <head th:replace="~{layout/plantilla :: head}"/>
     <body>
-
-        <!--SECT para tarjetas-->
-        <section class="py-5" th:fragment="tarjetaSeries">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <h2 class="section-title mb-4" th:text="#{serie.catalogo}"></h2>
-                        <div class="col-md-3" th:if="${esAdmin}">
-                            <button type="button" 
-                                    class="btn btn-custom-primary" 
-                                    data-bs-toggle="modal"
-
-                                    data-bs-target="#guardarSerieModal"
-                                    th:text="#{serie.agregar}">
-                                <i class="fa-solid fa-plus"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="row g-4">
-                    <div class="col-lg-3 col-md-6" th:each="s : ${series}">
-                        <div class="card content-card h-100">
-                            <div class="text-center p-3">
-                                <img th:src="${s.ruta_imagen}" alt="Serie" class="img-fluid rounded" style="max-height: 200px; object-fit: cover;">
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title" th:text="${s.titulo}">Título</h5>
-                                <p class="card-text" th:text="${s.descripcion}">Descripción</p>
-                                <small class="text-muted">Publicación: <span th:text="${s.año}"></span></small><br>
-                                <small class="text-muted">Categoría: <span th:text="${s.categoria.nombre}"></span></small><br>
-                                <small class="text-muted">Temporadas: <span th:text="${s.temporadas}"></span> -</small>
-                                <small class="text-muted">Episodios: <span th:text="${s.episodios}"></span></small>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!--FORM para agregar series-->
-        <div th:fragment="agregarSerie">
-            
+        <section th:fragment="agregarSerie">
             <div class="modal fade" 
                  id="guardarSerieModal" 
                  tabindex="-1" 
@@ -56,6 +15,7 @@
                         <div class="card-body p-4">
                             <div class="text-center mb-4">
                             </div>
+                            
                             <form th:action='@{/serie/guardar}'
                                   th:object='${serie}'
                                   method="post"
@@ -70,7 +30,7 @@
 
                                     <div class="mb-4 input-group-custom">
                                         <h6 class="card-title"><label>[[#{serie.año}]]</label></h6>
-                                        <input type="number" class="form-control" name="año">
+                                        <input type="date" class="form-control" name="año">
                                     </div>
 
                                     <div class="mb-4 input-group-custom">
@@ -111,6 +71,94 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
+
+        <!--SECT para tarjetas-->
+        <section class="py-5" th:fragment="tarjetaSeries">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="section-title mb-4" th:text="#{serie.catalogo}"></h2>
+                        <div class="col-md-3" th:if="${esAdmin}">
+                            <button type="button" 
+                                    class="btn btn-custom-primary" 
+                                    data-bs-toggle="modal"
+
+                                    data-bs-target="#guardarSerieModal"
+                                    th:text="#{serie.agregar}">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-4">
+                    <div class="col-lg-3 col-md-6" th:each="s : ${series}">
+                        <div class="card content-card h-100">
+                            <div class="text-center p-3">
+                                <img th:src="${s.ruta_imagen}" alt="Serie" class="img-fluid rounded" style="max-height: 200px; object-fit: cover;">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="${s.titulo}">Título</h5>
+                                <p class="card-text" th:text="${s.descripcion}">Descripción</p>
+                                <small class="text-muted">Publicación: <span th:text="${s.año}"></span></small><br>
+                                <small class="text-muted">Categoría: <span th:text="${s.categoria.nombre}"></span></small><br>
+                                <small class="text-muted">Temporadas: <span th:text="${s.temporadas}"></span> -</small>
+                                <small class="text-muted">Episodios: <span th:text="${s.episodios}"></span></small>
+                                
+                                <div class="mt-3" th:if="${esAdmin}">
+                                    <button type="button"
+                                            class="btn btn-danger"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#eliminarSerieModal"
+                                            th:data-id="${s.id_serie}"
+                                            th:data-titulo="${s.titulo}">
+                                        <i class="fa-solid fa-trash"></i> [[#{serie.eliminar}]]
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="eliminarSerieModal" tabindex="-1" aria-labelledby="eliminarSerieModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header bg-danger text-white">
+                            <h5 class="modal-title" id="eliminarSerieModalLabel">Eliminar Serie</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>¿Estás seguro de que deseas eliminar la serie:  <strong id="tituloSerieEliminar"></strong>?</p>
+                            <form th:action="@{/serie/eliminar}" method="post">
+                                <input type="hidden" name="id_serie" id="idSerieEliminar">
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+
+                    var eliminarModal = document.getElementById('eliminarSerieModal');
+
+                    eliminarModal.addEventListener('show.bs.modal', function (event) {
+                        var button = event.relatedTarget;
+
+                        var id = button.getAttribute('data-id');
+                        var titulo = button.getAttribute('data-titulo');
+
+                        document.getElementById('idSerieEliminar').value = id;
+                        document.getElementById('tituloSerieEliminar').textContent = titulo;
+                    });
+
+                });
+            </script>
+        </section>
     </body>
+
 </html>

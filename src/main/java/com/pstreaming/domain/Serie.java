@@ -1,6 +1,7 @@
 package com.pstreaming.domain;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
 import lombok.Data;
 
 @Data
@@ -19,7 +20,7 @@ public class Serie {
     private String titulo;
 
     @Column(name = "año")
-    private int año;
+    private LocalDate año;
 
     @Column(name = "temporadas")
     private int temporadas;
@@ -36,5 +37,4 @@ public class Serie {
     @ManyToOne
     @JoinColumn(name = "id_categoria", nullable = false)
     private Categoria categoria;
-
 }

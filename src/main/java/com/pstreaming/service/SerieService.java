@@ -19,13 +19,17 @@ public class SerieService {
     }
     
     @Transactional(readOnly = true)
-    public Serie getPeliculaByTitulo(String titulo) {
+    public Serie getSerieByTitulo(String titulo) {
         if (titulo == null || titulo.trim().isEmpty()) {
             return null;
         }
         return SerieRepository.findByTitulo(titulo);
     }
-   
+    
+    @Transactional(readOnly = true)
+    public Serie getSerieByID(Long id){
+        return SerieRepository.findById(id).orElse(null);
+    }
     
     @Transactional
     public Serie save(Serie serie) {
@@ -41,18 +45,8 @@ public class SerieService {
     }
     
     @Transactional
-    public boolean delete(Serie serie) {
-        if (serie == null) {
-            return false;
-        }
-        
-        try {
-            SerieRepository.delete(serie);
-            return true;
-        } catch (Exception e) {
-            System.err.println("Error al eliminar usuario: " + e.getMessage());
-            return false;
-        }
+    public void delete(Serie Serie) {
+        SerieRepository.delete(Serie);
     }
     
     @Transactional

@@ -1,9 +1,20 @@
-#Version con jdk17
-FROM maven:3.8.5-openjdk-17 as build
-COPY . .
+FROM maven:3.9.9-eclipse-temurin-17 AS build
+
+WORKDIR /app
+
+COPY pom.xml .
+RUN mvn dependency:go-offline
+
+COPY src ./src
+
 RUN mvn clean package -DskipTests
 
-FROM openjdk:17.0.1-jdk-slim
-COPY --from=build /target/PlataformaStreaming-1.jar PlataformaStreaming.jar
-EXPOSE 80
-ENTRYPOINT ["java","-jar","PlataformaStreaming.jar"]
+FROM eclipse-temurin:17-jdk-jammy
+
+WORKDIR /app
+
+COPY --from=build /app/target/*.jar app.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java","-jar","app.jar"]

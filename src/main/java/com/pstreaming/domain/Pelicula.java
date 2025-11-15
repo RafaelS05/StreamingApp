@@ -1,6 +1,7 @@
 package com.pstreaming.domain;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
 
 import lombok.Data;
 
@@ -20,7 +21,7 @@ public class Pelicula {
     private String titulo;
 
     @Column(name = "año")
-    private int año;
+    private LocalDate año;
 
     @Column(name = "ruta_imagen")
     private String ruta_imagen;
