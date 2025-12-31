@@ -79,8 +79,8 @@
 
             <!--Formulario de registro-->
             <div th:fragment="form-registro" class="container-fluid min-vh-100 d-flex align-items-center justify-content-center py-5">
-                <div class="row w-100 justify-content-center">
-                    <div class="col-11 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+                <div class="row w-200 justify-content-center">
+                    <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
                         <div class="card form-container">
                             <div class="card-body p-4">
                                 <div class="text-center mb-4">
@@ -90,7 +90,7 @@
 
                                 <form id="register-form" th:action="@{/usuario/registro}" method="post" th:object="${usuario}">
                                     <div class="row">
-                                        <div class="col-12 mb-3">
+                                        <div class="col-12 mb-4">
                                             <div class="input-group-custom">
                                                 <span class="input-icon">👤</span>
                                                 <input type="text" th:field="*{nombre}" class="form-control form-input" 
@@ -99,7 +99,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-6 mb-3">
+                                        <div class="col-md-12 mb-4">
                                             <div class="input-group-custom">
                                                 <span class="input-icon">👤</span>
                                                 <input type="text" th:field="*{apellido_1}" class="form-control form-input" 
@@ -108,16 +108,9 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-6 mb-3">
-                                            <div class="input-group-custom">
-                                                <span class="input-icon">👤</span>
-                                                <input type="text" th:field="*{apellido_2}" class="form-control form-input" 
-                                                       placeholder=" " required>
-                                                <label class="input-floating-label">Segundo apellido</label>
-                                            </div>
-                                        </div>
 
-                                        <div class="col-12 mb-3">
+
+                                        <div class="col-12 mb-4">
                                             <div class="input-group-custom">
                                                 <span class="input-icon">📞</span>
                                                 <input type="text" th:field="*{telefono}" class="form-control form-input" 
@@ -126,7 +119,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-12 mb-3">
+                                        <div class="col-12 mb-4">
                                             <div class="input-group-custom">
                                                 <span class="input-icon">📧</span>
                                                 <input type="email" th:field="*{correo}" class="form-control form-input" 
@@ -135,7 +128,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-12 mb-3">
+                                        <div class="col-12 mb-4">
                                             <div class="input-group-custom">
                                                 <span class="input-icon">🔒</span>
                                                 <input type="password" th:field="*{password}" class="form-control form-input" 
@@ -146,15 +139,15 @@
 
                                         <div class="col-12 mb-4">
                                             <div class="input-group-custom">
-                                                <span class="input-icon">📍</span>
-                                                <input type="text" th:field="*{direccion}" class="form-control form-input" 
-                                                       placeholder=" " required>
-                                                <label class="input-floating-label">Dirección</label>
+                                                <span class="input-icon">🔒</span>
+                                                <input type="text" id="palabraClaveUser" th:field="*{palabraClave}" class="form-control form-input" 
+                                                       placeholder=" " readonly>
+                                                <label class="input-floating-label">Palabra clave</label>
                                             </div>
+                                            <button type="button" class="btn btn-custom-secondary w-25 mb-4" onclick="RecordVoz('palabraClaveUser')">Grabar</button>
                                         </div>
-                                    </div>
 
-                                    <button type="submit" class="btn btn-custom-secondary w-100 mb-3" th:text="#{usuario.boton.registro}"></button>
+                                        <button type="submit" class="btn btn-custom-secondary w-100 mb-4" th:text="#{usuario.boton.registro}"></button>
                                 </form>
 
                                 <div class="text-center">
@@ -165,29 +158,55 @@
                     </div>
                 </div>
             </div>
+            <script th:inline="javascript">
+                function RecordVoz(palabraClaveUser) {
+                    const SpeechRecognition =
+                            window.SpeechRecognition || window.webkitSpeechRecognition;
+
+                    if (!SpeechRecognition) {
+                        alert("El navegador no soporta el reconocimiento de voz.");
+                        return;
+                    }
+
+                    const recognition = new SpeechRecognition();
+                    recognition.lang = 'es-ES';
+                    recognition.interimResults = false;
+                    recognition.maxAlternatives = 1;
+
+                    recognition.onresult = (event) => {
+                        document.getElementById(palabraClaveUser).value =
+                                event.results[0][0].transcript;
+                    };
+                    recognition.onerror = (e) => {
+                        alert("Error al reconocer: " + e.error);
+                    };
+                    recognition.start();
+                }
+            </script>
+        </div>
 
 
-            <!-- Formulario para página "perfil" -->
-            <div th:fragment="form-perfil" class="container-fluid min-vh-100 d-flex align-items-center justify-content-center py-5">
-                <div class="row w-100 justify-content-center">
-                    <div class="col-11 col-sm-10 col-md-8 col-lg-6 col-xl-5">
-                        <div class="card form-container">
-                            <div class="card-body p-4">
-                                <div class="text-center mb-4">
-                                    <h1 class="form-title" th:text="#{usuario.pefil}"></h1>
-                                </div>
-                                <div class="col-12 mb-3">
-                                    <div class="input-group-custom">
-                                        <span class="input-icon">📧</span>
-                                        <h2 class="form-input"
-                                            th:text="${usuario.correo}"></h2>
-                                    </div>
+        <!-- Formulario para página "perfil" -->
+        <div th:fragment="form-perfil" class="container-fluid min-vh-100 d-flex align-items-center justify-content-center py-5">
+            <div class="row w-100 justify-content-center">
+                <div class="col-11 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+                    <div class="card form-container">
+                        <div class="card-body p-4">
+                            <div class="text-center mb-4">
+                                <h1 class="form-title" th:text="#{usuario.pefil}"></h1>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <div class="input-group-custom">
+                                    <span class="input-icon">📧</span>
+                                    <h2 class="form-input"
+                                        th:text="${usuario.correo}"></h2>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </main>  
-    </body>
+        </div>
+    </main>  
+</body>
 </html>

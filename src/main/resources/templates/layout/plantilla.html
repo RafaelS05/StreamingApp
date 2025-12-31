@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
@@ -10,9 +12,9 @@
                     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
                         <link rel="stylesheet" href="/css/styles.css">
                             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-                            <script src="/js/nav.js"></script>
-                            <script src="/js/forms.js"></script>
-                            <script src="/js/rutinas.js"></script>
+                            <script th:src="@{/js/forms.js}"></script>
+                            <script th:src="@{/js/rutinas.js}"></script>
+                            <script th:src="@{/js/vozUsuario.js}"></script>
                             <script src="https://accounts.google.com/gsi/client" async defer></script>
                             </head>
 
@@ -74,58 +76,20 @@
                                     </div>
                                 </section>
 
-                                <!-- Content Section -->
-                                <section class="content-section py-5">
-                                    <div class="container">
-                                        <!-- Películas Trending -->
-                                        <div class="content-row mb-5" th:fragment="contenidoPeliculas">
-                                            <h2 class="section-title mb-4" th:text="#{pelicula.populares}"></h2>
-                                        </div>
-                                </section>
-
-                                <!-- Series Trending -->
-                                <section>
-                                    <div class="content-row mb-5" th:fragment="contenidoSeries">
-                                        <h2 class="section-title mb-4" th:text="#{serie.populares}"></h2>
-                                        <section class="py-5" th:fragment="tarjetaSeries">
-                                            <div class="container">
-                                                <div class="row g-4">
-                                                    <div class="col-lg-3 col-md-6" th:each="s : ${series}">
-                                                        <div class="card content-card h-100">
-                                                            <div class="text-center p-3">
-                                                                <img th:src="${s.ruta_imagen}" alt="Serie" class="img-fluid rounded" style="max-height: 200px; object-fit: cover;">
-                                                            </div>
-                                                            <div class="card-body">
-                                                                <h5 class="card-title">[[${s.titulo}]]</h5>
-                                                                <p class="card-text">[[${s.descripcion}]]</p>
-                                                                <small class="text-muted">Publicación: [[${s.año}]]</small>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </section>
-                                    </div>
-                                    </div>
-                                </section>
-
                                 <!-- Footer -->
                                 <footer th:fragment="footer" class="custom-footer text-center py-4 mt-5">
                                     <div class="container">
                                         <p th:text="#{footer.derechos}" class="mb-2"></p>
                                         <p th:text="#{footer.contexto}" class="mb-2"></p>
-                                        <p th:text="#{nav.contacto}" class="mb-3"></p>
+                                        <p th:text="#{nav.contacto}" class="mb-3">:</p>
                                         <div class="social-links">
-                                            <a class="btn btn-custom-primary me-2" href="https://www.instagram.com/_rafita.s_/" target="_blank">
+                                            <a class="btn btn-custom-primary me-2" href="https://www.instagram.com/_rsolano_/" target="_blank">
                                                 <i class="fab fa-instagram"></i>
                                                 Instagram
                                             </a>
                                             <a class="btn btn-custom-primary" href="https://wa.me/+50689739749" target="_blank">
                                                 <i class="fab fa-whatsapp"></i>
                                                 WhatsApp
-                                            </a>
-                                            <a class="btn btn-custom-primary" href="#contacto" th:text="#{nav.contacto}">
-                                                
                                             </a>
                                         </div>
                                     </div>

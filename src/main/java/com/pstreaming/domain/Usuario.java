@@ -43,6 +43,9 @@ public class Usuario {
 
     @Column(name = "fecha_registro")
     private LocalDateTime fecha_registro;
+    
+    @Column(name = "palabra_Clave")
+    private String palabraClave;
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "idUsuario", updatable = false)

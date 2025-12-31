@@ -22,7 +22,7 @@ public class UserDetailsI implements UserDetails {
             return List.of();
         }
         return usuario.getRoles().stream()
-                .map(rol -> new SimpleGrantedAuthority(rol.getNombre())) // asumiendo que Rol tiene getNombre()
+                .map(rol -> new SimpleGrantedAuthority(rol.getNombre()))
                 .collect(Collectors.toList());
     }
 

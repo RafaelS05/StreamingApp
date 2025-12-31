@@ -58,6 +58,7 @@ public class UsuarioController {
             }
 
             usuario.setPassword(aEncoder.encode(usuario.getPassword()));
+            usuario.setPalabraClave(aEncoder.encode(usuario.getPalabraClave()));
 
             usuario.setFecha_registro(LocalDateTime.now());
 
