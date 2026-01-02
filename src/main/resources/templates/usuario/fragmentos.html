@@ -13,8 +13,8 @@
                         <div class="card form-container">
                             <div class="card-body p-4">
                                 <div class="text-center mb-4">
-                                    <h1 class="form-title" th:text="#{app.logo}">🎬 Rafa+</h1>
-                                    <p class="form-subtitle" th:text="#{hero.subtitle}">El mejor entretenimiento a tu alcance</p>
+                                    <h1 class="form-title" th:text="#{app.logo}"></h1>
+                                    <p class="form-subtitle" th:text="#{hero.subtitle}"></p>
                                 </div>
 
                                 <form id="login-form" th:action="@{/usuario/login}" method="post">
@@ -26,13 +26,23 @@
                                             <label class="input-floating-label">Correo electrónico</label>
                                         </div>
                                     </div>
-
-                                    <div class="mb-4">
+                                    <!-- Login por contrasenna -->
+                                    <div class="mb-4" id="passwordMode">
                                         <div class="input-group-custom">
                                             <span class="input-icon">🔒</span>
                                             <input type="password" name="password" class="form-control form-input" 
                                                    placeholder=" " required>
                                             <label class="input-floating-label">Contraseña</label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Login por voz -->
+                                    <div class="mb-4" id="vozMode">
+                                        <div class="input-group-custom mb-2">
+                                            <span class="input-icon">🔒</span>
+                                            <input type="text" name="palabraClave" id="PalabraClaveUsuario" class="form-control form-input" 
+                                                   placeholder=" " required>
+                                            <label class="input-floating-label">Palabra clave</label>
                                         </div>
                                     </div>
 
@@ -44,6 +54,11 @@
                                         Ingresar con Google
                                     </a>
                                 </form>
+
+                                <button type="button" class="btn btn-outline-danger w-100 mb-3"
+                                        id="ButtonToggleModoLogin">
+                                    Ingresar con voz (Palabra clave)
+                                </button>
 
                                 <div class="text-center">
                                     <a th:href="@{/}" class="btn btn-outline-light" th:text="#{volver.inicio}">Volver al inicio</a>
@@ -158,31 +173,6 @@
                     </div>
                 </div>
             </div>
-            <script th:inline="javascript">
-                function RecordVoz(palabraClaveUser) {
-                    const SpeechRecognition =
-                            window.SpeechRecognition || window.webkitSpeechRecognition;
-
-                    if (!SpeechRecognition) {
-                        alert("El navegador no soporta el reconocimiento de voz.");
-                        return;
-                    }
-
-                    const recognition = new SpeechRecognition();
-                    recognition.lang = 'es-ES';
-                    recognition.interimResults = false;
-                    recognition.maxAlternatives = 1;
-
-                    recognition.onresult = (event) => {
-                        document.getElementById(palabraClaveUser).value =
-                                event.results[0][0].transcript;
-                    };
-                    recognition.onerror = (e) => {
-                        alert("Error al reconocer: " + e.error);
-                    };
-                    recognition.start();
-                }
-            </script>
         </div>
 
 

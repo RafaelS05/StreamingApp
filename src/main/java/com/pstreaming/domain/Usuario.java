@@ -23,17 +23,11 @@ public class Usuario {
     @Column(name = "apellido_1")
     private String apellido_1;
 
-    @Column(name = "apellido_2")
-    private String apellido_2;
-
     @Column(name = "correo", unique = true)
     private String correo;
 
     @Column(name = "password")
     private String password;
-
-    @Column(name = "direccion")
-    private String direccion;
 
     @Column(name = "telefono")
     private String telefono;
