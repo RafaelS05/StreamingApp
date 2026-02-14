@@ -17,7 +17,11 @@
                                     <p class="form-subtitle" th:text="#{hero.subtitle}"></p>
                                 </div>
 
-                                <form id="login-form" th:action="@{/usuario/login}" method="post">
+                                <form id="login-form"
+                                      th:action="@{/usuario/login}"
+                                      data-password-action="/usuario/login"
+                                      data-voice-action="/usuario/login/voz"
+                                      method="post">
                                     <div class="mb-3">
                                         <div class="input-group-custom">
                                             <span class="input-icon">📧</span>
@@ -30,18 +34,18 @@
                                     <div class="mb-4" id="passwordMode">
                                         <div class="input-group-custom">
                                             <span class="input-icon">🔒</span>
-                                            <input type="password" name="password" class="form-control form-input" 
+                                            <input type="password" id="passwordInput" name="password" class="form-control form-input" 
                                                    placeholder=" " required>
                                             <label class="input-floating-label">Contraseña</label>
                                         </div>
                                     </div>
 
                                     <!-- Login por voz -->
-                                    <div class="mb-4" id="vozMode">
+                                    <div class="mb-4 d-none" id="vozMode">
                                         <div class="input-group-custom mb-2">
                                             <span class="input-icon">🔒</span>
                                             <input type="text" name="palabraClave" id="PalabraClaveUsuario" class="form-control form-input" 
-                                                   placeholder=" " required>
+                                                   placeholder=" ">
                                             <label class="input-floating-label">Palabra clave</label>
                                         </div>
                                     </div>
