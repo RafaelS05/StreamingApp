@@ -14,7 +14,7 @@ public class Serie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_serie")
-    private Long id_serie;
+    private Long idSerie;
 
     @Column(name = "titulo")
     private String titulo;
@@ -29,7 +29,7 @@ public class Serie {
     private int episodios;
     
     @Column(name = "ruta_imagen")
-    private String ruta_imagen;
+    private String rutaImagen;
 
     @Column(name = "descripcion")
     private String descripcion;

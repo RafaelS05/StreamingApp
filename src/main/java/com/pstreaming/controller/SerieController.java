@@ -35,7 +35,7 @@ public class SerieController {
         List<Categoria> categorias = categoriaService.listaCategorias();
 
         Map<Long, String> categoriasMap = categorias.stream()
-                .collect(Collectors.toMap(Categoria::getId_categoria,
+                .collect(Collectors.toMap(Categoria::getIdCategoria,
                         Categoria::getNombre));
 
         model.addAttribute("series", series);
@@ -57,8 +57,8 @@ public class SerieController {
             RedirectAttributes redirectAttributes) {
         if (!imagenFile.isEmpty()) {
             serieService.save(serie);
-            String ruta_imagen = firebaseStorageService.cargaImagen(imagenFile, "serie", serie.getId_serie());
-            serie.setRuta_imagen(ruta_imagen);
+            String ruta_imagen = firebaseStorageService.cargaImagen(imagenFile, "serie", serie.getIdSerie());
+            serie.setRutaImagen(ruta_imagen);
         }
         serieService.save(serie);
         redirectAttributes.addFlashAttribute("error", messageSource.getMessage("serie.error", null, Locale.getDefault()));

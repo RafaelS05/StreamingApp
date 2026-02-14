@@ -15,7 +15,7 @@ public class Pelicula {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_pelicula")
-    private Long id_pelicula;
+    private Long idPelicula;
 
     @Column(name = "titulo")
     private String titulo;
@@ -24,7 +24,7 @@ public class Pelicula {
     private LocalDate año;
 
     @Column(name = "ruta_imagen")
-    private String ruta_imagen;
+    private String rutaImagen;
 
     @Column(name = "descripcion")
     private String descripcion;

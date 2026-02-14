@@ -7,9 +7,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class UserDetailsI implements UserDetails {
 
+    @Autowired
     private final Usuario usuario;
 
     public UserDetailsI(Usuario usurio) {

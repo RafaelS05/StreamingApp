@@ -43,7 +43,7 @@ public class PeliculaController {
         List<Categoria> categorias = categoriaService.listaCategorias();
 
         Map<Long, String> categoriasMap = categorias.stream()
-                .collect(Collectors.toMap(Categoria::getId_categoria,
+                .collect(Collectors.toMap(Categoria::getIdCategoria,
                         Categoria::getNombre));
 
         model.addAttribute("peliculas", peliculas);
@@ -59,8 +59,8 @@ public class PeliculaController {
             RedirectAttributes redirectAttributes) {
         if (!imagenFile.isEmpty()) {
             peliculaService.save(pelicula);
-            String ruta_imagen = firebaseStorageService.cargaImagen(imagenFile, "pelicula", pelicula.getId_pelicula());
-            pelicula.setRuta_imagen(ruta_imagen);
+            String ruta_imagen = firebaseStorageService.cargaImagen(imagenFile, "pelicula", pelicula.getIdPelicula());
+            pelicula.setRutaImagen(ruta_imagen);
         }
         peliculaService.save(pelicula);
         redirectAttributes.addFlashAttribute("error", messageSource.getMessage("pelicula.error", null, Locale.getDefault()));

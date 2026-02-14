@@ -22,7 +22,7 @@ public class PeliculaService {
     @Transactional(readOnly = true)
     public Pelicula getPelicula(Pelicula pelicula){
         return peliculaRepository.
-                findById(pelicula.getId_pelicula()).orElse(null);
+                findById(pelicula.getIdPelicula()).orElse(null);
         
     }
     @Transactional (readOnly = true)
@@ -58,13 +58,13 @@ public class PeliculaService {
 
     @Transactional
     public Pelicula actualizar(Pelicula Pelicula) {
-        if (Pelicula == null || Pelicula.getId_pelicula()== null) {
+        if (Pelicula == null || Pelicula.getIdPelicula()== null) {
             throw new IllegalArgumentException("El Pelicula y su ID no pueden ser null");
         }
         
-        Optional<Pelicula> PeliculaExistente = peliculaRepository.findById(Pelicula.getId_pelicula());
+        Optional<Pelicula> PeliculaExistente = peliculaRepository.findById(Pelicula.getIdPelicula());
         if (PeliculaExistente.isEmpty()) {
-            throw new IllegalArgumentException("Pelicula no encontrado con ID: " + Pelicula.getId_pelicula());
+            throw new IllegalArgumentException("Pelicula no encontrado con ID: " + Pelicula.getIdPelicula());
         }
         
         if (Pelicula.getTitulo()!= null) {
