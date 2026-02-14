@@ -180,7 +180,7 @@
                                                        placeholder=" " readonly>
                                                 <label class="input-floating-label">Palabra clave</label>
                                             </div>
-                                            <button type="button" class="btn btn-custom-secondary w-25 mb-4" onclick="RecordVoz('palabraClaveUser')">Palabra Clave para login.</button>
+                                            <button type="button" class="btn btn-custom-secondary w-100 mb-4" onclick="RecordVoz('palabraClaveUser')">Registre su palabra 'Clave' para el login.</button>
                                         </div>
 
                                         <div class="col-12 mb-4">
@@ -189,10 +189,11 @@
                                                 <input type="file" id="vozEnrollFile" name="audio" hidden accept="audio/*">
                                                 <p>Repita: El carro verde viaja muy veloz.</p>
                                             </div>
-                                            <button type="button" class="btn btn-custom-secondary w-25 mb-4" id="btnRecordEnroll">Registro de voz utilizada para el 2FA</button>
+                                            <button type="button" class="btn btn-custom-secondary w-100 mb-4" id="btnRecordEnroll">Registre su voz utilizada para el 2FA</button>
 
                                             <small id="enrollStatus" class="text-white"></small>
                                         </div>
+                                        <button type="submit" class="btn btn-custom-primary w-100 mb-3" th:text="#{usuario.boton.registro}"></button>
                                     </div>
                                 </form>
                             </div>

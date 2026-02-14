@@ -35,8 +35,7 @@ public class SerieController {
         List<Categoria> categorias = categoriaService.listaCategorias();
 
         Map<Long, String> categoriasMap = categorias.stream()
-                .collect(Collectors.toMap(
-                        Categoria::getId_categoria,
+                .collect(Collectors.toMap(Categoria::getId_categoria,
                         Categoria::getNombre));
 
         model.addAttribute("series", series);
