@@ -26,7 +26,7 @@ public class ProjectConfig {
  @Bean
 public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
-            .authorizeRequests(auth -> auth.anyRequest().permitAll());
+            .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
 //        .authorizeHttpRequests(authz -> authz
 //            .requestMatchers("/usuario/registro", "/usuario/login", "/usuario/2fa", "/dashboard", "/logout", "/index", "/").permitAll()
 //            .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()

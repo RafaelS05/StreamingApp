@@ -52,7 +52,6 @@ public class UsuarioService {
         if (usuario.getCorreo() != null) {
             usuario.setCorreo(usuario.getCorreo().trim().toLowerCase());
         }
-        
         return usuarioRepository.save(usuario);
     }
     
