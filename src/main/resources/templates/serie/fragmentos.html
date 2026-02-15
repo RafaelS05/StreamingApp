@@ -57,9 +57,9 @@
 
                                     <div class="mb-4 input-group-custom">
                                         <h6 class="card-title"><label>[[#{categoria}]]</label></h6>
-                                        <select th:field="*{categoria.id_categoria}" class="form-select" aria-label="Default select example">
+                                        <select th:field="*{categoria.idCategoria}" class="form-select" aria-label="Default select example">
                                             <option th:each="categoria : ${categorias}" 
-                                                    th:value="${categoria.id_categoria}" 
+                                                    th:value="${categoria.idCategoria}" 
                                                     th:text="${categoria.nombre}">
                                             </option>
                                         </select>
@@ -95,7 +95,7 @@
                     <div class="col-lg-3 col-md-6" th:each="s : ${series}">
                         <div class="card content-card h-100">
                             <div class="text-center p-3">
-                                <img th:src="${s.ruta_imagen}" alt="Serie" class="img-fluid rounded" style="max-height: 200px; object-fit: cover;">
+                                <img th:src="${s.rutaImagen}" alt="Serie" class="img-fluid rounded" style="max-height: 200px; object-fit: cover;">
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title" th:text="${s.titulo}">Título</h5>
@@ -110,7 +110,7 @@
                                             class="btn btn-danger"
                                             data-bs-toggle="modal"
                                             data-bs-target="#eliminarSerieModal"
-                                            th:data-id="${s.id_serie}"
+                                            th:data-id="${s.idSerie}"
                                             th:data-titulo="${s.titulo}">
                                         <i class="fa-solid fa-trash"></i> [[#{serie.eliminar}]]
                                     </button>
@@ -131,7 +131,7 @@
                         <div class="modal-body">
                             <p>¿Estás seguro de que deseas eliminar la serie:  <strong id="tituloSerieEliminar"></strong>?</p>
                             <form th:action="@{/serie/eliminar}" method="post">
-                                <input type="hidden" name="id_serie" id="idSerieEliminar">
+                                <input type="hidden" name="idSerie" id="idSerieEliminar">
                                 <div class="d-flex justify-content-end">
                                     <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancelar</button>
                                     <button type="submit" class="btn btn-danger">Eliminar</button>

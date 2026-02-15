@@ -107,7 +107,7 @@ public class UsuarioController {
         }
 
         boolean esAdmin = usuario.getRoles().stream()
-                .anyMatch(rol -> "ADMIN".equals(rol.getNombre()));
+                .anyMatch(rol -> "USER".equals(rol.getNombre()));
 
         if (twoFAserivice.require2FA(usuario)) {
             String code = FAService.sendVerificationCode(usuario.getTelefono());

@@ -2,15 +2,12 @@ package com.pstreaming.controller;
 
 import com.pstreaming.domain.Usuario;
 import com.pstreaming.service.TwoFAService;
-import com.pstreaming.service.UsuarioService;
 import com.pstreaming.service.AuthService;
-import com.pstreaming.service.TwoFAPolicyService;
 import com.pstreaming.service.VoiceAuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,15 +22,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class TwoFactorAuthController {
 
     @Autowired
-    private UsuarioService usuarioService;
-    @Autowired
-    private PasswordEncoder aEncoder;
-    @Autowired
     private TwoFAService FAService;
     @Autowired
     private AuthService authService;
-    @Autowired
-    private TwoFAPolicyService twoFAserivice;
     @Autowired
     private VoiceAuthService voiceService;
 
@@ -106,7 +97,7 @@ public class TwoFactorAuthController {
 
             return "redirect:/index";
 
-        } catch (Exception e)  {
+        } catch (Exception e) {
             redirect.addFlashAttribute("error", "Error verificando la voz.");
             return "redirect:/usuario/2fa";
         }
@@ -125,6 +116,14 @@ public class TwoFactorAuthController {
     public String ProcesarEnroll(@RequestParam("audio") MultipartFile audio,
             HttpSession session,
             RedirectAttributes redirect) {
+
+        System.out.println("audio null? " + (audio == null));
+        System.out.println("audio empty? " + (audio != null && audio.isEmpty()));
+        System.out.println("audio name: " + (audio != null ? audio.getName() : null));
+        System.out.println("audio original: " + (audio != null ? audio.getOriginalFilename() : null));
+        System.out.println("audio size: " + (audio != null ? audio.getSize() : null));
+        System.out.println("audio type: " + (audio != null ? audio.getContentType() : null));
+        
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
         if (usuario == null) {
             return "redirect:/usuario/login";
