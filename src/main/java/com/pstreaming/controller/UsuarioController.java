@@ -106,19 +106,14 @@ public class UsuarioController {
             return "redirect:/usuario/login?error";
         }
 
-        boolean esAdmin = usuario.getRoles().stream()
-                .anyMatch(rol -> "USER".equals(rol.getNombre()));
-
         if (twoFAserivice.require2FA(usuario)) {
-            String code = FAService.sendVerificationCode(usuario.getTelefono());
-            session.setAttribute("2faCode", code);
             session.setAttribute("2faUser", usuario);
             return "redirect:/usuario/2fa";
         }
         authService.signIn(usuario, session);
         return "redirect:/index";
     }
-
+    
     // Login con voz
     @PostMapping("/login/voz")
     public String procesarLoginVoz(@RequestParam String correo,
@@ -133,10 +128,8 @@ public class UsuarioController {
             return "redirect:/usuario/login?error";
         }
 
-        boolean esAdmin = usuario.getRoles().stream()
-                .anyMatch(rol -> "ADMIN".equals(rol.getNombre()));
-
      if (twoFAserivice.require2FA(usuario)) {
+         session.setAttribute("2faUser", usuario);
             return "redirect:/usuario/2fa/voz";
       }
         authService.signIn(usuario, session);

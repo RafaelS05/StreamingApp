@@ -70,7 +70,10 @@
             </div>
 
             <!--Formulario de 2FA-->
-            <div th:fragment="form-2FA" class="container-fluid vh-100 d-flex align-items-center justify-content-center">
+            <div th:fragment="form-2FA" 
+                 id="2fa-container" 
+                 th:attr="data-modo=${modo}" 
+                 class="container-fluid vh-100 d-flex align-items-center justify-content-center">
                 <div class="row w-100 justify-content-center">
                     <div class="col-11 col-sm-8 col-md-6 col-lg-4">
                         <div class="card form-container">
@@ -81,27 +84,39 @@
                                     <button type="button" class="btn btn-outline-light w-50" id="btn-Voz">Voz</button>
                                 </div>
 
-
-                                <form id="sms-form" th:action="@{/usuario/2fa/code}" method="post">
+                                <!-- Formulario SMS -->
+                                <form id="sms-Form" th:action="@{/usuario/2fa/code}" method="post">
+                                    <div class="mb-3">
+                                        <button type="button" class="btn btn-outline-primary w-100 mb-2" id="btnSendSms">
+                                            Enviar código por SMS
+                                        </button>
+                                        <span id="smsStatus" class="text-muted small"></span>
+                                    </div>
                                     <div class="mb-3">
                                         <div class="input-group-custom">
-                                            <span class="input-icon"></span>
-                                            <input type="text" name="codigoIngresado" class="form-control form-input" 
+                                            <input type="text" name="codigoIngresado" class="form-control form-input"
                                                    required placeholder="Código 6 dígitos" maxlength="6">
                                         </div>
-                                        <button type="submit" class="btn btn-custom-primary w-100 mb-3">Verificar</button>
                                     </div>
+                                    <button type="submit" class="btn btn-custom-primary w-100 mb-3">Verificar</button>
                                 </form>
 
-                                <form th:action="@{/usuario/2fa/voz}" method="post" enctype="multipart/form-data" class="d-none">
-                                    <input type="file" name="audio" id="audioFile" hidden>
+                                <!-- Formulario VOZ -->
+                                <form id="voz-Form" th:action="@{/usuario/2fa/voz}" method="post"
+                                      enctype="multipart/form-data" class="d-none">
 
-                                    <p>Repita: El carro verde viaja muy veloz.</p>
+                                    <input type="file" name="audio" id="audio2faFile" hidden>
+
+                                    <p>Repita: <strong>El carro verde viaja muy veloz.</strong></p>
+
+                                    <div id="recordStatus" class="mb-2 text-muted small"></div>
+
                                     <button type="button" class="btn btn-custom-primary w-100 mb-2" id="btnRecord2fa">
-                                        Grabar voz (3s)
+                                        🎙 Grabar voz (3s)
                                     </button>
 
-                                    <button type="submit" class="btn btn-custom-secondary w-100" id="btnVerify2fa" disabled>
+                                    <button type="submit" class="btn btn-custom-secondary w-100" 
+                                            id="btnVerify2fa" disabled>
                                         Verificar voz
                                     </button>
                                 </form>
@@ -178,9 +193,10 @@
                                                        placeholder=" " readonly>
                                                 <label class="input-floating-label">Palabra clave</label>
                                             </div>
-                                            <button type="button" class="btn btn-custom-secondary w-25 mb-4" onclick="RecordVoz('palabraClaveUser')">Grabar</button>
+                                            <button type="button" class="btn btn-custom-primary w-25 mb-4" onclick="RecordVoz('palabraClaveUser')">Grabar</button>
                                         </div>
                                     </div>
+                                    <button type="submit" class="btn btn-custom-secondary w-25 mb-4">Registrar</button>
                                 </form>
                             </div>
                         </div>

@@ -7,13 +7,17 @@ import com.pstreaming.service.VoiceAuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -31,9 +35,22 @@ public class TwoFactorAuthController {
     @GetMapping("/2fa")
     public String mostrar2FA(HttpSession session, Model model, RedirectAttributes redirect) {
         model.addAttribute("modo", "2fa");
-
         return "usuario/2fa";
     }
+    
+    @PostMapping("/2fa/send-sms")
+    @ResponseBody
+    public ResponseEntity<?> sendSmsCodigo(HttpSession session){
+       Usuario usuario = (Usuario) session.getAttribute("2faUser");
+        if (usuario == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Sesion Expirada"));
+        }
+        String code = FAService.sendVerificationCode(usuario.getTelefono());
+        session.setAttribute("2faCode", code);
+        return ResponseEntity.ok(Map.of("mensaje", "SMS enviado correctamente"));
+    }
+    
 
     @PostMapping("/2fa/code")
     public String verificar2FACode(HttpServletRequest request,
@@ -67,7 +84,7 @@ public class TwoFactorAuthController {
         redirect.addFlashAttribute("error", "Código incorrecto");
         return "redirect:/usuario/2fa";
     }
-
+    
     //Verify
     @PostMapping("/2fa/voz")
     public String verificarConVoz(@RequestParam("audio") MultipartFile audio,
@@ -116,13 +133,6 @@ public class TwoFactorAuthController {
     public String ProcesarEnroll(@RequestParam("audio") MultipartFile audio,
             HttpSession session,
             RedirectAttributes redirect) {
-
-        System.out.println("audio null? " + (audio == null));
-        System.out.println("audio empty? " + (audio != null && audio.isEmpty()));
-        System.out.println("audio name: " + (audio != null ? audio.getName() : null));
-        System.out.println("audio original: " + (audio != null ? audio.getOriginalFilename() : null));
-        System.out.println("audio size: " + (audio != null ? audio.getSize() : null));
-        System.out.println("audio type: " + (audio != null ? audio.getContentType() : null));
         
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
         if (usuario == null) {
