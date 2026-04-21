@@ -1,15 +1,7 @@
 package com.pstreaming.controller;
 
-import com.pstreaming.domain.UserDetailsI;
-import com.pstreaming.domain.Usuario;
-import com.pstreaming.domain.VozUsuario;
-import com.pstreaming.service.TwoFAService;
-import com.pstreaming.service.UsuarioService;
-import com.pstreaming.service.AuthService;
-import com.pstreaming.service.TwoFAPolicyService;
-import com.pstreaming.service.VoiceAuthService;
-import jakarta.servlet.http.HttpSession;
 import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +16,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.pstreaming.domain.UserDetailsI;
+import com.pstreaming.domain.Usuario;
+import com.pstreaming.domain.VozUsuario;
+import com.pstreaming.service.AuthService;
+import com.pstreaming.service.TwoFAPolicyService;
+import com.pstreaming.service.UsuarioService;
+import com.pstreaming.service.VoiceAuthService;
+
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 @RequestMapping("/usuario")
 public class UsuarioController {
@@ -32,8 +34,7 @@ public class UsuarioController {
     private UsuarioService usuarioService;
     @Autowired
     private PasswordEncoder aEncoder;
-    @Autowired
-    private TwoFAService FAService;
+
     @Autowired
     private AuthService authService;
     @Autowired

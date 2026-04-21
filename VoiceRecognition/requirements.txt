@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+python-dotenv
+torch
+speechbrain
+pydub
+soundfile
+librosa
+numpy
+pydantic
+sqlalchemy
+pymysql
+slowapi
