@@ -70,7 +70,10 @@
             </div>
 
             <!--Formulario de 2FA-->
-            <div th:fragment="form-2FA" class="container-fluid vh-100 d-flex align-items-center justify-content-center">
+            <div th:fragment="form-2FA" 
+                 id="2fa-container" 
+                 th:attr="data-modo=${modo}" 
+                 class="container-fluid vh-100 d-flex align-items-center justify-content-center">
                 <div class="row w-100 justify-content-center">
                     <div class="col-11 col-sm-8 col-md-6 col-lg-4">
                         <div class="card form-container">
@@ -81,27 +84,39 @@
                                     <button type="button" class="btn btn-outline-light w-50" id="btn-Voz">Voz</button>
                                 </div>
 
-
-                                <form id="sms-form" th:action="@{/usuario/2fa}" method="post">
+                                <!-- Formulario SMS -->
+                                <form id="sms-Form" th:action="@{/usuario/2fa/code}" method="post">
+                                    <div class="mb-3">
+                                        <button type="button" class="btn btn-outline-primary w-100 mb-2" id="btnSendSms">
+                                            Enviar código por SMS
+                                        </button>
+                                        <span id="smsStatus" class="text-muted small"></span>
+                                    </div>
                                     <div class="mb-3">
                                         <div class="input-group-custom">
-                                            <span class="input-icon"></span>
-                                            <input type="text" name="codigoIngresado" class="form-control form-input" 
+                                            <input type="text" name="codigoIngresado" class="form-control form-input"
                                                    required placeholder="Código 6 dígitos" maxlength="6">
                                         </div>
-                                        <button type="submit" class="btn btn-custom-primary w-100 mb-3">Verificar</button>
                                     </div>
+                                    <button type="submit" class="btn btn-custom-primary w-100 mb-3">Verificar</button>
                                 </form>
 
-                                <form th:action="@{/usuario/2fa/voz}" method="post" enctype="multipart/form-data" class="d-none">
-                                    <input type="file" name="audio" id="audioFile" hidden>
+                                <!-- Formulario VOZ -->
+                                <form id="voz-Form" th:action="@{/usuario/2fa/voz}" method="post"
+                                      enctype="multipart/form-data" class="d-none">
 
-                                    <p>Repita: El carro verde viaja muy veloz.</p>
+                                    <input type="file" name="audio" id="audio2faFile" hidden>
+
+                                    <p>Repita: <strong>El carro verde viaja muy veloz.</strong></p>
+
+                                    <div id="recordStatus" class="mb-2 text-muted small"></div>
+
                                     <button type="button" class="btn btn-custom-primary w-100 mb-2" id="btnRecord2fa">
-                                        Grabar voz (3s)
+                                        🎙 Grabar voz (3s)
                                     </button>
 
-                                    <button type="submit" class="btn btn-custom-secondary w-100" id="btnVerify2fa" disabled>
+                                    <button type="submit" class="btn btn-custom-secondary w-100" 
+                                            id="btnVerify2fa" disabled>
                                         Verificar voz
                                     </button>
                                 </form>
@@ -144,8 +159,6 @@
                                             </div>
                                         </div>
 
-
-
                                         <div class="col-12 mb-4">
                                             <div class="input-group-custom">
                                                 <span class="input-icon">📞</span>
@@ -180,22 +193,48 @@
                                                        placeholder=" " readonly>
                                                 <label class="input-floating-label">Palabra clave</label>
                                             </div>
-                                            <button type="button" class="btn btn-custom-secondary w-25 mb-4" onclick="RecordVoz('palabraClaveUser')">Grabar</button>
+                                            <button type="button" class="btn btn-custom-primary w-25 mb-4" onclick="RecordVoz('palabraClaveUser')">Grabar</button>
                                         </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-custom-secondary w-25 mb-4">Registrar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            <!--Fragmento para registrar Voz-->
+            <div th:fragment="form-VozEnroll" class="container-fluid min-vh-100 d-flex align-items-center justify-content-center py-5">
+                <div class="row w-200 justify-content-center">
+                    <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+                        <div class="card form-container">
+                            <div class="card-body p-4">
+                                <div class="text-center mb-4">
+                                    <h1 class="form-title" th:text="#{app.logo}"></h1>
+                                    <p class="form-subtitle" th:text="#{hero.subtitle}"></p>
+                                </div>
+
+                                <form th:action="@{/usuario/enroll}" method="post" th:object="${VozUsuario}" enctype="multipart/form-data">
+                                    <div class="row">
                                         <div class="col-12 mb-4">
                                             <div class="input-group-custom">
                                                 <span class="input-icon">...</span>
-                                                <input type="file" id="vozEnrollFile" name="audio" hidden accept="audio/*">
+                                                <input id="audioEnrollFile" name="audio" type="file" accept="audio/*" hidden>
+                                                <div id="enrollStatus"></div>
                                                 <p>Repita: El carro verde viaja muy veloz.</p>
                                             </div>
-                                            <button type="button" class="btn btn-custom-secondary w-100 mb-4" id="btnRecordEnroll">Registre su voz utilizada para el 2FA</button>
 
-                                            <small id="enrollStatus" class="text-white"></small>
+                                            <button type="button"
+                                                    class="btn btn-custom-secondary w-100 mb-4"
+                                                    onclick="RecordFileInput('audioEnrollFile')">
+                                                Registre su voz utilizada para el 2FA
+                                            </button>
                                         </div>
                                         <button type="submit" class="btn btn-custom-primary w-100 mb-3" th:text="#{usuario.boton.registro}"></button>
                                     </div>
                                 </form>
+
                             </div>
                             <div class="text-center">
                                 <a th:href="@{/}" class="btn btn-outline-light" th:text="#{volver.inicio}">Volver al inicio</a>
@@ -221,6 +260,26 @@
                                         <h2 class="form-input"
                                             th:text="${usuario.correo}"></h2>
                                     </div>
+
+                                    <form th:action="@{/usuario/enroll}" method="post" th:object="${VozUsuario}" enctype="multipart/form-data">
+                                        <div class="row">
+                                            <div class="col-12 mb-4">
+                                                <div class="input-group-custom">
+                                                    <span class="input-icon">...</span>
+                                                    <input id="audioEnrollFile" name="audio" type="file" accept="audio/*" hidden>
+                                                    <div id="enrollStatus"></div>
+                                                    <p>Repita: El carro verde viaja muy veloz.</p>
+                                                </div>
+
+                                                <button type="button"
+                                                        class="btn btn-custom-secondary w-100 mb-4"
+                                                        onclick="RecordFileInput('audioEnrollFile')">
+                                                    Registre su voz utilizada para el 2FA
+                                                </button>
+                                            </div>
+                                            <button type="submit" class="btn btn-custom-primary w-100 mb-3" th:text="#{usuario.boton.registro}"></button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>

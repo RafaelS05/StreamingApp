@@ -1,287 +1,176 @@
-# StreamingApp — Streaming Platform
+# StreamingApp (PlataformaStreaming)
 
-A full-stack, Netflix-inspired streaming platform built with **Spring Boot 4** and **Java 17**, featuring advanced authentication including **voice biometrics** and **two-factor authentication (2FA)**. Includes a companion **Python FastAPI microservice** for AI-powered speaker recognition.
+Aplicación web desarrollada con **Spring Boot + Thymeleaf** para gestionar una plataforma de streaming con catálogo de películas y series, autenticación de usuarios y mecanismos de seguridad como **2FA por SMS** y validación de voz.
 
----
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Architecture](#architecture)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Environment Variables](#environment-variables)
-  - [Running with Docker](#running-with-docker)
-  - [Running Locally](#running-locally)
-- [Voice Recognition Microservice](#voice-recognition-microservice)
-- [Project Structure](#project-structure)
-- [Security](#security)
-- [Contributing](#contributing)
+## Tabla de contenido
+- [Características principales](#características-principales)
+- [Stack tecnológico](#stack-tecnológico)
+- [Estructura del proyecto](#estructura-del-proyecto)
+- [Requisitos previos](#requisitos-previos)
+- [Configuración de entorno](#configuración-de-entorno)
+- [Ejecución en local](#ejecución-en-local)
+- [Ejecución con Docker](#ejecución-con-docker)
+- [Rutas principales](#rutas-principales)
+- [Notas de seguridad importantes](#notas-de-seguridad-importantes)
+- [Comandos útiles](#comandos-útiles)
 
 ---
 
-## Overview
+## Características principales
 
-StreamingApp is a full-featured content streaming platform that allows users to browse movies and TV series, manage subscriptions, and authenticate via multiple methods. Its distinguishing feature is a **voice biometric authentication** system — users can enroll their voice and use it as a second factor or primary identifier, powered by a PyTorch/SpeechBrain machine learning model.
-
----
-
-## Features
-
-- **Content Catalog** — Browse movies and TV series organized by category.
-- **Role-Based Access Control** — `ADMIN` and `USER` roles with protected routes.
-- **User Registration and Login** — Secure BCrypt-hashed passwords.
-- **Google OAuth2** — Sign in with Google accounts.
-- **Two-Factor Authentication (2FA)** — OTP codes delivered via SMS through Twilio.
-- **Voice Biometric Authentication** — Enroll and verify users by voice using a deep learning model.
-- **Subscription Tiers** — BASICA, ESTANDAR, and PREMIUM plans.
-- **Email Notifications** — Transactional emails via Gmail SMTP.
-- **Cloud Media Storage** — Thumbnails and media served from Firebase / Google Cloud Storage.
-- **QR Code Generation** — For 2FA setup flows.
-- **Session Management** — 30-minute timeout with secure, HTTP-only cookies.
+- Registro e inicio de sesión de usuarios.
+- Inicio de sesión tradicional y flujo con OAuth2 (Google).
+- Verificación en dos pasos (2FA) mediante código SMS.
+- Enrolamiento y verificación de voz para autenticación adicional.
+- Gestión de catálogo de **películas** y **series** con categorías.
+- Carga de imágenes de contenido a Firebase Storage.
+- Interfaz web con Thymeleaf, Bootstrap y mensajes internacionalizados.
 
 ---
 
-## Tech Stack
+## Stack tecnológico
 
-### Backend
-
-| Technology | Version |
-|---|---|
-| Java | 17 |
-| Spring Boot | 4.0.0 |
-| Spring Security + OAuth2 | Latest |
-| Spring Data JPA (Hibernate) | Latest |
-| Spring WebFlux | Latest |
-| MariaDB / MySQL | 8.0 |
-
-### Frontend
-
-| Technology | Version |
-|---|---|
-| Thymeleaf | Latest |
-| Bootstrap | 5.3.8 |
-| jQuery | 3.7.1 |
-| Font Awesome | 7.0.1 |
-
-### External Services
-
-| Service | Purpose |
-|---|---|
-| Google Cloud Storage | Media and image hosting |
-| Firebase Admin SDK | Backend cloud services |
-| Twilio | SMS delivery for 2FA |
-| Microsoft Cognitive Services Speech | Speech-to-text processing |
-| Gmail SMTP | Email notifications |
-
-### Voice Recognition Microservice (Python)
-
-| Technology | Purpose |
-|---|---|
-| FastAPI + Uvicorn | REST API server |
-| PyTorch + SpeechBrain | ECAPA-VoxCeleb speaker recognition model |
-| librosa / soundfile | Audio processing |
-| SQLAlchemy + PyMySQL | Voice embedding persistence |
+- **Java 17**
+- **Spring Boot 4**
+- **Spring Web / Thymeleaf**
+- **Spring Security + OAuth2 Client**
+- **Spring Data JPA (Hibernate)**
+- **MariaDB / MySQL**
+- **Twilio SDK** (SMS)
+- **Google Cloud Storage / Firebase Admin**
+- **Azure Speech SDK** (integración de voz)
+- **Maven**
 
 ---
 
-## Architecture
+## Estructura del proyecto
 
-```
-+--------------------------------------------------+
-|                   Web Browser                    |
-|           (Thymeleaf + Bootstrap UI)             |
-+---------------------+----------------------------+
-                      |  HTTP / HTTPS
-+---------------------v----------------------------+
-|         Spring Boot Application (Port 80)        |
-|                                                  |
-|  Controllers  ->  Services  ->  Repositories     |
-|                                                  |
-|  +-----------+   +-------------+  +-----------+  |
-|  | Auth /    |   | Content     |  | Users /   |  |
-|  | OAuth2 /  |   | (Movies,    |  | Roles /   |  |
-|  | 2FA / Voice   |  Series)   |  | Subscript.|  |
-|  +-----------+   +-------------+  +-----------+  |
-+------+---------------+------------------+--------+
-       |               |                  |
-+------v------+  +------v-----+  +--------v-----------+
-| MariaDB /   |  | Firebase   |  | Voice Recognition  |
-| MySQL DB    |  | Cloud      |  | Microservice (Py)  |
-| Port 3307   |  | Storage    |  | FastAPI Port 8000  |
-+-------------+  +------------+  +--------------------+
+```text
+src/main/java/com/pstreaming
+├── controller   # Controladores MVC
+├── domain       # Entidades/modelos
+├── repository   # Repositorios JPA
+└── service      # Lógica de negocio e integraciones externas
+
+src/main/resources
+├── templates    # Vistas Thymeleaf
+├── static.img   # Recursos estáticos de imágenes
+├── firebase     # Credenciales/config de Firebase
+├── application.properties
+└── messages.properties
 ```
 
 ---
 
-## Getting Started
+## Requisitos previos
 
-### Prerequisites
+Asegúrate de tener instalado:
 
-- **Docker** and **Docker Compose** (recommended), or:
-- **Java 17+**, **Maven 3.9+**, **MariaDB/MySQL 8**, **Python 3.9+**
-- A Google Cloud project with OAuth2 credentials configured.
-- A Firebase project with a service account JSON file.
-- A Twilio account for SMS-based 2FA.
-- A Gmail account configured for application-level SMTP access.
+- **JDK 17**
+- **Maven 3.9+**
+- **MySQL/MariaDB**
+- (Opcional) **Docker + Docker Compose**
 
 ---
 
-### Environment Variables
+## Configuración de entorno
 
-Copy `ini.env` to `.env` and populate the required values:
+La aplicación usa propiedades directas y variables de entorno para servicios externos.
 
-```env
-# Database
-MYSQL_DATABASE=pstreaming
-MYSQL_USER=usuariop
-MYSQL_PASSWORD=your_db_password
-MYSQL_ROOT_PASSWORD=your_root_password
+### Variables recomendadas
 
-# Google OAuth2
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
-
-# Twilio (SMS 2FA)
-TWILIO_ACCOUNT_SID=your_twilio_sid
-TWILIO_AUTH_TOKEN=your_twilio_auth_token
-TWILIO_FROM_PHONE=+1234567890
-
-# Gmail SMTP
-GMAIL_USERNAME=your_email@gmail.com
-GMAIL_PASSWORD=your_app_password
-```
-
-> **Warning:** Never commit `.env` or `ini.env` files containing real credentials to version control.
-
----
-
-### Running with Docker
+Configura como mínimo las siguientes variables antes de arrancar:
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/your-username/StreamingApp.git
-cd StreamingApp
+# OAuth2 Google
+export GOOGLE_CLIENT_ID="tu_client_id"
+export GOOGLE_CLIENT_SECRET="tu_client_secret"
 
-# 2. Configure the environment file
-cp ini.env .env
-# Edit .env with your credentials
+# Twilio
+export TWILIO_ACCOUNT_SID="tu_account_sid"
+export TWILIO_AUTH_TOKEN="tu_auth_token"
+export TWILIO_FROM_PHONE="+123456789"
+```
 
-# 3. Build and start all services
+### Base de datos
+
+Por defecto se espera una base `pstreaming` en `localhost:3307` según `application.properties`.
+
+Ejemplo de URL:
+
+```properties
+spring.datasource.url=jdbc:mariadb://localhost:3307/pstreaming?useGssApi=false
+```
+
+> Si usas otros puertos/credenciales, ajústalos en `src/main/resources/application.properties` o por variables de entorno de Spring (`SPRING_DATASOURCE_*`).
+
+---
+
+## Ejecución en local
+
+1. Clona el repositorio.
+2. Configura la base de datos y variables de entorno.
+3. Ejecuta:
+
+```bash
+mvn spring-boot:run
+```
+
+La aplicación levantará en el puerto configurado por `server.port` (actualmente `80`).
+
+---
+
+## Ejecución con Docker
+
+El repositorio incluye `Dockerfile` y `docker-compose.yml`.
+
+1. Crea/ajusta un archivo `.env` con tus credenciales (puedes basarte en `ini.env`, pero **no** uses secretos reales en repositorio).
+2. Levanta servicios:
+
+```bash
 docker compose up --build
 ```
 
-The application will be available at `http://localhost:8080`.
-
-Docker Compose provisions the following services:
-- `mysql-db` — MySQL 8.0 on port `3307`
-- `streamingapp` — Spring Boot application on port `8080`
-
-> The Voice Recognition microservice must be started separately. See the section below.
+Esto inicia:
+- `mysql-db`
+- `streamingapp`
 
 ---
 
-### Running Locally
+## Rutas principales
 
-**1. Start the database**
+- `/` → redirige a `/index`
+- `/index` → página principal
+- `/usuario/registro` → registro de usuario
+- `/usuario/login` → login
+- `/usuario/2fa` → verificación por código
+- `/pelicula/pelicula` → catálogo/gestión de películas
+- `/serie/serie` → catálogo/gestión de series
+- `/usuario/perfil` → perfil del usuario
 
-Ensure MariaDB or MySQL is running on port `3307` and that a database named `pstreaming` has been created.
+---
 
-**2. Configure application properties**
+## Notas de seguridad importantes
 
-Update `src/main/resources/application.properties` with your local credentials.
+- Antes de publicar o desplegar, mueve credenciales sensibles a variables de entorno o un gestor de secretos.
+- No subas llaves/API keys reales al repositorio.
+- Revisa la configuración de Spring Security para asegurar las rutas privadas en producción.
 
-**3. Build and run the Spring Boot application**
+---
+
+## Comandos útiles
 
 ```bash
-mvn clean package -DskipTests
-java -jar target/PlataformaStreaming-1.jar
-```
+# Compilar
+mvn clean compile
 
-**4. Start the Voice Recognition microservice**
+# Ejecutar pruebas
+mvn test
 
-```bash
-cd VoiceRecognition
-pip install -r requirements.txt
-uvicorn app:app --host 0.0.0.0 --port 8000
-```
-
-The application will be available at `http://localhost:80`.
-
----
-
-## Voice Recognition Microservice
-
-Located in the `VoiceRecognition/` directory, this is a standalone **Python FastAPI** service responsible for biometric voice authentication.
-
-**Model:** `speechbrain/spkrec-ecapa-voxceleb` — a state-of-the-art speaker verification model trained on the VoxCeleb dataset.
-
-**Authentication flow:**
-
-1. **Enrollment** — The user records a voice sample. The model generates a speaker embedding, which is stored in the database.
-2. **Verification** — On login, a new audio sample is compared against the stored embedding using cosine similarity. The acceptance threshold is `0.85`.
-
-**API Endpoints:**
-
-| Method | Endpoint | Description |
-|---|---|---|
-| `POST` | `/enroll/{usuario_id}` | Register a user's voice embedding |
-| `POST` | `/verify/{usuario_id}` | Verify a voice sample against a stored embedding |
-
-**Audio requirements:** Input audio is automatically resampled to 16 kHz mono WAV prior to processing.
-
----
-
-## Project Structure
-
-```
-StreamingApp/
-├── src/main/java/com/pstreaming/
-│   ├── PlataformaStreamingApplication.java   # Application entry point
-│   ├── ProjectConfig.java                    # Spring Security configuration
-│   ├── controller/                           # HTTP layer (8 controllers)
-│   ├── domain/                               # JPA entity models (10 classes)
-│   ├── service/                              # Business logic (12 services)
-│   └── repository/                           # Data access layer (8 repositories)
-├── src/main/resources/
-│   ├── application.properties                # Application configuration
-│   ├── templates/                            # Thymeleaf HTML templates
-│   └── static/                               # CSS, JavaScript, and images
-├── VoiceRecognition/
-│   ├── app.py                                # FastAPI voice authentication service
-│   └── requirements.txt                      # Python dependencies
-├── Dockerfile                                # Multi-stage Java build
-├── docker-compose.yml                        # Service orchestration
-└── ini.env                                   # Environment variable template
+# Empaquetar JAR
+mvn clean package
 ```
 
 ---
 
-## Security
-
-- Passwords are hashed using **BCrypt**.
-- Sessions expire after **30 minutes** of inactivity.
-- Cookies are set as **HTTP-only** with the `SameSite=Lax` attribute.
-- OAuth2 authentication is handled by Spring Security.
-- 2FA codes are transmitted via **SMS (Twilio)**.
-- Voice verification uses **cosine similarity** with a strict acceptance threshold.
-
-> **Production note:** Ensure that Spring Security's authorization rules in `ProjectConfig.java` are fully enforced. Review all secrets management practices before any public deployment.
-
----
-
-## Contributing
-
-1. Fork the repository.
-2. Create a feature branch: `git checkout -b feature/feature-name`
-3. Commit your changes: `git commit -m "Add feature description"`
-4. Push to the branch: `git push origin feature/feature-name`
-5. Open a Pull Request.
-
----
-
-## License
-
-This project is intended for educational and portfolio purposes. Forking and adapting it is permitted.
+Si quieres, puedo prepararte una versión de este README enfocada a **despliegue en producción** (con checklist de seguridad, variables por entorno y pipeline CI/CD).

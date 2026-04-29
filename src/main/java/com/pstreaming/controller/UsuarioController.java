@@ -1,15 +1,7 @@
 package com.pstreaming.controller;
 
-import com.pstreaming.domain.UserDetailsI;
-import com.pstreaming.domain.Usuario;
-import com.pstreaming.domain.VozUsuario;
-import com.pstreaming.service.TwoFAService;
-import com.pstreaming.service.UsuarioService;
-import com.pstreaming.service.AuthService;
-import com.pstreaming.service.TwoFAPolicyService;
-import com.pstreaming.service.VoiceAuthService;
-import jakarta.servlet.http.HttpSession;
 import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +16,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.pstreaming.domain.UserDetailsI;
+import com.pstreaming.domain.Usuario;
+import com.pstreaming.domain.VozUsuario;
+import com.pstreaming.service.AuthService;
+import com.pstreaming.service.TwoFAPolicyService;
+import com.pstreaming.service.UsuarioService;
+import com.pstreaming.service.VoiceAuthService;
+
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 @RequestMapping("/usuario")
 public class UsuarioController {
@@ -32,8 +34,7 @@ public class UsuarioController {
     private UsuarioService usuarioService;
     @Autowired
     private PasswordEncoder aEncoder;
-    @Autowired
-    private TwoFAService FAService;
+
     @Autowired
     private AuthService authService;
     @Autowired
@@ -106,19 +107,14 @@ public class UsuarioController {
             return "redirect:/usuario/login?error";
         }
 
-        boolean esAdmin = usuario.getRoles().stream()
-                .anyMatch(rol -> "ADMIN".equals(rol.getNombre()));
-
         if (twoFAserivice.require2FA(usuario)) {
-            String code = FAService.sendVerificationCode(usuario.getTelefono());
-            session.setAttribute("2faCode", code);
             session.setAttribute("2faUser", usuario);
             return "redirect:/usuario/2fa";
         }
         authService.signIn(usuario, session);
         return "redirect:/index";
     }
-
+    
     // Login con voz
     @PostMapping("/login/voz")
     public String procesarLoginVoz(@RequestParam String correo,
@@ -133,10 +129,8 @@ public class UsuarioController {
             return "redirect:/usuario/login?error";
         }
 
-        boolean esAdmin = usuario.getRoles().stream()
-                .anyMatch(rol -> "ADMIN".equals(rol.getNombre()));
-
      if (twoFAserivice.require2FA(usuario)) {
+         session.setAttribute("2faUser", usuario);
             return "redirect:/usuario/2fa/voz";
       }
         authService.signIn(usuario, session);
