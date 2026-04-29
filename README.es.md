@@ -1,10 +1,10 @@
-# 🎬 StreamingApp — Plataforma de Streaming
+# StreamingApp — Plataforma de Streaming
 
-Una plataforma de streaming full-stack inspirada en Netflix, construida con **Spring Boot 4** y **Java 17**, que incluye autenticación avanzada mediante **biometría de voz** y **autenticación de dos factores (2FA)**. Incluye un **microservicio Python/FastAPI** para reconocimiento de hablantes con inteligencia artificial.
+Plataforma de streaming full-stack inspirada en Netflix, construida con **Spring Boot 4** y **Java 17**. Incorpora autenticación avanzada mediante **biometría de voz** y **autenticación de dos factores (2FA)**, además de un **microservicio Python/FastAPI** para el reconocimiento de hablantes mediante inteligencia artificial.
 
 ---
 
-## 📋 Tabla de Contenidos
+## Tabla de Contenidos
 
 - [Descripción General](#descripción-general)
 - [Funcionalidades](#funcionalidades)
@@ -24,29 +24,30 @@ Una plataforma de streaming full-stack inspirada en Netflix, construida con **Sp
 
 ## Descripción General
 
-StreamingApp es una plataforma de streaming completa que permite a los usuarios explorar películas y series, gestionar suscripciones y autenticarse mediante múltiples métodos. Su característica principal es el sistema de **autenticación biométrica por voz** — los usuarios pueden registrar su voz y usarla como segundo factor o identificador principal, impulsado por un modelo de aprendizaje automático basado en PyTorch y SpeechBrain.
+StreamingApp es una plataforma de streaming completa que permite a los usuarios explorar películas y series, gestionar suscripciones y autenticarse mediante múltiples métodos. Su característica distintiva es el sistema de **autenticación biométrica por voz** — los usuarios pueden registrar su voz y utilizarla como segundo factor o identificador principal, impulsado por un modelo de aprendizaje automático basado en PyTorch y SpeechBrain.
 
 ---
 
-## ✨ Funcionalidades
+## Funcionalidades
 
-- **Catálogo de Contenido** — Explora películas y series organizadas por categoría
-- **Control de Acceso por Roles** — Roles `ADMIN` y `USUARIO` con rutas protegidas
-- **Registro e Inicio de Sesión** — Contraseñas cifradas con BCrypt
-- **OAuth2 con Google** — Inicia sesión con tu cuenta de Google
-- **Autenticación de Dos Factores (2FA)** — Códigos OTP enviados por SMS vía Twilio
-- **Autenticación Biométrica por Voz** — Registro y verificación de usuarios mediante voz con modelo de deep learning
-- **Planes de Suscripción** — Niveles BÁSICA, ESTÁNDAR y PREMIUM
-- **Notificaciones por Correo** — Correos transaccionales vía Gmail SMTP
-- **Almacenamiento de Media en la Nube** — Miniaturas y contenido servidos desde Firebase / Google Cloud Storage
-- **Generación de Códigos QR** — Para flujos de configuración de 2FA
-- **Gestión de Sesión** — Expiración a los 30 minutos con cookies seguras y HTTP-only
+- **Catálogo de Contenido** — Exploración de películas y series organizadas por categoría.
+- **Control de Acceso por Roles** — Roles `ADMIN` y `USUARIO` con rutas protegidas.
+- **Registro e Inicio de Sesión** — Contraseñas cifradas con BCrypt.
+- **OAuth2 con Google** — Inicio de sesión con cuenta de Google.
+- **Autenticación de Dos Factores (2FA)** — Códigos OTP enviados por SMS mediante Twilio.
+- **Autenticación Biométrica por Voz** — Registro y verificación de usuarios mediante voz con modelo de aprendizaje profundo.
+- **Planes de Suscripción** — Niveles BÁSICA, ESTÁNDAR y PREMIUM.
+- **Notificaciones por Correo Electrónico** — Correos transaccionales mediante Gmail SMTP.
+- **Almacenamiento de Media en la Nube** — Miniaturas y contenido servidos desde Firebase / Google Cloud Storage.
+- **Generación de Códigos QR** — Para flujos de configuración de 2FA.
+- **Gestión de Sesión** — Expiración a los 30 minutos con cookies seguras y HTTP-only.
 
 ---
 
-## 🛠 Stack Tecnológico
+## Stack Tecnológico
 
 ### Backend
+
 | Tecnología | Versión |
 |---|---|
 | Java | 17 |
@@ -57,6 +58,7 @@ StreamingApp es una plataforma de streaming completa que permite a los usuarios 
 | MariaDB / MySQL | 8.0 |
 
 ### Frontend
+
 | Tecnología | Versión |
 |---|---|
 | Thymeleaf | Última |
@@ -65,76 +67,78 @@ StreamingApp es una plataforma de streaming completa que permite a los usuarios 
 | Font Awesome | 7.0.1 |
 
 ### Servicios Externos
+
 | Servicio | Uso |
 |---|---|
 | Google Cloud Storage | Almacenamiento de media e imágenes |
 | Firebase Admin SDK | Servicios en la nube de backend |
-| Twilio | SMS para 2FA |
-| Microsoft Cognitive Services Speech | Texto a voz |
-| Gmail SMTP | Notificaciones por correo |
+| Twilio | Envío de SMS para 2FA |
+| Microsoft Cognitive Services Speech | Procesamiento de texto a voz |
+| Gmail SMTP | Notificaciones por correo electrónico |
 
 ### Microservicio de Reconocimiento de Voz (Python)
+
 | Tecnología | Uso |
 |---|---|
 | FastAPI + Uvicorn | Servidor REST API |
 | PyTorch + SpeechBrain | Modelo ECAPA-VoxCeleb para identificación de hablantes |
 | librosa / soundfile | Procesamiento de audio |
-| SQLAlchemy + PyMySQL | Almacenamiento de embeddings de voz |
+| SQLAlchemy + PyMySQL | Persistencia de embeddings de voz |
 
 ---
 
-## 🏗 Arquitectura
+## Arquitectura
 
 ```
-┌──────────────────────────────────────────────────┐
-│               Navegador Web                      │
-│         (Interfaz Thymeleaf + Bootstrap)         │
-└─────────────────────┬────────────────────────────┘
-                      │ HTTP / HTTPS
-┌─────────────────────▼────────────────────────────┐
-│      Aplicación Spring Boot (Puerto 80)          │
-│                                                  │
-│  Controladores → Servicios → Repositorios        │
-│                                                  │
-│  ┌─────────────┐  ┌───────────┐  ┌───────────┐  │
-│  │  Auth /     │  │ Contenido │  │ Usuarios /│  │
-│  │  OAuth2 /   │  │(Películas,│  │  Roles /  │  │
-│  │  2FA / Voz  │  │  Series)  │  │   Subs.   │  │
-│  └─────────────┘  └───────────┘  └───────────┘  │
-└──────┬──────────────┬───────────────┬────────────┘
-       │              │               │
-┌──────▼──────┐ ┌─────▼──────┐ ┌─────▼──────────────┐
-│  MariaDB /  │ │  Firebase  │ │  Microservicio de   │
-│  MySQL DB   │ │  Cloud     │ │  Voz (Python)       │
-│ Puerto 3307 │ │  Storage   │ │  FastAPI Puerto 8000│
-└─────────────┘ └────────────┘ └────────────────────┘
++--------------------------------------------------+
+|                  Navegador Web                   |
+|         (Interfaz Thymeleaf + Bootstrap)         |
++---------------------+----------------------------+
+                      |  HTTP / HTTPS
++---------------------v----------------------------+
+|      Aplicación Spring Boot (Puerto 80)          |
+|                                                  |
+|  Controladores  ->  Servicios  ->  Repositorios  |
+|                                                  |
+|  +-----------+   +-------------+  +-----------+  |
+|  | Auth /    |   | Contenido   |  | Usuarios /|  |
+|  | OAuth2 /  |   | (Películas, |  | Roles /   |  |
+|  | 2FA / Voz |   |  Series)    |  | Suscripc. |  |
+|  +-----------+   +-------------+  +-----------+  |
++------+---------------+------------------+--------+
+       |               |                  |
++------v------+  +------v-----+  +--------v-----------+
+| MariaDB /   |  | Firebase   |  | Microservicio Voz  |
+| MySQL DB    |  | Cloud      |  | (Python)           |
+| Puerto 3307 |  | Storage    |  | FastAPI Puerto 8000|
++-------------+  +------------+  +--------------------+
 ```
 
 ---
 
-## 🚀 Primeros Pasos
+## Primeros Pasos
 
 ### Requisitos Previos
 
-- **Docker** y **Docker Compose** (recomendado)
-- O bien: **Java 17+**, **Maven 3.9+**, **MariaDB/MySQL 8**, **Python 3.9+**
-- Un proyecto de Google Cloud con credenciales OAuth2
-- Un proyecto de Firebase con JSON de cuenta de servicio
-- Una cuenta de Twilio (para SMS con 2FA)
-- Una cuenta de Gmail (para notificaciones por correo)
+- **Docker** y **Docker Compose** (recomendado), o bien:
+- **Java 17+**, **Maven 3.9+**, **MariaDB/MySQL 8**, **Python 3.9+**
+- Un proyecto de Google Cloud con credenciales OAuth2 configuradas.
+- Un proyecto de Firebase con un archivo JSON de cuenta de servicio.
+- Una cuenta de Twilio para 2FA por SMS.
+- Una cuenta de Gmail configurada para acceso SMTP a nivel de aplicación.
 
 ---
 
 ### Variables de Entorno
 
-Copia `ini.env` a `.env` y completa tus credenciales:
+Copie `ini.env` a `.env` y complete los valores requeridos:
 
 ```env
 # Base de datos
 MYSQL_DATABASE=pstreaming
 MYSQL_USER=usuariop
-MYSQL_PASSWORD=tu_contraseña_db
-MYSQL_ROOT_PASSWORD=tu_contraseña_root
+MYSQL_PASSWORD=contraseña_db
+MYSQL_ROOT_PASSWORD=contraseña_root
 
 # Google OAuth2
 GOOGLE_CLIENT_ID=tu_google_client_id
@@ -147,102 +151,104 @@ TWILIO_FROM_PHONE=+1234567890
 
 # Gmail SMTP
 GMAIL_USERNAME=tucorreo@gmail.com
-GMAIL_PASSWORD=tu_contraseña_de_app
+GMAIL_PASSWORD=tu_contraseña_de_aplicacion
 ```
 
-> ⚠️ **Nunca subas archivos `.env` o `ini.env` con credenciales reales a control de versiones.**
+> **Advertencia:** No incluya archivos `.env` o `ini.env` con credenciales reales en el control de versiones.
 
 ---
 
 ### Ejecución con Docker
 
 ```bash
-# 1. Clona el repositorio
+# 1. Clone el repositorio
 git clone https://github.com/tu-usuario/StreamingApp.git
 cd StreamingApp
 
-# 2. Configura el archivo de entorno
+# 2. Configure el archivo de entorno
 cp ini.env .env
-# Edita .env con tus credenciales
+# Edite .env con sus credenciales
 
-# 3. Construye e inicia todos los servicios
+# 3. Construya e inicie todos los servicios
 docker compose up --build
-
-# La app estará disponible en http://localhost:8080
 ```
 
-Docker Compose levanta:
+La aplicación estará disponible en `http://localhost:8080`.
+
+Docker Compose levanta los siguientes servicios:
 - `mysql-db` — MySQL 8.0 en el puerto `3307`
 - `streamingapp` — Aplicación Spring Boot en el puerto `8080`
 
-> El microservicio de reconocimiento de voz debe iniciarse por separado (ver más abajo).
+> El microservicio de reconocimiento de voz debe iniciarse de forma independiente. Consulte la sección correspondiente a continuación.
 
 ---
 
 ### Ejecución Local
 
-**1. Inicia la base de datos**
-```bash
-# Asegúrate de que MariaDB/MySQL esté corriendo en el puerto 3307
-# Crea una base de datos llamada `pstreaming`
-```
+**1. Inicie la base de datos**
 
-**2. Configura `application.properties`**
-Actualiza `src/main/resources/application.properties` con tus credenciales locales.
+Asegúrese de que MariaDB o MySQL esté en ejecución en el puerto `3307` y de que exista una base de datos llamada `pstreaming`.
 
-**3. Compila y ejecuta la app Spring Boot**
+**2. Configure las propiedades de la aplicación**
+
+Actualice `src/main/resources/application.properties` con sus credenciales locales.
+
+**3. Compile y ejecute la aplicación Spring Boot**
+
 ```bash
 mvn clean package -DskipTests
 java -jar target/PlataformaStreaming-1.jar
 ```
 
-**4. Inicia el microservicio de reconocimiento de voz**
+**4. Inicie el microservicio de reconocimiento de voz**
+
 ```bash
 cd VoiceRecognition
 pip install -r requirements.txt
 uvicorn app:app --host 0.0.0.0 --port 8000
 ```
 
-La aplicación estará disponible en **http://localhost:80**.
+La aplicación estará disponible en `http://localhost:80`.
 
 ---
 
-## 🎤 Microservicio de Reconocimiento de Voz
+## Microservicio de Reconocimiento de Voz
 
-Ubicado en la carpeta `VoiceRecognition/`, es un servicio **Python FastAPI** independiente que gestiona la autenticación biométrica por voz.
+Ubicado en el directorio `VoiceRecognition/`, es un servicio **Python FastAPI** independiente que gestiona la autenticación biométrica por voz.
 
-**Modelo:** `speechbrain/spkrec-ecapa-voxceleb` — un modelo de verificación de hablantes de última generación entrenado con VoxCeleb.
+**Modelo:** `speechbrain/spkrec-ecapa-voxceleb` — un modelo de verificación de hablantes de última generación entrenado con el conjunto de datos VoxCeleb.
 
-**Cómo funciona:**
-1. **Registro (Enrollment)** — El usuario graba una muestra de voz; el modelo genera un embedding del hablante y lo almacena.
-2. **Verificación** — Al iniciar sesión, se compara una nueva muestra contra el embedding almacenado usando similitud coseno (umbral: `0.85`).
+**Flujo de autenticación:**
 
-**Endpoints:**
+1. **Registro (Enrollment)** — El usuario graba una muestra de voz. El modelo genera un embedding del hablante, el cual se almacena en la base de datos.
+2. **Verificación** — Al iniciar sesión, una nueva muestra de audio se compara contra el embedding almacenado mediante similitud coseno. El umbral de aceptación es `0.85`.
+
+**Endpoints de la API:**
 
 | Método | Endpoint | Descripción |
 |---|---|---|
-| `POST` | `/enroll/{usuario_id}` | Registra la voz de un usuario |
-| `POST` | `/verify/{usuario_id}` | Verifica una voz contra el embedding almacenado |
+| `POST` | `/enroll/{usuario_id}` | Registra el embedding de voz de un usuario |
+| `POST` | `/verify/{usuario_id}` | Verifica una muestra de voz contra el embedding almacenado |
 
-**Requisitos de audio:** El audio se remuestrea automáticamente a 16 kHz mono WAV antes del procesamiento.
+**Requisitos de audio:** El audio de entrada se remuestrea automáticamente a 16 kHz mono WAV antes del procesamiento.
 
 ---
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```
 StreamingApp/
 ├── src/main/java/com/pstreaming/
-│   ├── PlataformaStreamingApplication.java   # Punto de entrada
-│   ├── ProjectConfig.java                    # Configuración Spring Security
-│   ├── controller/                           # Controladores HTTP (8 clases)
+│   ├── PlataformaStreamingApplication.java   # Punto de entrada de la aplicación
+│   ├── ProjectConfig.java                    # Configuración de Spring Security
+│   ├── controller/                           # Capa HTTP (8 controladores)
 │   ├── domain/                               # Modelos de entidad JPA (10 clases)
 │   ├── service/                              # Lógica de negocio (12 servicios)
-│   └── repository/                           # Repositorios Spring Data JPA (8 repos)
+│   └── repository/                           # Capa de acceso a datos (8 repositorios)
 ├── src/main/resources/
-│   ├── application.properties                # Configuración de la app
+│   ├── application.properties                # Configuración de la aplicación
 │   ├── templates/                            # Plantillas HTML Thymeleaf
-│   └── static/                               # CSS, JS, imágenes
+│   └── static/                               # CSS, JavaScript e imágenes
 ├── VoiceRecognition/
 │   ├── app.py                                # Servicio FastAPI de autenticación por voz
 │   └── requirements.txt                      # Dependencias Python
@@ -253,33 +259,29 @@ StreamingApp/
 
 ---
 
-## 🔐 Seguridad
+## Seguridad
 
-- Contraseñas cifradas con **BCrypt**
-- Las sesiones expiran tras **30 minutos** de inactividad
-- Las cookies son **HTTP-only** y `SameSite=Lax`
-- OAuth2 gestionado por Spring Security
-- Códigos 2FA enviados por **SMS (Twilio)**
-- La verificación de voz usa **similitud coseno** con un umbral estricto
+- Las contraseñas se cifran mediante **BCrypt**.
+- Las sesiones expiran tras **30 minutos** de inactividad.
+- Las cookies se configuran como **HTTP-only** con el atributo `SameSite=Lax`.
+- La autenticación OAuth2 es gestionada por Spring Security.
+- Los códigos 2FA se transmiten mediante **SMS (Twilio)**.
+- La verificación de voz emplea **similitud coseno** con un umbral de aceptación estricto.
 
-> **Nota para producción:** Asegúrate de que las reglas de autorización de Spring Security en `ProjectConfig.java` estén completamente habilitadas. Revisa las prácticas de gestión de secretos antes de desplegar públicamente.
-
----
-
-## 🤝 Contribuciones
-
-1. Haz un fork del repositorio
-2. Crea una rama para tu funcionalidad: `git checkout -b feature/mi-funcionalidad`
-3. Confirma tus cambios: `git commit -m 'Agrega mi funcionalidad'`
-4. Sube la rama: `git push origin feature/mi-funcionalidad`
-5. Abre un Pull Request
+> **Nota para producción:** Asegúrese de que las reglas de autorización de Spring Security en `ProjectConfig.java` estén completamente habilitadas. Revise las prácticas de gestión de secretos antes de realizar cualquier despliegue público.
 
 ---
 
-## 📄 Licencia
+## Contribuciones
 
-Este proyecto es de carácter educativo y de portafolio. Siéntete libre de hacer un fork y adaptarlo.
+1. Realice un fork del repositorio.
+2. Cree una rama para su funcionalidad: `git checkout -b feature/nombre-funcionalidad`
+3. Confirme sus cambios: `git commit -m "Descripción del cambio"`
+4. Suba la rama: `git push origin feature/nombre-funcionalidad`
+5. Abra un Pull Request.
 
 ---
 
-*Construido con ❤️ usando Spring Boot, PyTorch y SpeechBrain.*
+## Licencia
+
+Este proyecto tiene carácter educativo y de portafolio. Se permite su fork y adaptación.
