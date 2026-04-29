@@ -11,3 +11,4 @@ pydantic
 sqlalchemy
 pymysql
 slowapi
+cryptography
