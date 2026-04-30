@@ -21,6 +21,7 @@ import com.pstreaming.service.TwoFAPolicyService;
 import com.pstreaming.service.UsuarioService;
 
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/usuario")

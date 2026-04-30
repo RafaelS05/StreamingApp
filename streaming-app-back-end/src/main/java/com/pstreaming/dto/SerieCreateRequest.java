@@ -11,5 +11,5 @@ public class SerieCreateRequest {
     private int temporadas;
     private int episodios;
     private String descripcion;
-    private String idCategoria;
+    private Long idCategoria;
 }

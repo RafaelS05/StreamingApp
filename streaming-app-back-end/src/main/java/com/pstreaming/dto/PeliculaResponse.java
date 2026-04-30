@@ -10,5 +10,5 @@ public class PeliculaResponse {
     private LocalDate año;
     private String rutaImagen;
     private String descripcion;
-    private String categoria;
+    private Long idCategoria;
 }

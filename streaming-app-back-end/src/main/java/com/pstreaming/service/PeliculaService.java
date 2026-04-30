@@ -1,22 +1,34 @@
 package com.pstreaming.service;
 
+import com.pstreaming.domain.Categoria;
+import com.pstreaming.domain.Imagen;
 import com.pstreaming.domain.Pelicula;
+import com.pstreaming.dto.PeliculaResponse;
 import com.pstreaming.repository.PeliculaRepository;
+import com.pstreaming.repository.CategoriaRepository;
+import java.time.LocalDateTime;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class PeliculaService {
     
     @Autowired
     private PeliculaRepository peliculaRepository;
+    @Autowired
+    private CategoriaRepository categoriaRepository;
+    @Autowired
+    private FirebaseStorageService firebaseService;
     
     @Transactional(readOnly = true)
-    public List<Pelicula> listaPeliculas() {
-        return peliculaRepository.findAll();
+    public List<PeliculaResponse> listaPeliculas() {
+        return peliculaRepository.findAll().stream()
+                .map(this::toResponse)
+                .toList();
     }
     
     @Transactional(readOnly = true)
@@ -39,16 +51,24 @@ public class PeliculaService {
     
     
     @Transactional
-    public Pelicula save(Pelicula Pelicula) {
-        if (Pelicula == null) {
-            throw new IllegalArgumentException("La Pelicula no puede ser null");
-        }
+    public PeliculaResponse save(PeliculaResponse request, MultipartFile imagenFile) {
+        Pelicula p = new Pelicula();
+        p.setTitulo(request.getTitulo());
+        p.setAño(request.getAño());
+        p.setDescripcion(request.getDescripcion());
         
-        if (Pelicula.getTitulo()!= null) {
-            Pelicula.setTitulo(Pelicula.getTitulo().trim().toLowerCase());
-        }
+        Categoria categoria = categoriaRepository.findById(request.getIdCategoria())
+                .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
+        peliculaRepository.save(p);
         
-        return peliculaRepository.save(Pelicula);
+        if(imagenFile != null && !imagenFile.isEmpty()){
+            Imagen img = new Imagen();
+            img.setRutaFirebase(firebaseService.cargaImagen(imagenFile, "pelicula", p.getIdPelicula()));
+            img.setNombreArchivo(imagenFile.getOriginalFilename());
+            img.setFechaCarga(LocalDateTime.now());
+            peliculaRepository.save(p);
+        }
+        return toResponse(p);
     }
     
     @Transactional
@@ -73,4 +93,20 @@ public class PeliculaService {
         
         return peliculaRepository.save(Pelicula);
     }
+    
+    
+    /* Utilities */
+    private PeliculaResponse toResponse(Pelicula pelicula){
+        PeliculaResponse res = new PeliculaResponse();
+        res.setIdPelicula(pelicula.getIdPelicula());
+        res.setTitulo(pelicula.getTitulo());
+        res.setAño(pelicula.getAño());
+        res.setDescripcion(pelicula.getDescripcion());
+        res.setIdCategoria(pelicula.getCategoria().getIdCategoria());
+        res.setRutaImagen(pelicula.getImagen() != null ? pelicula.getImagen().getRutaFirebase() : null);
+        
+        return res;
+    }
+    
+    
 }

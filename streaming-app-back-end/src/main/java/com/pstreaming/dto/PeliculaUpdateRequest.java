@@ -9,6 +9,6 @@ public class PeliculaUpdateRequest {
     private String titulo;
     private LocalDate año;
     private String descripcion;
-    private String idCategoria;
+    private Long idCategoria;
     
 }
