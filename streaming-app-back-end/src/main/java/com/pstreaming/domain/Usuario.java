@@ -9,7 +9,7 @@ import lombok.Data;
 @Entity
 @Table(name = "usuario")
 public class Usuario {
-
+    
     private static final long serialVersionUID = 1L;
 
     @Id
