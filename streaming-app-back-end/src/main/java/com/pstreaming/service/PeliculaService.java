@@ -1,102 +1,103 @@
 package com.pstreaming.service;
 
-import com.pstreaming.domain.Categoria;
-import com.pstreaming.domain.Imagen;
-import com.pstreaming.domain.Pelicula;
-import com.pstreaming.dto.PeliculaResponse;
-import com.pstreaming.repository.PeliculaRepository;
-import com.pstreaming.repository.CategoriaRepository;
+import com.pstreaming.domain.*;
+import com.pstreaming.dto.*;
+import com.pstreaming.repository.*;
 import java.time.LocalDateTime;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class PeliculaService {
-    
+
     @Autowired
     private PeliculaRepository peliculaRepository;
     @Autowired
     private CategoriaRepository categoriaRepository;
     @Autowired
     private FirebaseStorageService firebaseService;
-    
+
     @Transactional(readOnly = true)
     public List<PeliculaResponse> listaPeliculas() {
         return peliculaRepository.findAll().stream()
                 .map(this::toResponse)
                 .toList();
     }
-    
+
     @Transactional(readOnly = true)
-    public Pelicula getPelicula(Pelicula pelicula){
+    public Pelicula getPelicula(Pelicula pelicula) {
         return peliculaRepository.
                 findById(pelicula.getIdPelicula()).orElse(null);
-        
+
     }
-    @Transactional (readOnly = true)
-    public Pelicula getPeliculaByID(Long id){
-        return peliculaRepository.findById(id).orElse(null);
-    }
-    @Transactional(readOnly = true)
-    public Pelicula getPeliculaByTitulo(String titulo) {
-        if (titulo == null || titulo.trim().isEmpty()) {
-            return null;
-        }
-        return peliculaRepository.findByTitulo(titulo);
-    }
-    
-    
+
     @Transactional
-    public PeliculaResponse save(PeliculaResponse request, MultipartFile imagenFile) {
-        Pelicula p = new Pelicula();
-        p.setTitulo(request.getTitulo());
-        p.setAño(request.getAño());
-        p.setDescripcion(request.getDescripcion());
-        
+    public PeliculaResponse saveMovie(PeliculaCreateRequest request, MultipartFile imagenFile) {
+        Pelicula pS = new Pelicula();
+
         Categoria categoria = categoriaRepository.findById(request.getIdCategoria())
                 .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
-        peliculaRepository.save(p);
-        
-        if(imagenFile != null && !imagenFile.isEmpty()){
+
+        if (imagenFile != null && !imagenFile.isEmpty()) {
             Imagen img = new Imagen();
-            img.setRutaFirebase(firebaseService.cargaImagen(imagenFile, "pelicula", p.getIdPelicula()));
+            img.setRutaFirebase(firebaseService.cargaImagen(imagenFile, "pelicula", pS.getIdPelicula()));
             img.setNombreArchivo(imagenFile.getOriginalFilename());
             img.setFechaCarga(LocalDateTime.now());
-            peliculaRepository.save(p);
+            pS.setImagen(img);
+            peliculaRepository.save(pS);
         }
-        return toResponse(p);
+
+        pS.setTitulo(request.getTitulo());
+        pS.setAño(request.getAño());
+        pS.setDescripcion(request.getDescripcion());
+        pS.setCategoria(categoria);
+        peliculaRepository.save(pS);
+
+        return toResponse(pS);
     }
-    
+
     @Transactional
-    public void delete(Pelicula Pelicula) {
+    public void deleteMovie(Pelicula Pelicula) {
         peliculaRepository.delete(Pelicula);
     }
 
     @Transactional
-    public Pelicula actualizar(Pelicula Pelicula) {
-        if (Pelicula == null || Pelicula.getIdPelicula()== null) {
-            throw new IllegalArgumentException("El Pelicula y su ID no pueden ser null");
-        }
+    public PeliculaResponse updateMovie(Long id, PeliculaUpdateRequest updateRequest, MultipartFile imagenFile) {
         
-        Optional<Pelicula> PeliculaExistente = peliculaRepository.findById(Pelicula.getIdPelicula());
-        if (PeliculaExistente.isEmpty()) {
-            throw new IllegalArgumentException("Pelicula no encontrado con ID: " + Pelicula.getIdPelicula());
+        Pelicula pU = peliculaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pelicula no encontrada"));
+        if (updateRequest.getTitulo() != null) {
+            pU.setTitulo(updateRequest.getTitulo());
         }
-        
-        if (Pelicula.getTitulo()!= null) {
-            Pelicula.setTitulo(Pelicula.getTitulo().trim().toLowerCase());
+        if (updateRequest.getAño() != null) {
+            pU.setAño(updateRequest.getAño());
         }
-        
-        return peliculaRepository.save(Pelicula);
+        if (updateRequest.getDescripcion() != null) {
+            pU.setDescripcion(updateRequest.getDescripcion());
+        }
+        if (updateRequest.getIdCategoria() != null) {
+            Categoria ct = categoriaRepository.findById(updateRequest.getIdCategoria())
+                    .orElseThrow(() -> new RuntimeException("Cetgoria no encontrada"));
+            pU.setCategoria(ct);
+        }
+
+        if (imagenFile != null && !imagenFile.isEmpty()) {
+            Imagen img = new Imagen();
+            img.setRutaFirebase(firebaseService.cargaImagen(imagenFile, "pelicula", pU.getIdPelicula()));
+            img.setNombreArchivo(imagenFile.getOriginalFilename());
+            img.setFechaCarga(LocalDateTime.now());
+            pU.setImagen(img);
+        }
+
+        peliculaRepository.save(pU);
+        return toResponse(pU);
     }
-    
-    
+
     /* Utilities */
-    private PeliculaResponse toResponse(Pelicula pelicula){
+    private PeliculaResponse toResponse(Pelicula pelicula) {
         PeliculaResponse res = new PeliculaResponse();
         res.setIdPelicula(pelicula.getIdPelicula());
         res.setTitulo(pelicula.getTitulo());
@@ -104,9 +105,8 @@ public class PeliculaService {
         res.setDescripcion(pelicula.getDescripcion());
         res.setIdCategoria(pelicula.getCategoria().getIdCategoria());
         res.setRutaImagen(pelicula.getImagen() != null ? pelicula.getImagen().getRutaFirebase() : null);
-        
+
         return res;
     }
-    
-    
+
 }

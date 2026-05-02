@@ -1,21 +1,30 @@
 package com.pstreaming.service;
 
-import com.pstreaming.domain.Serie;
-import com.pstreaming.repository.SerieRepository;
+import com.pstreaming.domain.*;
+import com.pstreaming.dto.*;
+import com.pstreaming.repository.*;
+import java.time.LocalDateTime;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class SerieService {
     
     @Autowired
     private SerieRepository SerieRepository;
+    @Autowired
+    private CategoriaRepository categoriaRepository;
+    @Autowired
+    private FirebaseStorageService firebaseService;
     
     @Transactional(readOnly = true)
-    public List<Serie> listaSeries() {
-        return SerieRepository.findAll();
+    public List<SerieResponse> listaSeries() {
+        return SerieRepository.findAll()
+                .stream().map(this::toResponse)
+                .toList();
     }
     
     @Transactional(readOnly = true)
@@ -66,5 +75,20 @@ public class SerieService {
             System.err.println("Error al eliminar usuario por ID: " + e.getMessage());
             return false;
         }
+    }
+    
+    /* Utilities */
+    private SerieResponse toResponse(Serie s){
+        SerieResponse res = new SerieResponse();
+        res.setIdSerie(s.getIdSerie());
+        res.setTitulo(s.getTitulo());
+        res.setTemporadas(s.getTemporadas());
+        res.setEpisodios(s.getEpisodios());
+        res.setAño(s.getAño());
+        res.setDescripcion(s.getDescripcion());
+        res.setIdCategoria(s.getCategoria().getIdCategoria());
+        res.setRutaImagen(s.getImagen() != null ? s.getImagen().getRutaFirebase() : null);
+        
+        return res;
     }
 }
