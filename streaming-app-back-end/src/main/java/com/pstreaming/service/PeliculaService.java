@@ -27,18 +27,11 @@ public class PeliculaService {
                 .toList();
     }
 
-    @Transactional(readOnly = true)
-    public Pelicula getPelicula(Pelicula pelicula) {
-        return peliculaRepository.
-                findById(pelicula.getIdPelicula()).orElse(null);
-
-    }
-
     @Transactional
-    public PeliculaResponse saveMovie(PeliculaCreateRequest request, MultipartFile imagenFile) {
+    public PeliculaResponse saveMovie(PeliculaCreateRequest rq, MultipartFile imagenFile) {
         Pelicula pS = new Pelicula();
 
-        Categoria categoria = categoriaRepository.findById(request.getIdCategoria())
+        Categoria ct = categoriaRepository.findById(rq.getIdCategoria())
                 .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
 
         if (imagenFile != null && !imagenFile.isEmpty()) {
@@ -50,36 +43,31 @@ public class PeliculaService {
             peliculaRepository.save(pS);
         }
 
-        pS.setTitulo(request.getTitulo());
-        pS.setAño(request.getAño());
-        pS.setDescripcion(request.getDescripcion());
-        pS.setCategoria(categoria);
+        pS.setTitulo(rq.getTitulo());
+        pS.setAño(rq.getAño());
+        pS.setDescripcion(rq.getDescripcion());
+        pS.setCategoria(ct);
         peliculaRepository.save(pS);
 
         return toResponse(pS);
     }
-
+    
     @Transactional
-    public void deleteMovie(Pelicula Pelicula) {
-        peliculaRepository.delete(Pelicula);
-    }
-
-    @Transactional
-    public PeliculaResponse updateMovie(Long id, PeliculaUpdateRequest updateRequest, MultipartFile imagenFile) {
+    public PeliculaResponse updateMovie(Long id, PeliculaUpdateRequest updateRq, MultipartFile imagenFile) {
         
         Pelicula pU = peliculaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pelicula no encontrada"));
-        if (updateRequest.getTitulo() != null) {
-            pU.setTitulo(updateRequest.getTitulo());
+        if (updateRq.getTitulo() != null) {
+            pU.setTitulo(updateRq.getTitulo());
         }
-        if (updateRequest.getAño() != null) {
-            pU.setAño(updateRequest.getAño());
+        if (updateRq.getAño() != null) {
+            pU.setAño(updateRq.getAño());
         }
-        if (updateRequest.getDescripcion() != null) {
-            pU.setDescripcion(updateRequest.getDescripcion());
+        if (updateRq.getDescripcion() != null) {
+            pU.setDescripcion(updateRq.getDescripcion());
         }
-        if (updateRequest.getIdCategoria() != null) {
-            Categoria ct = categoriaRepository.findById(updateRequest.getIdCategoria())
+        if (updateRq.getIdCategoria() != null) {
+            Categoria ct = categoriaRepository.findById(updateRq.getIdCategoria())
                     .orElseThrow(() -> new RuntimeException("Cetgoria no encontrada"));
             pU.setCategoria(ct);
         }
@@ -94,6 +82,13 @@ public class PeliculaService {
 
         peliculaRepository.save(pU);
         return toResponse(pU);
+    }
+    
+    /* por implementar falta tabla para los estados por separado */
+    @Transactional
+    public PeliculaResponse changeStatus(){
+        
+        return null;
     }
 
     /* Utilities */

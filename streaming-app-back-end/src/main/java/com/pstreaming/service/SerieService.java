@@ -12,73 +12,90 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class SerieService {
-    
+
     @Autowired
-    private SerieRepository SerieRepository;
+    private SerieRepository serieRepository;
     @Autowired
     private CategoriaRepository categoriaRepository;
     @Autowired
     private FirebaseStorageService firebaseService;
-    
+
     @Transactional(readOnly = true)
     public List<SerieResponse> listaSeries() {
-        return SerieRepository.findAll()
+        return serieRepository.findAll()
                 .stream().map(this::toResponse)
                 .toList();
     }
-    
-    @Transactional(readOnly = true)
-    public Serie getSerieByTitulo(String titulo) {
-        if (titulo == null || titulo.trim().isEmpty()) {
-            return null;
+
+    @Transactional
+    public SerieResponse saveSerie(SerieCreateRequest rq, MultipartFile imagenFile) {
+        Serie sS = new Serie();
+        
+        Categoria ct = categoriaRepository.findById(rq.getIdCategoria())
+                .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
+        
+        if (imagenFile != null && !imagenFile.isEmpty()) {
+            Imagen img = new Imagen();
+            img.setRutaFirebase(firebaseService.cargaImagen(imagenFile, "serie", sS.getIdSerie()));
+            img.setNombreArchivo(imagenFile.getOriginalFilename());
+            img.setFechaCarga(LocalDateTime.now());
+            serieRepository.save(sS);
         }
-        return SerieRepository.findByTitulo(titulo);
-    }
-    
-    @Transactional(readOnly = true)
-    public Serie getSerieByID(Long id){
-        return SerieRepository.findById(id).orElse(null);
+        sS.setTitulo(rq.getTitulo());
+        sS.setAño(rq.getAño());
+        sS.setTemporadas(rq.getTemporadas());
+        sS.setEpisodios(rq.getEpisodios());
+        sS.setDescripcion(rq.getDescripcion());
+        sS.setCategoria(ct);
+        serieRepository.save(sS);
+        
+        return toResponse(sS);
     }
     
     @Transactional
-    public Serie save(Serie serie) {
-        if (serie == null) {
-            throw new IllegalArgumentException("El usuario no puede ser null");
+    public SerieResponse updateSerie(Long id, SerieUpdateRequest updateRq, MultipartFile imagenFile){
+        Serie sU = serieRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Serie no encontrada"));
+               if (updateRq.getTitulo() != null) {
+            sU.setTitulo(updateRq.getTitulo());
         }
-        
-        if (serie.getTitulo()!= null) {
-            serie.setTitulo(serie.getTitulo().trim().toLowerCase());
+        if (updateRq.getAño() != null) {
+            sU.setAño(updateRq.getAño());
         }
-        
-        return SerieRepository.save(serie);
+        if (updateRq.getTemporadas() != 0) {
+            sU.setTemporadas(updateRq.getTemporadas());
+        }
+        if (updateRq.getEpisodios() != 0) {
+            sU.setEpisodios(updateRq.getEpisodios());
+        }
+        if (updateRq.getDescripcion() != null) {
+            sU.setDescripcion(updateRq.getDescripcion());
+        }
+        if (updateRq.getIdCategoria() != null) {
+            Categoria ct = categoriaRepository.findById(updateRq.getIdCategoria())
+                    .orElseThrow(() -> new RuntimeException("Cetgoria no encontrada"));
+            sU.setCategoria(ct);
+        }
+
+        if (imagenFile != null && !imagenFile.isEmpty()) {
+            Imagen img = new Imagen();
+            img.setRutaFirebase(firebaseService.cargaImagen(imagenFile, "serie", sU.getIdSerie()));
+            img.setNombreArchivo(imagenFile.getOriginalFilename());
+            img.setFechaCarga(LocalDateTime.now());
+            sU.setImagen(img);
+        }
+        return null;
     }
-    
+
+    /* por implementar falta tabla para los estados por separado */
     @Transactional
-    public void delete(Serie Serie) {
-        SerieRepository.delete(Serie);
+    public SerieResponse changeStatus() {
+
+        return null;
     }
-    
-    @Transactional
-    public boolean deleteById(Long id) {
-        if (id == null) {
-            return false;
-        }
-        
-        try {
-            if (!SerieRepository.existsById(id)) {
-                return false;
-            }
-            
-            SerieRepository.deleteById(id);
-            return true;
-        } catch (Exception e) {
-            System.err.println("Error al eliminar usuario por ID: " + e.getMessage());
-            return false;
-        }
-    }
-    
+
     /* Utilities */
-    private SerieResponse toResponse(Serie s){
+    private SerieResponse toResponse(Serie s) {
         SerieResponse res = new SerieResponse();
         res.setIdSerie(s.getIdSerie());
         res.setTitulo(s.getTitulo());
@@ -88,7 +105,7 @@ public class SerieService {
         res.setDescripcion(s.getDescripcion());
         res.setIdCategoria(s.getCategoria().getIdCategoria());
         res.setRutaImagen(s.getImagen() != null ? s.getImagen().getRutaFirebase() : null);
-        
+
         return res;
     }
 }

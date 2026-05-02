@@ -15,9 +15,8 @@ public class PeliculaController {
     @Autowired
     private PeliculaService peliculaService;
 
-//  se rastree una dirección de un archivo html
     @GetMapping()
-    public ResponseEntity<List<PeliculaResponse>> listMovie() {
+    public ResponseEntity<List<PeliculaResponse>> movieList() {
         return ResponseEntity.ok(peliculaService.listaPeliculas());
     }
 

@@ -108,20 +108,20 @@ public class UsuarioController {
         return "redirect:/dashboard";
     }
     
-// LOGOUT
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        authService.signOut(session);
-        return "redirect:/usuario/login?logout";
-    }
+//// LOGOUT
+//    @GetMapping("/logout")
+//    public String logout(HttpSession session) {
+//        authService.signOut(session);
+//        return "redirect:/usuario/login?logout";
+//    }
 
-    @GetMapping("/perfil")
-    public String perfil(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserDetailsI userDetails = (UserDetailsI) auth.getPrincipal();
-        Usuario usuario = userDetails.getUsuario();
-
-        model.addAttribute("usuario", usuario);
-        return "usuario/perfil";
-    }
+//    @GetMapping("/perfil")
+//    public String perfil(Model model) {
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        UserDetailsI userDetails = (UserDetailsI) auth.getPrincipal();
+//        Usuario usuario = userDetails.getUsuario();
+//
+//        model.addAttribute("usuario", usuario);
+//        return "usuario/perfil";
+//    }
 }
