@@ -1,7 +1,6 @@
 package com.pstreaming.service;
 
-import com.pstreaming.domain.UserDetailsI;
-import com.pstreaming.domain.Usuario;
+import com.pstreaming.domain.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

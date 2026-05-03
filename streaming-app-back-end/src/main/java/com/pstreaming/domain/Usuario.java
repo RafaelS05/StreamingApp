@@ -9,7 +9,7 @@ import lombok.Data;
 @Entity
 @Table(name = "usuario")
 public class Usuario {
-    
+
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -32,12 +32,14 @@ public class Usuario {
     @Column(name = "telefono")
     private String telefono;
 
+    /* Eliminar de la tabla usuario y manejar la imagen por separado
     @Column(name = "ruta_imagen")
     private String ruta_imagen;
-
+     */
+    
     @Column(name = "fecha_registro")
     private LocalDateTime fecha_registro;
-    
+
     @Column(name = "palabra_Clave")
     private String palabraClave;
 

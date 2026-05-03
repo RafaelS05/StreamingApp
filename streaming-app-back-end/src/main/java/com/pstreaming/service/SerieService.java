@@ -28,61 +28,67 @@ public class SerieService {
     }
 
     @Transactional
-    public SerieResponse saveSerie(SerieCreateRequest rq, MultipartFile imagenFile) {
-        Serie sS = new Serie();
+    public SerieResponse saveSerie(SerieCreateRequest request, MultipartFile imagenFile) {
+        Serie newSerie = new Serie();
         
-        Categoria ct = categoriaRepository.findById(rq.getIdCategoria())
+        Categoria categoria = categoriaRepository.findById(request.getIdCategoria())
                 .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
         
         if (imagenFile != null && !imagenFile.isEmpty()) {
             Imagen img = new Imagen();
-            img.setRutaFirebase(firebaseService.cargaImagen(imagenFile, "serie", sS.getIdSerie()));
+            img.setRutaFirebase(firebaseService.cargaImagen(imagenFile, "serie", newSerie.getIdSerie()));
             img.setNombreArchivo(imagenFile.getOriginalFilename());
             img.setFechaCarga(LocalDateTime.now());
-            serieRepository.save(sS);
+            serieRepository.save(newSerie);
         }
-        sS.setTitulo(rq.getTitulo());
-        sS.setAño(rq.getAño());
-        sS.setTemporadas(rq.getTemporadas());
-        sS.setEpisodios(rq.getEpisodios());
-        sS.setDescripcion(rq.getDescripcion());
-        sS.setCategoria(ct);
-        serieRepository.save(sS);
         
-        return toResponse(sS);
+        newSerie.setTitulo(request.getTitulo());
+        newSerie.setAño(request.getAño());
+        newSerie.setTemporadas(request.getTemporadas());
+        newSerie.setEpisodios(request.getEpisodios());
+        newSerie.setDescripcion(request.getDescripcion());
+        newSerie.setCategoria(categoria);
+        serieRepository.save(newSerie);
+        
+        return toResponse(newSerie);
     }
     
     @Transactional
-    public SerieResponse updateSerie(Long id, SerieUpdateRequest updateRq, MultipartFile imagenFile){
-        Serie sU = serieRepository.findById(id)
+    public SerieResponse updateSerie(Long id, SerieUpdateRequest updateRequest, MultipartFile imagenFile){
+        Serie updateSerie = serieRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Serie no encontrada"));
-               if (updateRq.getTitulo() != null) {
-            sU.setTitulo(updateRq.getTitulo());
+               if (updateRequest.getTitulo() != null) {
+            updateSerie.setTitulo(updateRequest.getTitulo());
         }
-        if (updateRq.getAño() != null) {
-            sU.setAño(updateRq.getAño());
+               
+        if (updateRequest.getAño() != null) {
+            updateSerie.setAño(updateRequest.getAño());
         }
-        if (updateRq.getTemporadas() != 0) {
-            sU.setTemporadas(updateRq.getTemporadas());
+        
+        if (updateRequest.getTemporadas() != 0) {
+            updateSerie.setTemporadas(updateRequest.getTemporadas());
         }
-        if (updateRq.getEpisodios() != 0) {
-            sU.setEpisodios(updateRq.getEpisodios());
+        
+        if (updateRequest.getEpisodios() != 0) {
+            updateSerie.setEpisodios(updateRequest.getEpisodios());
         }
-        if (updateRq.getDescripcion() != null) {
-            sU.setDescripcion(updateRq.getDescripcion());
+        
+        if (updateRequest.getDescripcion() != null) {
+            updateSerie.setDescripcion(updateRequest.getDescripcion());
         }
-        if (updateRq.getIdCategoria() != null) {
-            Categoria ct = categoriaRepository.findById(updateRq.getIdCategoria())
+        
+        if (updateRequest.getIdCategoria() != null) {
+            Categoria ct = categoriaRepository.findById(updateRequest.getIdCategoria())
                     .orElseThrow(() -> new RuntimeException("Cetgoria no encontrada"));
-            sU.setCategoria(ct);
+            updateSerie.setCategoria(ct);
         }
 
         if (imagenFile != null && !imagenFile.isEmpty()) {
             Imagen img = new Imagen();
-            img.setRutaFirebase(firebaseService.cargaImagen(imagenFile, "serie", sU.getIdSerie()));
+            img.setRutaFirebase(firebaseService.cargaImagen(imagenFile, "serie", updateSerie.getIdSerie()));
             img.setNombreArchivo(imagenFile.getOriginalFilename());
             img.setFechaCarga(LocalDateTime.now());
-            sU.setImagen(img);
+            updateSerie.setImagen(img);
         }
         return null;
     }

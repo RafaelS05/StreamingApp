@@ -45,6 +45,6 @@ public class SerieController {
 //            redirectAttributes.addFlashAttribute("error", messageSource.getMessage("pelicula.eliminar.error", null, Locale.getDefault()));
 //        }
 //        serieService.delete(serie);
-//        return "redirect:/serie/serie"; //XD
+//        return "redirect:/serie/serie";
 //    }
 }
