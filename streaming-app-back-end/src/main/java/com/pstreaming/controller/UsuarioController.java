@@ -1,12 +1,12 @@
 package com.pstreaming.controller;
 
-import com.pstreaming.domain.Usuario;
+import com.pstreaming.domain.*;
 import com.pstreaming.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.pstreaming.service.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -15,6 +15,10 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
+    @Autowired
+    private PasswordEncoder aEncoder;
+    @Autowired
+    private JwtService jwtService;
 
     // PROCESAR REGISTRO
     @PostMapping("/registro")
@@ -28,9 +32,14 @@ public class UsuarioController {
     @PostMapping("/login/password")
     public ResponseEntity<UsuarioLoginResponse> userLoginPassword(
             @RequestBody UsuarioLoginRequest request) {
-        Usuario usuario = usuarioService.getUsuatioByCorreo(request.getCorreo());
-        return null;
-        
+        Usuario usuario = usuarioService.getUsuarioByCorreo(request.getCorreo());
 
+        if (usuario == null || !aEncoder.matches(request.getPassword(), usuario.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        UsuarioLoginResponse res = new UsuarioLoginResponse();
+        res.setToken(jwtService.generateToken(new UserDetailsI(usuario)));
+        res.setTipo("Bearer");
+        return ResponseEntity.ok(res);
     }
 }

@@ -13,6 +13,7 @@ public class SerieResponse {
     private int episodios;
     private String rutaImagen;
     private String descripcion;
-    private Long idCategoria;
+    private String categoria;
+    private String estado;
 
 }

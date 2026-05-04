@@ -5,10 +5,11 @@ import lombok.*;
 
 @Data
 public class PeliculaCreateRequest {
-    
+
     private String titulo;
     private LocalDate año;
     private String descripcion;
     private Long idCategoria;
+    private Long idEstado;
     
 }

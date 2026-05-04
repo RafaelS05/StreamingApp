@@ -24,12 +24,16 @@ public class Serie {
 
     @Column(name = "temporadas")
     private int temporadas;
-    
+
     @Column(name = "episodios")
     private int episodios;
-    
+
     @Column(name = "descripcion")
     private String descripcion;
+
+    @ManyToOne
+    @JoinColumn(name = "id_estado", nullable = false)
+    private Estado estado;
 
     @ManyToOne
     @JoinColumn(name = "id_categoria", nullable = false)

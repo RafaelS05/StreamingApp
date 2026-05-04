@@ -1,8 +1,8 @@
 package com.pstreaming.service;
 
-import com.pstreaming.domain.Usuario;
+import com.pstreaming.domain.*;
 import com.pstreaming.dto.*;
-import com.pstreaming.repository.UsuarioRepository;
+import com.pstreaming.repository.*;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,31 +15,33 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
     @Autowired
+    private EstadoRepository estadoRepository;
+    @Autowired
     private PasswordEncoder aEncoder;
-    @Autowired
-    private AuthService authService;
-    @Autowired
-    private TwoFAPolicyService twoFAserivice;
+//    @Autowired
+//    private AuthService authService;
+//    @Autowired
+//    private TwoFAPolicyService twoFAserivice;
 
     @Transactional
-    public UsuarioResponse save(UsuarioRegistroRequest rq) {
-        Usuario u = new Usuario();
+    public UsuarioResponse save(UsuarioRegistroRequest request) {
+        Usuario usuario = new Usuario();
+        Estado estado = estadoRepository.findByNombre("ACTIVO");
+        usuario.setEstado(estado);
 
-        if (existeByCorreo(rq.getCorreo())) {
+        if (existeByCorreo(request.getCorreo())) {
             throw new RuntimeException("Este correo ya se encuentra registrado.");
         }
 
-//        if (twoFAserivice.require2FA(u)) {
-//            
-//        }
-        u.setNombre(rq.getNombre());
-        u.setApellido_1(rq.getApellido_1());
-        u.setCorreo(rq.getCorreo());
-        u.setPassword(aEncoder.encode(rq.getPassword()));
-        u.setTelefono(rq.getTelefono());
-        u.setPalabraClave(rq.getPalabraClave());
+        usuario.setNombre(request.getNombre());
+        usuario.setApellido_1(request.getApellido_1());
+        usuario.setCorreo(request.getCorreo());
+        usuario.setPassword(aEncoder.encode(request.getPassword()));
+        usuario.setTelefono(request.getTelefono());
+        usuario.setPalabraClave(request.getPalabraClave());
+        usuarioRepository.save(usuario);
 
-        return null;
+        return toResponse(usuario);
     }
 
     @Transactional
@@ -83,12 +85,7 @@ public class UsuarioService {
         res.setApellido_1(u.getApellido_1());
         res.setCorreo(u.getCorreo());
         res.setTelefono(u.getTelefono());
-
-        return res;
-    }
-
-    private UsuarioLoginResponse toResponseLogin(Usuario u) {
-        UsuarioLoginResponse res = new UsuarioLoginResponse();
+        res.setEstado(u.getEstado().getNombre());
 
         return res;
     }
@@ -102,7 +99,7 @@ public class UsuarioService {
     }
 
     @Transactional
-    public Usuario getUsuatioByCorreo(String correo) {
+    public Usuario getUsuarioByCorreo(String correo) {
         if (correo == null || correo.trim().isEmpty()) {
             return null;
         }

@@ -12,4 +12,6 @@ public class SerieUpdateRequest {
     private int episodios;
     private String descripcion;
     private Long idCategoria;
+    private Long idEstado;
+
 }

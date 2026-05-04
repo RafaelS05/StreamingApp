@@ -10,5 +10,6 @@ public class UsuarioResponse {
     private String apellido_1;
     private String correo;
     private String telefono;
+    private String estado;
 
 }

@@ -5,11 +5,10 @@ import com.pstreaming.service.*;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@Controller
+@RestController
 @RequestMapping("/api/serie")
 public class SerieController {
 
@@ -37,14 +36,4 @@ public class SerieController {
             @RequestPart(value = "imagen", required = false) MultipartFile imagenFile) {
         return ResponseEntity.ok(serieService.updateSerie(id, request, imagenFile));
     }
-
-//    @PostMapping("/eliminar")
-//    public String eliminar(@RequestParam("id_serie") Long id, RedirectAttributes redirectAttributes) {
-//        serie = serieService.getSerieByID(id);
-//        if (serie == null) {
-//            redirectAttributes.addFlashAttribute("error", messageSource.getMessage("pelicula.eliminar.error", null, Locale.getDefault()));
-//        }
-//        serieService.delete(serie);
-//        return "redirect:/serie/serie";
-//    }
 }

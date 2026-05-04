@@ -30,6 +30,10 @@ public class Pelicula {
     @JoinColumn(name = "id_categoria", nullable = false)
     private Categoria categoria;
 
+    @ManyToOne
+    @JoinColumn(name = "id_estado", nullable = false)
+    private Estado estado;
+
     // Relación con la tabla imagen — CascadeType.ALL para que al eliminar
     // la película también se elimine su imagen asociada en la tabla
     @OneToOne(cascade = CascadeType.ALL)

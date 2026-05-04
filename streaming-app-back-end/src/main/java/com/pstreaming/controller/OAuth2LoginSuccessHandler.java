@@ -37,7 +37,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler{
             usuario.setCorreo(correo);
             usuario.setNombre(nombre);
             usuario.setApellido_1(apellido);
-            usuarioService.save(usuario);
+            //usuarioService.save(rq);
         }
         HttpSession session = request.getSession();
         session.setAttribute("usuarioLogueado", usuario);

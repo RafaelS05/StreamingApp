@@ -32,11 +32,6 @@ public class Usuario {
     @Column(name = "telefono")
     private String telefono;
 
-    /* Eliminar de la tabla usuario y manejar la imagen por separado
-    @Column(name = "ruta_imagen")
-    private String ruta_imagen;
-     */
-    
     @Column(name = "fecha_registro")
     private LocalDateTime fecha_registro;
 
@@ -46,4 +41,8 @@ public class Usuario {
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "idUsuario", updatable = false)
     private List<Rol> roles;
+
+    @ManyToOne
+    @JoinColumn(name = "id_estado", nullable = false)
+    private Estado estado;
 }
