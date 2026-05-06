@@ -25,13 +25,16 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioResponse save(UsuarioRegistroRequest request) {
-        Usuario usuario = new Usuario();
-        Estado estado = estadoRepository.findByNombre("ACTIVO");
-        usuario.setEstado(estado);
 
         if (existeByCorreo(request.getCorreo())) {
             throw new RuntimeException("Este correo ya se encuentra registrado.");
         }
+        Usuario usuario = new Usuario();
+        Estado estado = estadoRepository.findByNombre("ACTIVO");
+        if (estado == null) {
+            throw new RuntimeException("Este usuario no cuenta con un estado definido.");
+        }
+        usuario.setEstado(estado);
 
         usuario.setNombre(request.getNombre());
         usuario.setApellido_1(request.getApellido_1());

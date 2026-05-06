@@ -28,7 +28,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain) throws ServletException, IOException {
 
         // Lee el header Authorization de la petición
-        final String authHeader = request.getHeader("Authorization");
+        String authHeader = request.getHeader("Authorization");
 
         // Si no hay header o no empieza con "Bearer " deja pasar la petición
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -36,41 +36,49 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        // Extrae solo el token quitando el prefijo "Bearer "
-        final String token = authHeader.substring(7);
+        try {
+            // Extrae solo el token quitando el prefijo "Bearer "
+            String token = authHeader.substring(7);
 
-        // Extrae el correo del payload del token
-        final String correo = jwtService.extractUsername(token);
+            // Extrae el correo del payload del token
+            String correo = jwtService.extractUsername(token);
+            // Solo procede si hay correo y todavía no hay autenticación establecida
+            if (correo != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-        // Solo procede si hay correo y todavía no hay autenticación establecida
-        if (correo != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                // Busca el usuario en la DB con ese correo
+                Usuario usuario = usuarioService.getUsuarioByCorreo(correo);
+                if (usuario == null) {
+                    filterChain.doFilter(request, response);
+                    return;
+                }
+                UserDetailsI userDetails = new UserDetailsI(usuario);
 
-            // Busca el usuario en la DB con ese correo
-            Usuario usuario = usuarioService.getUsuarioByCorreo(correo);
-            UserDetailsI userDetails = new UserDetailsI(usuario);
+                // Valida que el token sea válido para ese usuario
+                if (jwtService.isTokenValid(token, userDetails)) {
 
-            // Valida que el token sea válido para ese usuario
-            if (jwtService.isTokenValid(token, userDetails)) {
+                    // Crea el objeto de autenticación con los roles del usuario
+                    UsernamePasswordAuthenticationToken authToken
+                            = new UsernamePasswordAuthenticationToken(
+                                    userDetails,
+                                    null,
+                                    userDetails.getAuthorities()
+                            );
 
-                // Crea el objeto de autenticación con los roles del usuario
-                UsernamePasswordAuthenticationToken authToken
-                        = new UsernamePasswordAuthenticationToken(
-                                userDetails,
-                                null,
-                                userDetails.getAuthorities()
-                        );
+                    // Adjunta info de la petición actual al contexto de autenticación
+                    authToken.setDetails(
+                            new WebAuthenticationDetailsSource().buildDetails(request)
+                    );
 
-                // Adjunta info de la petición actual al contexto de autenticación
-                authToken.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
-                );
+                    // Establece la autenticación en el contexto de seguridad
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
 
-                // Establece la autenticación en el contexto de seguridad
-                SecurityContextHolder.getContext().setAuthentication(authToken);
             }
+        } catch (Exception e) {
+            // Deja continuar y spring devuelve 401
+            filterChain.doFilter(request, response);
+            return;
         }
-
-        // Deja continuar la petición al siguiente filtro o al controller
         filterChain.doFilter(request, response);
     }
 }
