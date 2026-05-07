@@ -40,6 +40,8 @@ public class UsuarioController {
         UsuarioLoginResponse res = new UsuarioLoginResponse();
         res.setToken(jwtService.generateToken(new UserDetailsI(usuario)));
         res.setTipo("Bearer");
+        res.setNombre(usuario.getNombre());
+        res.setRol(usuarioService.getRol(usuario));
         return ResponseEntity.ok(res);
     }
 }

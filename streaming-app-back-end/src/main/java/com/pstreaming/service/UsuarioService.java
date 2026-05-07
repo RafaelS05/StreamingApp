@@ -108,4 +108,16 @@ public class UsuarioService {
         }
         return usuarioRepository.findByCorreo(correo.trim().toLowerCase());
     }
+    
+    @Transactional
+    public String getRol(Usuario usuario){
+        if (usuario.getRoles() == null || usuario.getRoles().isEmpty()) {
+            return "USER";
+        }
+        return usuario.getRoles().stream()
+                .map(Rol::getNombre)
+                .filter(nombre -> "ADMIN".equals(nombre))
+                .findFirst()
+                .orElse("USER");
+    }
 }
