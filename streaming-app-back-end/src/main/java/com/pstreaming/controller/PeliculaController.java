@@ -15,7 +15,7 @@ public class PeliculaController {
     @Autowired
     private PeliculaService peliculaService;
 
-    @GetMapping()
+    @GetMapping("/list")
     public ResponseEntity<List<PeliculaResponse>> movieList() {
         return ResponseEntity.ok(peliculaService.listaPeliculas());
     }

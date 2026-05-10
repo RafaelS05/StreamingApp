@@ -97,7 +97,7 @@ public class UsuarioService {
 
         return res;
     }
-
+   
     @Transactional(readOnly = true)
     public boolean existeByCorreo(String correo) {
         if (correo == null || correo.trim().isEmpty()) {

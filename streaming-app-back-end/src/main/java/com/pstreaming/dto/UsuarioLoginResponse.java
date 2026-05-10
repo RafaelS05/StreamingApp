@@ -4,8 +4,9 @@ import lombok.Data;
 
 @Data
 public class UsuarioLoginResponse {
+
+    private String nombre;
+    private String rol;
     private String token;
     private String tipo;
-    private String rol;
-    private String nombre;
 }
