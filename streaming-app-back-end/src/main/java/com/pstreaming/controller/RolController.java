@@ -11,25 +11,22 @@ public class RolController {
     @ModelAttribute("esAdmin")
     public boolean esAdmin(HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
-        if (usuario == null || usuario.getRoles() == null) {
+        if (usuario == null || usuario.getRol() == null) {
             return false;
         }
 
-        return usuario.getRoles().stream()
-                .anyMatch(rol -> "ADMIN".equals(rol.getNombre()));
+        return usuario.getRol().equals("ADMIN");
 
     }
 
     @ModelAttribute("esUser")
     public boolean esUser(HttpSession session) {
         Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
-        if (usuario == null || usuario.getRoles() == null) {
+        if (usuario == null || usuario.getRol() == null) {
             return false;
         }
 
-        return usuario.getRoles().stream()
-                .anyMatch(rol -> "USER".equals(rol.getNombre()));
-
+        return usuario.getRol().equals("USER");
     }
 
     @ModelAttribute("usuarioActual")

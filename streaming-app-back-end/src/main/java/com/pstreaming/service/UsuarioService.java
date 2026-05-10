@@ -17,6 +17,8 @@ public class UsuarioService {
     @Autowired
     private EstadoRepository estadoRepository;
     @Autowired
+    private RolRepository rolRepository;
+    @Autowired
     private PasswordEncoder aEncoder;
 //    @Autowired
 //    private AuthService authService;
@@ -35,6 +37,8 @@ public class UsuarioService {
             throw new RuntimeException("Este usuario no cuenta con un estado definido.");
         }
         usuario.setEstado(estado);
+        
+        Rol rol = rolRepository.findByNombre("USER");
 
         usuario.setNombre(request.getNombre());
         usuario.setApellido_1(request.getApellido_1());
@@ -42,6 +46,7 @@ public class UsuarioService {
         usuario.setPassword(aEncoder.encode(request.getPassword()));
         usuario.setTelefono(request.getTelefono());
         usuario.setPalabraClave(request.getPalabraClave());
+        usuario.setRol(rol);
         usuarioRepository.save(usuario);
 
         return toResponse(usuario);
@@ -111,13 +116,9 @@ public class UsuarioService {
     
     @Transactional
     public String getRol(Usuario usuario){
-        if (usuario.getRoles() == null || usuario.getRoles().isEmpty()) {
+        if (usuario.getRol() == null) {
             return "USER";
         }
-        return usuario.getRoles().stream()
-                .map(Rol::getNombre)
-                .filter(nombre -> "ADMIN".equals(nombre))
-                .findFirst()
-                .orElse("USER");
+        return usuario.getRol().getNombre();
     }
 }

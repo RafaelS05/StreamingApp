@@ -5,10 +5,8 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "Estado")
+@Table(name = "estado")
 public class Estado {
-
-    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -2,7 +2,6 @@ package com.pstreaming.domain;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.Data;
 
 @Data
@@ -10,12 +9,10 @@ import lombok.Data;
 @Table(name = "usuario")
 public class Usuario {
 
-    private static final long serialVersionUID = 1L;
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idUsuario")
-    private Long idUsuario;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "idUsuario", columnDefinition = "VARCHAR(100)")
+    private String idUsuario;
 
     @Column(name = "nombre")
     private String nombre;
@@ -37,12 +34,12 @@ public class Usuario {
 
     @Column(name = "palabra_Clave")
     private String palabraClave;
-
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "idUsuario", updatable = false)
-    private List<Rol> roles;
+    
+    @ManyToOne
+    @JoinColumn(name = "id_rol")
+    private Rol rol;
 
     @ManyToOne
-    @JoinColumn(name = "id_estado", nullable = false)
+    @JoinColumn(name = "id_estado")
     private Estado estado;
 }

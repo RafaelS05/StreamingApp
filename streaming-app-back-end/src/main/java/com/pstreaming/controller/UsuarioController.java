@@ -37,8 +37,9 @@ public class UsuarioController {
         if (usuario == null || !aEncoder.matches(request.getPassword(), usuario.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+        UserDetailsI userDetailsI = new UserDetailsI(usuario);
         UsuarioLoginResponse res = new UsuarioLoginResponse();
-        res.setToken(jwtService.generateToken(new UserDetailsI(usuario)));
+        res.setToken(jwtService.generateToken(userDetailsI));
         res.setTipo("Bearer");
         res.setNombre(usuario.getNombre());
         res.setRol(usuarioService.getRol(usuario));

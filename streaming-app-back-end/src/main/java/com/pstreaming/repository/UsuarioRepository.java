@@ -3,7 +3,7 @@ package com.pstreaming.repository;
 import com.pstreaming.domain.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UsuarioRepository extends JpaRepository<Usuario, Long>{
+public interface UsuarioRepository extends JpaRepository<Usuario, String>{
     
     public Usuario findByCorreo(String correo);
     

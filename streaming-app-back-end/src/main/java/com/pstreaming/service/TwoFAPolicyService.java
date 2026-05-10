@@ -7,8 +7,7 @@ import org.springframework.stereotype.Service;
 public class TwoFAPolicyService {
     
     public boolean require2FA(Usuario usuario){
-        return usuario.getRoles() == null || usuario.getRoles().stream()
-                .noneMatch(r -> "USER".equals(r.getNombre()));
+        return usuario.getRol() == null || usuario.getRol().equals("USER");
+                
     }
-    
 }

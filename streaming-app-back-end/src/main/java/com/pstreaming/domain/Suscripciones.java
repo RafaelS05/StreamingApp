@@ -8,7 +8,6 @@ import lombok.Data;
 @Table(name = "suscripciones")
 public class Suscripciones {
     
-    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     
