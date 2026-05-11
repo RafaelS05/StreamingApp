@@ -11,7 +11,7 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "idUsuario", columnDefinition = "VARCHAR(100)")
+    @Column(name = "id_usuario", columnDefinition = "VARCHAR(100)")
     private String idUsuario;
 
     @Column(name = "nombre")

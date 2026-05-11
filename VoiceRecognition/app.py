@@ -108,7 +108,7 @@ class VozUsuario(base):  # type: ignore[valid-type, misc]
     id_voz = Column(BigInteger, primary_key=True, autoincrement=True)
     voice_print = Column(LargeBinary)
     voz_model = Column(String(100))
-    id_usuario = Column(BigInteger, nullable=False)
+    id_usuario = Column(String(100))
 
 
 DATABASE_URL = os.getenv("DATABASE_URL")
@@ -130,7 +130,7 @@ def get_db() -> Generator[Session, None, None]:
 
 @app.post("/enroll/{usuario_id}")
 async def enroll(
-    usuario_id: int,
+    usuario_id: str,
     audio: UploadFile = File(...),  # noqa: B008
     db: Session = Depends(get_db),  # noqa: B008
 ) -> dict[str, Any]:
@@ -168,7 +168,7 @@ async def enroll(
 
 @app.post("/verify/{usuario_id}")
 async def verify(
-    usuario_id: int,
+    usuario_id: str,
     audio: UploadFile = File(...),  # noqa: B008
     db: Session = Depends(get_db),  # noqa: B008
 ) -> VerifyResponse:

@@ -3,6 +3,7 @@ package com.pstreaming.service;
 import com.pstreaming.domain.*;
 import com.pstreaming.dto.*;
 import com.pstreaming.repository.*;
+import java.time.LocalDateTime;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,7 @@ public class UsuarioService {
         usuario.setTelefono(request.getTelefono());
         usuario.setPalabraClave(request.getPalabraClave());
         usuario.setRol(rol);
+        usuario.setFecha_registro(LocalDateTime.now());
         usuarioRepository.save(usuario);
 
         return toResponse(usuario);
