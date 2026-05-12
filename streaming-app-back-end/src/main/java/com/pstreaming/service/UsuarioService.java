@@ -21,10 +21,8 @@ public class UsuarioService {
     private RolRepository rolRepository;
     @Autowired
     private PasswordEncoder aEncoder;
-//    @Autowired
-//    private AuthService authService;
-//    @Autowired
-//    private TwoFAPolicyService twoFAserivice;
+    @Autowired
+    private TwoFAService twoFAserivice;
 
     @Transactional
     public UsuarioResponse save(UsuarioRegistroRequest request) {
@@ -38,7 +36,7 @@ public class UsuarioService {
             throw new RuntimeException("Este usuario no cuenta con un estado definido.");
         }
         usuario.setEstado(estado);
-        
+
         Rol rol = rolRepository.findByNombre("USER");
 
         usuario.setNombre(request.getNombre());
@@ -46,7 +44,12 @@ public class UsuarioService {
         usuario.setCorreo(request.getCorreo());
         usuario.setPassword(aEncoder.encode(request.getPassword()));
         usuario.setTelefono(request.getTelefono());
-        usuario.setPalabraClave(request.getPalabraClave());
+
+        if (!"SMS".equals(request.getMetodo2fa()) && !"VOZ".equals(request.getMetodo2fa())) {
+            throw new RuntimeException("Método 2FA inválido. Use SMS o VOZ.");
+        }
+        usuario.setMetodo2fa(request.getMetodo2fa());
+        
         usuario.setRol(rol);
         usuario.setFecha_registro(LocalDateTime.now());
         usuarioRepository.save(usuario);
@@ -99,7 +102,7 @@ public class UsuarioService {
 
         return res;
     }
-   
+
     @Transactional(readOnly = true)
     public boolean existeByCorreo(String correo) {
         if (correo == null || correo.trim().isEmpty()) {
@@ -115,9 +118,9 @@ public class UsuarioService {
         }
         return usuarioRepository.findByCorreo(correo.trim().toLowerCase());
     }
-    
+
     @Transactional
-    public String getRol(Usuario usuario){
+    public String getRol(Usuario usuario) {
         if (usuario.getRol() == null) {
             return "USER";
         }

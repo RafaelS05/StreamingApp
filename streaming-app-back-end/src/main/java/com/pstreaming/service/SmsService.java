@@ -3,7 +3,7 @@ package com.pstreaming.service;
 import org.springframework.stereotype.Service;
 import com.pstreaming.domain.TwilioConfig;
 import com.twilio.Twilio;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
 import org.springframework.beans.factory.annotation.Autowired;

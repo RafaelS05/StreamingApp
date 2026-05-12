@@ -32,9 +32,19 @@ public class Usuario {
     @Column(name = "fecha_registro")
     private LocalDateTime fecha_registro;
 
-    @Column(name = "palabra_Clave")
-    private String palabraClave;
+    @Column(name = "metodo_2fa")
+    private String metodo2fa;
+    /*
+        Paso 1: Datos básicos → nombre, correo, password, telefono, palabraClave
+    Paso 2: Enrollment de voz → graba frase → Spring lo manda al FastAPI → guarda confirmación
     
+    1. Password → válido → genera tempToken
+    2. Elige método 2FA:
+   ├── SMS        → código al teléfono → verifica → JWT
+   └── Voz        → graba frase → FastAPI verifica → JWT  
+    
+     */
+
     @ManyToOne
     @JoinColumn(name = "id_rol")
     private Rol rol;

@@ -15,6 +15,6 @@ public class UsuarioRegistroRequest {
     private String correo;
     private String password;
     private String telefono;
-    private String palabraClave;
+    private String metodo2fa;
 
 }

@@ -19,6 +19,8 @@ public class UsuarioController {
     private PasswordEncoder aEncoder;
     @Autowired
     private JwtService jwtService;
+    @Autowired
+    private TwoFAService twoFAService;
 
     // PROCESAR REGISTRO
     @PostMapping("/registro")
@@ -30,14 +32,22 @@ public class UsuarioController {
 
     // Login con contrasenna
     @PostMapping("/login/password")
-    public ResponseEntity<UsuarioLoginResponse> userLoginPassword(
+    public ResponseEntity<UsuarioLoginResponse> userTempLoginPassword(
             @RequestBody UsuarioLoginRequest request) {
         Usuario usuario = usuarioService.getUsuarioByCorreo(request.getCorreo());
-
+        UserDetailsI userDetailsI = new UserDetailsI(usuario);
+        
         if (usuario == null || !aEncoder.matches(request.getPassword(), usuario.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        UserDetailsI userDetailsI = new UserDetailsI(usuario);
+        if ("USER".equals(usuarioService.getRol(usuario))) {
+            UsuarioLoginResponse res = new UsuarioLoginResponse();
+            res.setToken(jwtService.generateTempToken(usuario));
+            res.setMetodo2fa(usuario.getMetodo2fa());
+            res.setTipo("Bearer_TEMP");
+            return ResponseEntity.ok(res);
+        }
+        
         UsuarioLoginResponse res = new UsuarioLoginResponse();
         res.setToken(jwtService.generateToken(userDetailsI));
         res.setTipo("Bearer");
