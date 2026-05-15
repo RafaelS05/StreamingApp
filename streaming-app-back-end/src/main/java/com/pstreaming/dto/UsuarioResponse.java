@@ -11,5 +11,6 @@ public class UsuarioResponse {
     private String correo;
     private String telefono;
     private String estado;
+    private Long metodoAuth;
 
 }

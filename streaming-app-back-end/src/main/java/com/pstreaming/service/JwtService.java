@@ -10,7 +10,6 @@ import io.jsonwebtoken.security.Keys;
 import java.util.Date;
 import java.util.function.Function;
 import javax.crypto.SecretKey;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 
 @Service
@@ -28,8 +27,6 @@ public class JwtService {
     private long jwtExpiration;
     @Value("${jwt.temp.expiration}")
     private long jwtTempExpiration;
-    @Autowired
-    private UsuarioService usuarioService;
 
     /* Convierte el String secreto en un SecretKey criptográfico
      JJWT necesita un objeto SecretKey, no un String directamente*/
@@ -95,7 +92,7 @@ public class JwtService {
 
     public boolean isTempToken(String token) {
         Claims claims = extractAllClaims(token);
-        /* Revisa el claim "scope" que agregamos en generateTempToken */
+        /* Revisa el claim "scope" en generateTempToken */
         return "2fa-pending".equals(claims.get("scope", String.class));
     }
 

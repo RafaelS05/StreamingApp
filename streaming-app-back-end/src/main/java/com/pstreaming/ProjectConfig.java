@@ -29,7 +29,11 @@ public class ProjectConfig {
                 .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                         "/api/usuario/registro",
-                        "/api/usuario/login/password"
+                        "/api/usuario/login/password",
+                        "/api/2fa/verificar-sms",
+                        "/api/2fa/voz",
+                        "/api/voz/enroll/*",
+                        "/api/metodo-auth"
                 ).permitAll()
                 .anyRequest().authenticated()
                 )

@@ -97,11 +97,24 @@ public class SerieService {
         return toResponse(updateSerie);
     }
 
-    /* por implementar falta tabla para los estados por separado */
-    @Transactional
-    public SerieResponse changeStatus() {
+    @Transactional(readOnly = true)
+    public SerieResponse findById(Long id) {
+        Serie serie = serieRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Serie no encontrada"));
+        return toResponse(serie);
+    }
 
-        return null;
+    @Transactional
+    public SerieResponse changeStatus(Long id, String estadoNombre) {
+        Serie serie = serieRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Serie no encontrada"));
+        Estado estado = estadoRepository.findByNombre(estadoNombre);
+        if (estado == null) {
+            throw new RuntimeException("Estado no encontrado: " + estadoNombre);
+        }
+        serie.setEstado(estado);
+        serieRepository.save(serie);
+        return toResponse(serie);
     }
 
     /* Utilities */

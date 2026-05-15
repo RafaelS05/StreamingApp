@@ -41,8 +41,8 @@ public class TwoFAService {
         
         System.out.println("=== DEBUG VERIFY CODE ===");
         System.out.println("Code ingresado: '" + inputCode + "'");
-        
-        if (!entry.codigo.equals(inputCode) || entry == null) {
+       
+        if (entry == null || !entry.codigo.equals(inputCode)) {
             return false;
         }
         

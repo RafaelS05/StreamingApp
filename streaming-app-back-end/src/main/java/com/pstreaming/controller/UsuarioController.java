@@ -35,19 +35,22 @@ public class UsuarioController {
     public ResponseEntity<UsuarioLoginResponse> userTempLoginPassword(
             @RequestBody UsuarioLoginRequest request) {
         Usuario usuario = usuarioService.getUsuarioByCorreo(request.getCorreo());
-        UserDetailsI userDetailsI = new UserDetailsI(usuario);
-        
+
         if (usuario == null || !aEncoder.matches(request.getPassword(), usuario.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+        UserDetailsI userDetailsI = new UserDetailsI(usuario);
         if ("USER".equals(usuarioService.getRol(usuario))) {
             UsuarioLoginResponse res = new UsuarioLoginResponse();
             res.setToken(jwtService.generateTempToken(usuario));
-            res.setMetodo2fa(usuario.getMetodo2fa());
+            if ("SMS".equals(usuario.getMetodoAuth().getNombre())) {
+                twoFAService.sendVerificationCode(usuario.getCorreo(), usuario.getTelefono());
+            }
+            res.setMetodoAuth(usuario.getMetodoAuth().getIdMetodo());
             res.setTipo("Bearer_TEMP");
             return ResponseEntity.ok(res);
         }
-        
+
         UsuarioLoginResponse res = new UsuarioLoginResponse();
         res.setToken(jwtService.generateToken(userDetailsI));
         res.setTipo("Bearer");

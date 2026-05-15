@@ -29,11 +29,23 @@ public class SerieController {
 
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<SerieResponse> getSerie(@PathVariable Long id) {
+        return ResponseEntity.ok(serieService.findById(id));
+    }
+
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<SerieResponse> updateSerie(
             @PathVariable Long id,
             @RequestPart("datos") SerieUpdateRequest request,
             @RequestPart(value = "imagen", required = false) MultipartFile imagenFile) {
         return ResponseEntity.ok(serieService.updateSerie(id, request, imagenFile));
+    }
+
+    @PatchMapping("/{id}/estado/{estado}")
+    public ResponseEntity<SerieResponse> changeStatus(
+            @PathVariable Long id,
+            @PathVariable String estado) {
+        return ResponseEntity.ok(serieService.changeStatus(id, estado));
     }
 }

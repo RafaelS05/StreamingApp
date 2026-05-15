@@ -20,9 +20,9 @@ public class UsuarioService {
     @Autowired
     private RolRepository rolRepository;
     @Autowired
-    private PasswordEncoder aEncoder;
+    private MetodoAuthRepository metodoAuthRepository;
     @Autowired
-    private TwoFAService twoFAserivice;
+    private PasswordEncoder aEncoder;
 
     @Transactional
     public UsuarioResponse save(UsuarioRegistroRequest request) {
@@ -45,11 +45,10 @@ public class UsuarioService {
         usuario.setPassword(aEncoder.encode(request.getPassword()));
         usuario.setTelefono(request.getTelefono());
 
-        if (!"SMS".equals(request.getMetodo2fa()) && !"VOZ".equals(request.getMetodo2fa())) {
-            throw new RuntimeException("Método 2FA inválido. Use SMS o VOZ.");
-        }
-        usuario.setMetodo2fa(request.getMetodo2fa());
+        MetodoAuth metodo = metodoAuthRepository.findById(request.getMetodoAuth())
+                .orElseThrow(() -> new RuntimeException("Metodo Invalido"));
         
+        usuario.setMetodoAuth(metodo);
         usuario.setRol(rol);
         usuario.setFecha_registro(LocalDateTime.now());
         usuarioRepository.save(usuario);
@@ -99,6 +98,7 @@ public class UsuarioService {
         res.setCorreo(u.getCorreo());
         res.setTelefono(u.getTelefono());
         res.setEstado(u.getEstado().getNombre());
+        res.setMetodoAuth(u.getMetodoAuth().getIdMetodo());
 
         return res;
     }
@@ -118,7 +118,7 @@ public class UsuarioService {
         }
         return usuarioRepository.findByCorreo(correo.trim().toLowerCase());
     }
-
+   
     @Transactional
     public String getRol(Usuario usuario) {
         if (usuario.getRol() == null) {

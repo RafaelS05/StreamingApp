@@ -86,11 +86,24 @@ public class PeliculaService {
         return toResponse(updateMovie);
     }
 
-    /* por implementar falta tabla para los estados por separado */
-    @Transactional
-    public PeliculaResponse changeStatus() {
+    @Transactional(readOnly = true)
+    public PeliculaResponse findById(Long id) {
+        Pelicula pelicula = peliculaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pelicula no encontrada"));
+        return toResponse(pelicula);
+    }
 
-        return null;
+    @Transactional
+    public PeliculaResponse changeStatus(Long id, String estadoNombre) {
+        Pelicula pelicula = peliculaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pelicula no encontrada"));
+        Estado estado = estadoRepository.findByNombre(estadoNombre);
+        if (estado == null) {
+            throw new RuntimeException("Estado no encontrado: " + estadoNombre);
+        }
+        pelicula.setEstado(estado);
+        peliculaRepository.save(pelicula);
+        return toResponse(pelicula);
     }
 
     /* Utilities */

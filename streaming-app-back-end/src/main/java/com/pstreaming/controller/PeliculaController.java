@@ -26,7 +26,11 @@ public class PeliculaController {
             @RequestPart(value = "imagen", required = false) MultipartFile imagenFile) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(peliculaService.saveMovie(request, imagenFile));
+    }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<PeliculaResponse> getMovie(@PathVariable Long id) {
+        return ResponseEntity.ok(peliculaService.findById(id));
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -35,5 +39,12 @@ public class PeliculaController {
             @RequestPart("datos") PeliculaUpdateRequest request,
             @RequestPart(value = "imagen", required = false) MultipartFile imagenFile) {
         return ResponseEntity.ok(peliculaService.updateMovie(id, request, imagenFile));
+    }
+
+    @PatchMapping("/{id}/estado/{estado}")
+    public ResponseEntity<PeliculaResponse> changeStatus(
+            @PathVariable Long id,
+            @PathVariable String estado) {
+        return ResponseEntity.ok(peliculaService.changeStatus(id, estado));
     }
 }

@@ -31,7 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
 
         // Si no hay header o no empieza con "Bearer " deja pasar la petición
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if (authHeader == null || !authHeader.startsWith("Bearer")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -42,6 +42,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             // Extrae el correo del payload del token
             String correo = jwtService.extractUsername(token);
+
+            if (jwtService.isTempToken(token)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
             // Solo procede si hay correo y todavía no hay autenticación establecida
             if (correo != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
