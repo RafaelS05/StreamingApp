@@ -46,6 +46,7 @@ public class TwoFactorAuthController {
         UsuarioLoginResponse res = new UsuarioLoginResponse();
         res.setToken(jwtService.generateToken(userDetailsI));
         res.setTipo("Bearer");
+        res.setIdUsuario(usuario.getIdUsuario());
         res.setNombre(usuario.getNombre());
         res.setRol(usuarioService.getRol(usuario));
 
@@ -75,17 +76,10 @@ public class TwoFactorAuthController {
         UsuarioLoginResponse res = new UsuarioLoginResponse();
         res.setToken(jwtService.generateToken(userDetailsI));
         res.setTipo("Bearer");
+        res.setIdUsuario(usuario.getIdUsuario());
         res.setNombre(usuario.getNombre());
         res.setRol(usuarioService.getRol(usuario));
 
         return ResponseEntity.ok(res);
-    }
-
-    @PostMapping("/enroll")
-    public String ProcesarEnroll(@RequestParam("audio") MultipartFile audio,
-            HttpSession session,
-            RedirectAttributes redirect) {
-
-        return null;
     }
 }

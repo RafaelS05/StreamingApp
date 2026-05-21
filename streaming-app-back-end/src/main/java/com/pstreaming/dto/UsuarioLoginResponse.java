@@ -4,7 +4,8 @@ import lombok.Data;
 
 @Data
 public class UsuarioLoginResponse {
-
+    
+    private String idUsuario;
     private String nombre;
     private String rol;
     private Long metodoAuth;

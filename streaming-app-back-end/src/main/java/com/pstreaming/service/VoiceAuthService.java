@@ -22,7 +22,7 @@ public class VoiceAuthService {
         this.webClient = builder.baseUrl(baseUrl).build();
     }
 
-    public void enroll(Usuario usuario, MultipartFile audio) {
+    public boolean enroll(Usuario usuario, MultipartFile audio) {
         LinkedMultiValueMap<String, Object> data = multipart(audio, "audio");
 
         webClient.post()
@@ -32,6 +32,11 @@ public class VoiceAuthService {
                 .retrieve()
                 .bodyToMono(Void.class)
                 .block();
+
+        if (audio == null) {
+            throw new IllegalStateException("Respuesta inválida del la verificación del micro-servicio");
+        }
+        return Boolean.TRUE;
     }
 
     public boolean verify(Usuario usuario, MultipartFile audio) {

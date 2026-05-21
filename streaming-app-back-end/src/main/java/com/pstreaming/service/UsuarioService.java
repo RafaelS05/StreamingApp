@@ -47,7 +47,7 @@ public class UsuarioService {
 
         MetodoAuth metodo = metodoAuthRepository.findById(request.getMetodoAuth())
                 .orElseThrow(() -> new RuntimeException("Metodo Invalido"));
-        
+
         usuario.setMetodoAuth(metodo);
         usuario.setRol(rol);
         usuario.setFecha_registro(LocalDateTime.now());
@@ -118,7 +118,14 @@ public class UsuarioService {
         }
         return usuarioRepository.findByCorreo(correo.trim().toLowerCase());
     }
-   
+
+    @Transactional(readOnly = true)
+    public Usuario findById(String idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        return usuario;
+    }
+
     @Transactional
     public String getRol(Usuario usuario) {
         if (usuario.getRol() == null) {
