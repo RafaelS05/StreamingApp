@@ -1,59 +1,56 @@
 package com.pstreaming;
 
-import com.pstreaming.controller.OAuth2LoginSuccessHandler;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.*;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.*;
 
 @Configuration
 @EnableWebSecurity
 public class ProjectConfig {
 
     @Autowired
-    private OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+    private JwtAuthenticationFilter jwtFilter;
 
+//    @Autowired
+//    private OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     @Bean
-    public PasswordEncoder aEncoder() {
-        return new BCryptPasswordEncoder();
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(sess -> sess
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests(auth -> auth
+                .requestMatchers(
+                        "/api/usuario/registro",
+                        "/api/usuario/login/password",
+                        "/api/2fa/verificar-sms",
+                        "/api/2fa/voz",
+                        "/api/voz/enroll/*",
+                        "/api/metodo-auth"
+                ).permitAll()
+                .anyRequest().authenticated()
+                )
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
 
- @Bean
-public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http
-            .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
-//        .authorizeHttpRequests(authz -> authz
-//            .requestMatchers("/usuario/registro", "/usuario/login", "/usuario/2fa", "/dashboard", "/logout", "/index", "/").permitAll()
-//            .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
-//            .anyRequest().authenticated()
-//        )
-//        .oauth2Login(oauth2 -> oauth2
-//            .loginPage("/usuario/login")
-//            .successHandler(oAuth2LoginSuccessHandler)
-//        )
-//        .formLogin(form -> form
-//            .loginPage("/usuario/login")
-//            .loginProcessingUrl("/spring-security-login")
-//            .defaultSuccessUrl("/dashboard")
-//            .permitAll()
-//        )
-//        .csrf(csrf -> csrf
-//            .ignoringRequestMatchers("/usuario/login", "/usuario/2fa")
-//        );
-    return http.build();
-}
-
-
     @Bean
-    public CharacterEncodingFilter characterEncodingFilter() {
-        CharacterEncodingFilter filter = new CharacterEncodingFilter();
-        filter.setEncoding("UTF-8");
-        filter.setForceEncoding(true);
-        return filter;
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 }

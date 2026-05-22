@@ -1,80 +1,50 @@
 package com.pstreaming.controller;
 
-import com.pstreaming.domain.Categoria;
-import com.pstreaming.domain.Pelicula;
-import com.pstreaming.service.CategoriaService;
-import com.pstreaming.service.FirebaseStorageService;
+import com.pstreaming.dto.*;
 import com.pstreaming.service.PeliculaService;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-@Controller
-@RequestMapping("/pelicula")
+@RestController
+@RequestMapping("/api/pelicula")
 public class PeliculaController {
 
     @Autowired
     private PeliculaService peliculaService;
 
-    @Autowired
-    private CategoriaService categoriaService;
-
-    @Autowired
-    private FirebaseStorageService firebaseStorageService;
-
-    @Autowired
-    private MessageSource messageSource;
-
-//  se rastree una dirección de un archivo html
-    @GetMapping("/pelicula")
-    public String pelicula(Model model) {
-        List<Pelicula> peliculas = peliculaService.listaPeliculas();
-        List<Categoria> categorias = categoriaService.listaCategorias();
-
-        Map<Long, String> categoriasMap = categorias.stream()
-                .collect(Collectors.toMap(Categoria::getIdCategoria,
-                        Categoria::getNombre));
-
-        model.addAttribute("peliculas", peliculas);
-        model.addAttribute("categorias", categorias);
-        model.addAttribute("categoriasMap", categoriasMap);
-        model.addAttribute("pelicula", new Pelicula());
-        return "pelicula/pelicula";
+    @GetMapping("/list")
+    public ResponseEntity<List<PeliculaResponse>> movieList() {
+        return ResponseEntity.ok(peliculaService.listaPeliculas());
     }
 
-    @PostMapping("/guardar")
-    public String guardar(Pelicula pelicula,
-            @RequestParam("imagenFile") MultipartFile imagenFile,
-            RedirectAttributes redirectAttributes) {
-        if (!imagenFile.isEmpty()) {
-            peliculaService.save(pelicula);
-            String ruta_imagen = firebaseStorageService.cargaImagen(imagenFile, "pelicula", pelicula.getIdPelicula());
-            pelicula.setRutaImagen(ruta_imagen);
-        }
-        peliculaService.save(pelicula);
-        redirectAttributes.addFlashAttribute("error", messageSource.getMessage("pelicula.error", null, Locale.getDefault()));
-        return "redirect:/pelicula/pelicula";
-    }
-    
-    @PostMapping("/eliminar")
-    public String eliminar(@RequestParam("id_pelicula") Long id, RedirectAttributes redirectAttributes, Pelicula pelicula){
-        pelicula = peliculaService.getPeliculaByID(id);
-        if (pelicula == null) {
-            redirectAttributes.addFlashAttribute("error", messageSource.getMessage("pelicula.eliminar.error", null, Locale.getDefault()));
-        }
-        peliculaService.delete(pelicula);
-        return "redirect:/pelicula/pelicula";
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<PeliculaResponse> saveMovie(
+            @RequestPart("datos") PeliculaCreateRequest request,
+            @RequestPart(value = "imagen", required = false) MultipartFile imagenFile) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(peliculaService.saveMovie(request, imagenFile));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<PeliculaResponse> getMovie(@PathVariable Long id) {
+        return ResponseEntity.ok(peliculaService.findById(id));
+    }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<PeliculaResponse> updateMovie(
+            @PathVariable Long id,
+            @RequestPart("datos") PeliculaUpdateRequest request,
+            @RequestPart(value = "imagen", required = false) MultipartFile imagenFile) {
+        return ResponseEntity.ok(peliculaService.updateMovie(id, request, imagenFile));
+    }
+
+    @PatchMapping("/{id}/estado/{estado}")
+    public ResponseEntity<PeliculaResponse> changeStatus(
+            @PathVariable Long id,
+            @PathVariable String estado) {
+        return ResponseEntity.ok(peliculaService.changeStatus(id, estado));
+    }
 }

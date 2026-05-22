@@ -5,13 +5,15 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "role")
-public class Role {
-
-    private static final long serialVersionUID = 1L;
+@Table(name = "estado")
+public class Estado {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String rol;
+    @Column(name = "idEstado")
+    private Long idEstado;
+
+    @Column(name = "nombre")
+    private String nombre;
 
 }

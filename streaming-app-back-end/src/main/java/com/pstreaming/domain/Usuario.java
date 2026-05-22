@@ -2,7 +2,6 @@ package com.pstreaming.domain;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.Data;
 
 @Data
@@ -10,12 +9,10 @@ import lombok.Data;
 @Table(name = "usuario")
 public class Usuario {
 
-    private static final long serialVersionUID = 1L;
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idUsuario")
-    private Long idUsuario;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id_usuario", columnDefinition = "VARCHAR(100)")
+    private String idUsuario;
 
     @Column(name = "nombre")
     private String nombre;
@@ -32,16 +29,29 @@ public class Usuario {
     @Column(name = "telefono")
     private String telefono;
 
-    @Column(name = "ruta_imagen")
-    private String ruta_imagen;
-
     @Column(name = "fecha_registro")
     private LocalDateTime fecha_registro;
-    
-    @Column(name = "palabra_Clave")
-    private String palabraClave;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "idUsuario", updatable = false)
-    private List<Rol> roles;
+    @ManyToOne
+    @JoinColumn(name = "id_rol")
+    private Rol rol;
+
+    @ManyToOne
+    @JoinColumn(name = "id_estado")
+    private Estado estado;
+
+    /*
+        Paso 1: Datos básicos → nombre, correo, password, telefono, palabraClave
+    Paso 2: Enrollment de voz → graba frase → Spring lo manda al FastAPI → guarda confirmación
+    
+    1. Password → válido → genera tempToken
+    2. Elige método 2FA:
+   ├── SMS        → código al teléfono → verifica → JWT
+   └── Voz        → graba frase → FastAPI verifica → JWT  
+    
+     */
+    @ManyToOne
+    @JoinColumn(name = "id_metodo_auth")
+    private MetodoAuth metodoAuth;
+
 }

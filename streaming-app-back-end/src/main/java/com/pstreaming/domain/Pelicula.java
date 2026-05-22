@@ -10,8 +10,6 @@ import lombok.Data;
 @Table(name = "pelicula")
 public class Pelicula {
 
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_pelicula")
@@ -23,9 +21,6 @@ public class Pelicula {
     @Column(name = "año")
     private LocalDate año;
 
-    @Column(name = "ruta_imagen")
-    private String rutaImagen;
-
     @Column(name = "descripcion")
     private String descripcion;
 
@@ -33,4 +28,13 @@ public class Pelicula {
     @JoinColumn(name = "id_categoria", nullable = false)
     private Categoria categoria;
 
+    @ManyToOne
+    @JoinColumn(name = "id_estado", nullable = false)
+    private Estado estado;
+
+    // Relación con la tabla imagen — CascadeType.ALL para que al eliminar
+    // la película también se elimine su imagen asociada en la tabla
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_imagen", nullable = true)
+    private Imagen imagen;
 }

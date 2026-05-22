@@ -1,151 +1,85 @@
 package com.pstreaming.controller;
 
+import com.pstreaming.domain.UserDetailsI;
 import com.pstreaming.domain.Usuario;
-import com.pstreaming.service.TwoFAService;
-import com.pstreaming.service.AuthService;
-import com.pstreaming.service.VoiceAuthService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.util.Map;
+import com.pstreaming.dto.*;
+import com.pstreaming.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-@Controller
-@RequestMapping("/usuario")
+@RestController
+@RequestMapping("/api/2fa")
 public class TwoFactorAuthController {
 
     @Autowired
-    private TwoFAService FAService;
-    @Autowired
-    private AuthService authService;
+    private TwoFAService twoFAService;
     @Autowired
     private VoiceAuthService voiceService;
+    @Autowired
+    private UsuarioService usuarioService;
+    @Autowired
+    private JwtService jwtService;
 
-    @GetMapping("/2fa")
-    public String mostrar2FA(HttpSession session, Model model, RedirectAttributes redirect) {
-        model.addAttribute("modo", "2fa");
-        return "usuario/2fa";
-    }
-    
-    @PostMapping("/2fa/send-sms")
-    @ResponseBody
-    public ResponseEntity<?> sendSmsCodigo(HttpSession session){
-       Usuario usuario = (Usuario) session.getAttribute("2faUser");
-        if (usuario == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("error", "Sesion Expirada"));
-        }
-        String code = FAService.sendVerificationCode(usuario.getTelefono());
-        session.setAttribute("2faCode", code);
-        return ResponseEntity.ok(Map.of("mensaje", "SMS enviado correctamente"));
-    }
-    
+    @PostMapping("/verificar-sms")
+    public ResponseEntity<UsuarioLoginResponse> verificarSMS(
+            @RequestBody SmsVerifyRequest request) {
 
-    @PostMapping("/2fa/code")
-    public String verificar2FACode(HttpServletRequest request,
-            HttpServletResponse response,
-            @RequestParam String codigoIngresado,
-            HttpSession session, RedirectAttributes redirect) {
-
-        String codigoEnviado = (String) session.getAttribute("2faCode");
-        Usuario usuario = (Usuario) session.getAttribute("2faUser");
-
-        if (codigoIngresado == null || codigoEnviado == null) {
-            redirect.addFlashAttribute("error", "Sesión expirada. Por favor, inicie sesión nuevamente.");
-            return "redirect:/usuario/login";
+        if (!jwtService.isTempToken(request.getTempToken())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        String codigoLimpio = codigoIngresado.trim();
-        boolean codigoValido = FAService.verifyCode(usuario.getTelefono(), codigoLimpio, codigoEnviado);
+        String correo = jwtService.extractUsername(request.getTempToken());
+        Usuario usuario = usuarioService.getUsuarioByCorreo(correo);
 
-        if (codigoValido) {
-            try {
-                authService.signIn(usuario, session);
-                return "redirect:/index";
+        String codigo = request.getCodigo();
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                redirect.addFlashAttribute("error", "Error interno. Intente nuevamente.");
-                return "redirect:/usuario/2fa";
-            }
+        if (!twoFAService.verifyCode(correo, codigo)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        redirect.addFlashAttribute("error", "Código incorrecto");
-        return "redirect:/usuario/2fa";
+        UserDetailsI userDetailsI = new UserDetailsI(usuario);
+
+        UsuarioLoginResponse res = new UsuarioLoginResponse();
+        res.setToken(jwtService.generateToken(userDetailsI));
+        res.setTipo("Bearer");
+        res.setIdUsuario(usuario.getIdUsuario());
+        res.setNombre(usuario.getNombre());
+        res.setRol(usuarioService.getRol(usuario));
+
+        return ResponseEntity.ok(res);
     }
-    
+
     //Verify
-    @PostMapping("/2fa/voz")
-    public String verificarConVoz(@RequestParam("audio") MultipartFile audio,
-            HttpServletResponse response,
-            HttpSession session, RedirectAttributes redirect) {
+    @PostMapping("/voz")
+    public ResponseEntity<UsuarioLoginResponse> verificarVoz(
+            @RequestHeader("X-Temp-Token") String tempToken,
+            @RequestParam MultipartFile audio) {
 
-        Usuario usuario = (Usuario) session.getAttribute("2faUser");
+        System.out.println("=== tempToken received: '" + tempToken + "'");
+        System.out.println("=== tempToken length: " + tempToken.length());
 
-        if (usuario == null) {
-            redirect.addFlashAttribute("error", "Sesión expirada. Por favor, inicie sesión nuevamente.");
-            return "redirect:/usuario/login";
-        }
-        if (audio == null || audio.isEmpty()) {
-            redirect.addFlashAttribute("error", "Debe grabar el audio.");
-            return "redirect:/usuario/2fa";
+        if (!jwtService.isTempToken(tempToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        try {
-            boolean ok = voiceService.verify(usuario, audio);
-            if (!ok) {
-                redirect.addFlashAttribute("error", "Voz no coincide.");
-                return "redirect:/usuario/2fa";
-            }
-            authService.signIn(usuario, session);
+        String correo = jwtService.extractUsername(tempToken);
+        Usuario usuario = usuarioService.getUsuarioByCorreo(correo);
 
-            session.removeAttribute("2faUser");
-
-            return "redirect:/index";
-
-        } catch (Exception e) {
-            redirect.addFlashAttribute("error", "Error verificando la voz.");
-            return "redirect:/usuario/2fa";
+        if (!voiceService.verify(usuario, audio)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-    }
+        UserDetailsI userDetailsI = new UserDetailsI(usuario);
 
-    //Apartado de enroll y verify para la voz del usuario
-    //Se utilizara el verify como un metodo de verificacion de 2 pasos
-    //Enroll
-    @GetMapping("/enroll")
-    public String mostrarEnroll() {
-        return "usuario/vozEnroll";
-    }
+        UsuarioLoginResponse res = new UsuarioLoginResponse();
+        res.setToken(jwtService.generateToken(userDetailsI));
+        res.setTipo("Bearer");
+        res.setIdUsuario(usuario.getIdUsuario());
+        res.setNombre(usuario.getNombre());
+        res.setRol(usuarioService.getRol(usuario));
 
-    @PostMapping("/enroll")
-    public String ProcesarEnroll(@RequestParam("audio") MultipartFile audio,
-            HttpSession session,
-            RedirectAttributes redirect) {
-        
-        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
-        if (usuario == null) {
-            return "redirect:/usuario/login";
-        }
-
-        try {
-            voiceService.enroll(usuario, audio);
-            redirect.addFlashAttribute("mensaje", "Voz registrada correctamente.");
-            return "redirect:/usuario/perfil";
-        } catch (Exception e) {
-            redirect.addFlashAttribute("error", "No se pudo registrar la voz.");
-            return "redirect:/usuario/voz/enroll";
-        }
+        return ResponseEntity.ok(res);
     }
 }
