@@ -119,11 +119,10 @@ public class UsuarioService {
         return usuarioRepository.findByCorreo(correo.trim().toLowerCase());
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Usuario findById(String idUsuario) {
-        Usuario usuario = usuarioRepository.findById(idUsuario)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-        return usuario;
+        return usuarioRepository.findById(idUsuario).orElse(null);
+
     }
 
     @Transactional

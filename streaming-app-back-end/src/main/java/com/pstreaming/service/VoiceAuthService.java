@@ -33,9 +33,6 @@ public class VoiceAuthService {
                 .bodyToMono(Void.class)
                 .block();
 
-        if (audio == null) {
-            throw new IllegalStateException("Respuesta inválida del la verificación del micro-servicio");
-        }
         return Boolean.TRUE;
     }
 

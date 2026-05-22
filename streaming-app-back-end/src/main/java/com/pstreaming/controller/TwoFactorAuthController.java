@@ -4,15 +4,13 @@ import com.pstreaming.domain.UserDetailsI;
 import com.pstreaming.domain.Usuario;
 import com.pstreaming.dto.*;
 import com.pstreaming.service.*;
-import jakarta.servlet.http.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/2fa")
 public class TwoFactorAuthController {
 
     @Autowired
@@ -24,7 +22,7 @@ public class TwoFactorAuthController {
     @Autowired
     private JwtService jwtService;
 
-    @PostMapping("/2fa/verificar-sms")
+    @PostMapping("/verificar-sms")
     public ResponseEntity<UsuarioLoginResponse> verificarSMS(
             @RequestBody SmsVerifyRequest request) {
 
@@ -54,10 +52,13 @@ public class TwoFactorAuthController {
     }
 
     //Verify
-    @PostMapping("/2fa/voz")
+    @PostMapping("/voz")
     public ResponseEntity<UsuarioLoginResponse> verificarVoz(
-            @RequestParam String tempToken,
+            @RequestHeader("X-Temp-Token") String tempToken,
             @RequestParam MultipartFile audio) {
+
+        System.out.println("=== tempToken received: '" + tempToken + "'");
+        System.out.println("=== tempToken length: " + tempToken.length());
 
         if (!jwtService.isTempToken(tempToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -65,7 +66,6 @@ public class TwoFactorAuthController {
 
         String correo = jwtService.extractUsername(tempToken);
         Usuario usuario = usuarioService.getUsuarioByCorreo(correo);
-
 
         if (!voiceService.verify(usuario, audio)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

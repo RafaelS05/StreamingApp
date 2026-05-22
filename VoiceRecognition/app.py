@@ -59,7 +59,7 @@ classifier: EncoderClassifier = EncoderClassifier.from_hparams(  # type: ignore[
 )
 
 MODEL_NAME = "speechbrain-ecapa-voxceleb"
-THRESHOLD = 0.85
+THRESHOLD = 0.72
 
 
 class VerifyResponse(BaseModel):
@@ -108,7 +108,7 @@ class VozUsuario(base):  # type: ignore[valid-type, misc]
     id_voz = Column(BigInteger, primary_key=True, autoincrement=True)
     voice_print = Column(LargeBinary)
     voz_model = Column(String(100))
-    id_usuario = Column(String(100))
+    id_usuario = Column("id_usuario_FK", String(100))
 
 
 DATABASE_URL = os.getenv("DATABASE_URL")

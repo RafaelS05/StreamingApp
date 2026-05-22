@@ -1,7 +1,6 @@
 package com.pstreaming.controller;
 
 import com.pstreaming.domain.Usuario;
-import com.pstreaming.dto.UsuarioLoginResponse;
 import com.pstreaming.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -18,7 +17,7 @@ public class EnrollVozController {
     private UsuarioService usuarioService;
 
     @PostMapping("/enroll/{idUsuario}")
-    public ResponseEntity<UsuarioLoginResponse> enrollVoice(
+    public ResponseEntity<Void> enrollVoice(
             @RequestParam("audio") MultipartFile audio,
             @PathVariable String idUsuario) {
 

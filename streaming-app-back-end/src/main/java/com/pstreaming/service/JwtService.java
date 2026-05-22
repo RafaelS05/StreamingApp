@@ -54,7 +54,7 @@ public class JwtService {
                 /* Fecha en que expira el token */
                 .expiration(expireDate)
                 /* Firma el token con la clave secreta usando HMAC-SHA256 */
-                .signWith(getSigningKey())
+                .signWith(getSigningKey(), Jwts.SIG.HS256)
                 /* Construye y serializa el token como String compacto: header.payload.signature */
                 .compact();
     }
@@ -65,12 +65,12 @@ public class JwtService {
 
         return Jwts.builder()
                 .subject(usuario.getCorreo())
-                .claim("roles", usuario.getRol())
+                .claim("roles", usuario.getRol().getNombre())
                 /* Marca este token como temporal, el backend lo valida antes de emitir el JWT definitivo */
                 .claim("scope", "2fa-pending")
                 .issuedAt(now)
                 .expiration(expireDate)
-                .signWith(getSigningKey())
+                .signWith(getSigningKey(), Jwts.SIG.HS256)
                 .compact();
     }
 

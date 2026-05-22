@@ -8,7 +8,7 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/metodoAuth")
+@RequestMapping("/api/metodo-auth")
 public class MetodoAuthController {
 
     @Autowired
