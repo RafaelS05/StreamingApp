@@ -1,11 +1,11 @@
 package com.pstreaming.controller;
 
-import com.pstreaming.domain.Usuario;
+import com.pstreaming.domain.User;
 import com.pstreaming.dto.SmsVerifyRequest;
-import com.pstreaming.dto.UsuarioLoginResponse;
+import com.pstreaming.dto.UserLoginResponse;
 import com.pstreaming.service.JwtService;
 import com.pstreaming.service.TwoFAService;
-import com.pstreaming.service.UsuarioService;
+import com.pstreaming.service.UserService;
 import com.pstreaming.service.VoiceAuthService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,18 +31,18 @@ class TwoFactorAuthControllerTest {
     @Mock
     private VoiceAuthService voiceService;
     @Mock
-    private UsuarioService usuarioService;
+    private UserService usuarioService;
     @Mock
     private JwtService jwtService;
 
     @InjectMocks
     private TwoFactorAuthController controller;
 
-    private Usuario user(String correo) {
-        Usuario usuario = new Usuario();
+    private User user(String correo) {
+        User usuario = new User();
         usuario.setIdUsuario("uuid-1");
-        usuario.setCorreo(correo);
-        usuario.setNombre("Rafael");
+        usuario.setEmail(correo);
+        usuario.setName("Rafael");
         return usuario;
     }
 
@@ -55,7 +55,7 @@ class TwoFactorAuthControllerTest {
         request.setCodigo("123456");
         when(jwtService.isTempToken("bad-token")).thenReturn(false);
 
-        ResponseEntity<UsuarioLoginResponse> response = controller.verificarSMS(request);
+        ResponseEntity<UserLoginResponse> response = controller.verificarSMS(request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         verify(jwtService, never()).generateToken(any());
@@ -71,7 +71,7 @@ class TwoFactorAuthControllerTest {
         when(usuarioService.getUsuarioByCorreo("user@correo.com")).thenReturn(user("user@correo.com"));
         when(twoFAService.verifyCode("user@correo.com", "000000")).thenReturn(false);
 
-        ResponseEntity<UsuarioLoginResponse> response = controller.verificarSMS(request);
+        ResponseEntity<UserLoginResponse> response = controller.verificarSMS(request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         verify(jwtService, never()).generateToken(any());
@@ -82,7 +82,7 @@ class TwoFactorAuthControllerTest {
         SmsVerifyRequest request = new SmsVerifyRequest();
         request.setTempToken("temp");
         request.setCodigo("123456");
-        Usuario usuario = user("user@correo.com");
+        User usuario = user("user@correo.com");
         when(jwtService.isTempToken("temp")).thenReturn(true);
         when(jwtService.extractUsername("temp")).thenReturn("user@correo.com");
         when(usuarioService.getUsuarioByCorreo("user@correo.com")).thenReturn(usuario);
@@ -90,10 +90,10 @@ class TwoFactorAuthControllerTest {
         when(jwtService.generateToken(any())).thenReturn("full-token");
         when(usuarioService.getRol(usuario)).thenReturn("USER");
 
-        ResponseEntity<UsuarioLoginResponse> response = controller.verificarSMS(request);
+        ResponseEntity<UserLoginResponse> response = controller.verificarSMS(request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        UsuarioLoginResponse body = response.getBody();
+        UserLoginResponse body = response.getBody();
         assertThat(body).isNotNull();
         assertThat(body.getToken()).isEqualTo("full-token");
         assertThat(body.getTipo()).isEqualTo("Bearer");
@@ -112,7 +112,7 @@ class TwoFactorAuthControllerTest {
     void verificarVoz_invalidTempToken_returnsUnauthorized() {
         when(jwtService.isTempToken("bad-token")).thenReturn(false);
 
-        ResponseEntity<UsuarioLoginResponse> response = controller.verificarVoz("bad-token", audio());
+        ResponseEntity<UserLoginResponse> response = controller.verificarVoz("bad-token", audio());
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         verify(voiceService, never()).verify(any(), any());
@@ -121,13 +121,13 @@ class TwoFactorAuthControllerTest {
     @Test
     void verificarVoz_voiceMismatch_returnsUnauthorized() {
         MultipartFile audio = audio();
-        Usuario usuario = user("user@correo.com");
+        User usuario = user("user@correo.com");
         when(jwtService.isTempToken("temp")).thenReturn(true);
         when(jwtService.extractUsername("temp")).thenReturn("user@correo.com");
         when(usuarioService.getUsuarioByCorreo("user@correo.com")).thenReturn(usuario);
         when(voiceService.verify(usuario, audio)).thenReturn(false);
 
-        ResponseEntity<UsuarioLoginResponse> response = controller.verificarVoz("temp", audio);
+        ResponseEntity<UserLoginResponse> response = controller.verificarVoz("temp", audio);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
         verify(jwtService, never()).generateToken(any());
@@ -136,7 +136,7 @@ class TwoFactorAuthControllerTest {
     @Test
     void verificarVoz_voiceMatch_returnsFullToken() {
         MultipartFile audio = audio();
-        Usuario usuario = user("user@correo.com");
+        User usuario = user("user@correo.com");
         when(jwtService.isTempToken("temp")).thenReturn(true);
         when(jwtService.extractUsername("temp")).thenReturn("user@correo.com");
         when(usuarioService.getUsuarioByCorreo("user@correo.com")).thenReturn(usuario);
@@ -144,10 +144,10 @@ class TwoFactorAuthControllerTest {
         when(jwtService.generateToken(any())).thenReturn("full-token");
         when(usuarioService.getRol(usuario)).thenReturn("USER");
 
-        ResponseEntity<UsuarioLoginResponse> response = controller.verificarVoz("temp", audio);
+        ResponseEntity<UserLoginResponse> response = controller.verificarVoz("temp", audio);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        UsuarioLoginResponse body = response.getBody();
+        UserLoginResponse body = response.getBody();
         assertThat(body).isNotNull();
         assertThat(body.getToken()).isEqualTo("full-token");
         assertThat(body.getTipo()).isEqualTo("Bearer");

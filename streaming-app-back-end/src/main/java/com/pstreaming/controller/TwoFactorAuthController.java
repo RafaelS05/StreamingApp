@@ -1,7 +1,7 @@
 package com.pstreaming.controller;
 
 import com.pstreaming.domain.UserDetailsI;
-import com.pstreaming.domain.Usuario;
+import com.pstreaming.domain.User;
 import com.pstreaming.dto.*;
 import com.pstreaming.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +18,12 @@ public class TwoFactorAuthController {
     @Autowired
     private VoiceAuthService voiceService;
     @Autowired
-    private UsuarioService usuarioService;
+    private UserService usuarioService;
     @Autowired
     private JwtService jwtService;
 
-    @PostMapping("/verificar-sms")
-    public ResponseEntity<UsuarioLoginResponse> verificarSMS(
+    @PostMapping("/sms")
+    public ResponseEntity<UserLoginResponse> verificarSMS(
             @RequestBody SmsVerifyRequest request) {
 
         if (!jwtService.isTempToken(request.getTempToken())) {
@@ -31,7 +31,7 @@ public class TwoFactorAuthController {
         }
 
         String correo = jwtService.extractUsername(request.getTempToken());
-        Usuario usuario = usuarioService.getUsuarioByCorreo(correo);
+        User usuario = usuarioService.getUsuarioByCorreo(correo);
 
         String codigo = request.getCodigo();
 
@@ -41,11 +41,11 @@ public class TwoFactorAuthController {
 
         UserDetailsI userDetailsI = new UserDetailsI(usuario);
 
-        UsuarioLoginResponse res = new UsuarioLoginResponse();
+        UserLoginResponse res = new UserLoginResponse();
         res.setToken(jwtService.generateToken(userDetailsI));
         res.setTipo("Bearer");
         res.setIdUsuario(usuario.getIdUsuario());
-        res.setNombre(usuario.getNombre());
+        res.setNombre(usuario.getName());
         res.setRol(usuarioService.getRol(usuario));
 
         return ResponseEntity.ok(res);
@@ -53,7 +53,7 @@ public class TwoFactorAuthController {
 
     //Verify
     @PostMapping("/voz")
-    public ResponseEntity<UsuarioLoginResponse> verificarVoz(
+    public ResponseEntity<UserLoginResponse> verificarVoz(
             @RequestHeader("X-Temp-Token") String tempToken,
             @RequestParam MultipartFile audio) {
 
@@ -65,7 +65,7 @@ public class TwoFactorAuthController {
         }
 
         String correo = jwtService.extractUsername(tempToken);
-        Usuario usuario = usuarioService.getUsuarioByCorreo(correo);
+        User usuario = usuarioService.getUsuarioByCorreo(correo);
 
         if (!voiceService.verify(usuario, audio)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -73,11 +73,11 @@ public class TwoFactorAuthController {
 
         UserDetailsI userDetailsI = new UserDetailsI(usuario);
 
-        UsuarioLoginResponse res = new UsuarioLoginResponse();
+        UserLoginResponse res = new UserLoginResponse();
         res.setToken(jwtService.generateToken(userDetailsI));
         res.setTipo("Bearer");
         res.setIdUsuario(usuario.getIdUsuario());
-        res.setNombre(usuario.getNombre());
+        res.setNombre(usuario.getName());
         res.setRol(usuarioService.getRol(usuario));
 
         return ResponseEntity.ok(res);

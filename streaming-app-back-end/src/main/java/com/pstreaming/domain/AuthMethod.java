@@ -5,12 +5,14 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "rol")
-public class Rol {
+@Table(name = "metodo_auth")
+public class AuthMethod {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idRol;
+    @Column(name = "id_auth_method")
+    private Long idMethod;
+    @Column(name = "name")
     private String name;
 
 }

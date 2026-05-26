@@ -1,15 +1,12 @@
 package com.pstreaming.service;
 
-import com.pstreaming.domain.Estado;
-import com.pstreaming.domain.MetodoAuth;
+import com.pstreaming.domain.Status;
+import com.pstreaming.domain.AuthMethod;
 import com.pstreaming.domain.Rol;
-import com.pstreaming.domain.Usuario;
-import com.pstreaming.dto.UsuarioRegistroRequest;
-import com.pstreaming.dto.UsuarioResponse;
-import com.pstreaming.repository.EstadoRepository;
-import com.pstreaming.repository.MetodoAuthRepository;
+import com.pstreaming.domain.User;
+import com.pstreaming.dto.UserRegisterRequest;
+import com.pstreaming.dto.UserResponse;
 import com.pstreaming.repository.RolRepository;
-import com.pstreaming.repository.UsuarioRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -26,26 +23,29 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import com.pstreaming.repository.StatusRepository;
+import com.pstreaming.repository.UserRepository;
+import com.pstreaming.repository.AuthMethodRepository;
 
 @ExtendWith(MockitoExtension.class)
 class UsuarioServiceTest {
 
     @Mock
-    private UsuarioRepository usuarioRepository;
+    private UserRepository usuarioRepository;
     @Mock
-    private EstadoRepository estadoRepository;
+    private StatusRepository estadoRepository;
     @Mock
     private RolRepository rolRepository;
     @Mock
-    private MetodoAuthRepository metodoAuthRepository;
+    private AuthMethodRepository metodoAuthRepository;
     @Mock
     private PasswordEncoder aEncoder;
 
     @InjectMocks
-    private UsuarioService usuarioService;
+    private UserService usuarioService;
 
-    private UsuarioRegistroRequest registroRequest() {
-        UsuarioRegistroRequest request = new UsuarioRegistroRequest();
+    private UserRegisterRequest registroRequest() {
+        UserRegisterRequest request = new UserRegisterRequest();
         request.setNombre("Rafael");
         request.setApellido_1("Solano");
         request.setCorreo("rafael@correo.com");
@@ -55,17 +55,17 @@ class UsuarioServiceTest {
         return request;
     }
 
-    private Estado estadoActivo() {
-        Estado estado = new Estado();
-        estado.setIdEstado(1L);
-        estado.setNombre("ACTIVO");
+    private Status estadoActivo() {
+        Status estado = new Status();
+        estado.setIdStatus(1L);
+        estado.setName("ACTIVO");
         return estado;
     }
 
-    private MetodoAuth metodoSms() {
-        MetodoAuth metodo = new MetodoAuth();
-        metodo.setIdMetodo(1L);
-        metodo.setNombre("SMS");
+    private AuthMethod metodoSms() {
+        AuthMethod metodo = new AuthMethod();
+        metodo.setIdMethod(1L);
+        metodo.setName("SMS");
         return metodo;
     }
 
@@ -73,7 +73,7 @@ class UsuarioServiceTest {
 
     @Test
     void save_duplicateCorreo_throws() {
-        UsuarioRegistroRequest request = registroRequest();
+        UserRegisterRequest request = registroRequest();
         when(usuarioRepository.existsByCorreo("rafael@correo.com")).thenReturn(true);
 
         assertThatThrownBy(() -> usuarioService.save(request))
@@ -84,7 +84,7 @@ class UsuarioServiceTest {
 
     @Test
     void save_missingEstado_throws() {
-        UsuarioRegistroRequest request = registroRequest();
+        UserRegisterRequest request = registroRequest();
         when(usuarioRepository.existsByCorreo("rafael@correo.com")).thenReturn(false);
         when(estadoRepository.findByNombre("ACTIVO")).thenReturn(null);
 
@@ -96,7 +96,7 @@ class UsuarioServiceTest {
 
     @Test
     void save_invalidMetodoAuth_throws() {
-        UsuarioRegistroRequest request = registroRequest();
+        UserRegisterRequest request = registroRequest();
         when(usuarioRepository.existsByCorreo("rafael@correo.com")).thenReturn(false);
         when(estadoRepository.findByNombre("ACTIVO")).thenReturn(estadoActivo());
         when(rolRepository.findByNombre("USER")).thenReturn(new Rol());
@@ -110,25 +110,25 @@ class UsuarioServiceTest {
 
     @Test
     void save_happyPath_encodesPasswordAndPersists() {
-        UsuarioRegistroRequest request = registroRequest();
+        UserRegisterRequest request = registroRequest();
         Rol rol = new Rol();
-        rol.setNombre("USER");
+        rol.setName("USER");
         when(usuarioRepository.existsByCorreo("rafael@correo.com")).thenReturn(false);
         when(estadoRepository.findByNombre("ACTIVO")).thenReturn(estadoActivo());
         when(rolRepository.findByNombre("USER")).thenReturn(rol);
         when(metodoAuthRepository.findById(1L)).thenReturn(Optional.of(metodoSms()));
         when(aEncoder.encode("plain-password")).thenReturn("hashed-password");
 
-        UsuarioResponse response = usuarioService.save(request);
+        UserResponse response = usuarioService.save(request);
 
-        ArgumentCaptor<Usuario> captor = ArgumentCaptor.forClass(Usuario.class);
+        ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
         verify(usuarioRepository).save(captor.capture());
-        Usuario persisted = captor.getValue();
-        assertThat(persisted.getCorreo()).isEqualTo("rafael@correo.com");
+        User persisted = captor.getValue();
+        assertThat(persisted.getEmail()).isEqualTo("rafael@correo.com");
         assertThat(persisted.getPassword()).isEqualTo("hashed-password");
-        assertThat(persisted.getNombre()).isEqualTo("Rafael");
+        assertThat(persisted.getName()).isEqualTo("Rafael");
         assertThat(persisted.getRol()).isSameAs(rol);
-        assertThat(persisted.getFecha_registro()).isNotNull();
+        assertThat(persisted.getRegisterDate()).isNotNull();
 
         assertThat(response.getCorreo()).isEqualTo("rafael@correo.com");
         assertThat(response.getEstado()).isEqualTo("ACTIVO");
@@ -158,7 +158,7 @@ class UsuarioServiceTest {
 
     @Test
     void getUsuarioByCorreo_trimsAndLowercases() {
-        Usuario usuario = new Usuario();
+        User usuario = new User();
         when(usuarioRepository.findByCorreo("rafael@correo.com")).thenReturn(usuario);
 
         assertThat(usuarioService.getUsuarioByCorreo("  Rafael@Correo.com ")).isSameAs(usuario);
@@ -166,14 +166,14 @@ class UsuarioServiceTest {
 
     @Test
     void getRol_nullRol_defaultsToUser() {
-        assertThat(usuarioService.getRol(new Usuario())).isEqualTo("USER");
+        assertThat(usuarioService.getRol(new User())).isEqualTo("USER");
     }
 
     @Test
     void getRol_withRol_returnsName() {
-        Usuario usuario = new Usuario();
+        User usuario = new User();
         Rol rol = new Rol();
-        rol.setNombre("ADMIN");
+        rol.setName("ADMIN");
         usuario.setRol(rol);
 
         assertThat(usuarioService.getRol(usuario)).isEqualTo("ADMIN");

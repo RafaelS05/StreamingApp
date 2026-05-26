@@ -1,7 +1,7 @@
 package com.pstreaming.controller;
 
-import com.pstreaming.domain.Usuario;
-import com.pstreaming.service.UsuarioService;
+import com.pstreaming.domain.User;
+import com.pstreaming.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler{
     
     @Autowired
-    private UsuarioService usuarioService;
+    private UserService usuarioService;
     
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, 
@@ -31,16 +31,16 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler{
         String nombre = oAuth2User.getAttribute("given_name");
         String apellido = oAuth2User.getAttribute("family_name");
         
-        Usuario usuario = usuarioService.getUsuarioByCorreo(correo);
-        if (usuario == null) {
-            usuario = new Usuario();
-            usuario.setCorreo(correo);
-            usuario.setNombre(nombre);
-            usuario.setApellido_1(apellido);
+        User user = usuarioService.getUsuarioByCorreo(correo);
+        if (user == null) {
+            user = new User();
+            user.setEmail(correo);
+            user.setName(nombre);
+            user.setSurname(apellido);
             //usuarioService.save(rq);
         }
         HttpSession session = request.getSession();
-        session.setAttribute("usuarioLogueado", usuario);
+        session.setAttribute("usuarioLogueado", user);
         
         response.sendRedirect("/dashboard");
     }

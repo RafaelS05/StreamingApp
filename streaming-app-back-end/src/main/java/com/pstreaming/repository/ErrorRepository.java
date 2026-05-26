@@ -1,9 +1,9 @@
 package com.pstreaming.repository;
 
-import com.pstreaming.domain.RegistroError;
+import com.pstreaming.domain.ErrorRegister;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ErrorRepository extends JpaRepository<RegistroError, Long> {
+public interface ErrorRepository extends JpaRepository<ErrorRegister, Long> {
 
-    public RegistroError findByMensaje(String mensaje);
+    public ErrorRegister findByMensaje(String mensaje);
 }

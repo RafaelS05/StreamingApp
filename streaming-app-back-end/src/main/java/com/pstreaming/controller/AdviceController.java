@@ -1,6 +1,6 @@
 package com.pstreaming.controller;
 
-import com.pstreaming.domain.RegistroError;
+import com.pstreaming.domain.ErrorRegister;
 import com.pstreaming.dto.ErrorResponse;
 import com.pstreaming.repository.ErrorRepository;
 import java.time.LocalDateTime;
@@ -17,9 +17,9 @@ public class AdviceController {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleRuntime(RuntimeException ex) {
-        RegistroError log = new RegistroError();
-        log.setMensaje(ex.getMessage());
-        log.setFecha(LocalDateTime.now());
+        ErrorRegister log = new ErrorRegister();
+        log.setMenssage(ex.getMessage());
+        log.setDateError(LocalDateTime.now());
         errorRepository.save(log);
         
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)

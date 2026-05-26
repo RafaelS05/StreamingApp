@@ -2,7 +2,7 @@ package com.pstreaming.service;
 
 import com.pstreaming.domain.Rol;
 import com.pstreaming.domain.UserDetailsI;
-import com.pstreaming.domain.Usuario;
+import com.pstreaming.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -24,12 +24,12 @@ class JwtServiceTest {
         ReflectionTestUtils.setField(jwtService, "jwtTempExpiration", 864000L);
     }
 
-    private Usuario usuario(String correo, String rolNombre) {
-        Usuario usuario = new Usuario();
-        usuario.setCorreo(correo);
+    private User usuario(String correo, String rolNombre) {
+        User usuario = new User();
+        usuario.setEmail(correo);
         usuario.setPassword("hashed");
         Rol rol = new Rol();
-        rol.setNombre(rolNombre);
+        rol.setName(rolNombre);
         usuario.setRol(rol);
         return usuario;
     }
