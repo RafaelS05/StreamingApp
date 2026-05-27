@@ -58,7 +58,7 @@ class UserControllerTest {
     void register_returnsCreatedWithBody() {
         UserRegisterRequest request = new UserRegisterRequest();
         UserResponse expected = new UserResponse();
-        expected.setCorreo("nuevo@correo.com");
+        expected.setEmail("nuevo@correo.com");
         when(usuarioService.save(request)).thenReturn(expected);
 
         ResponseEntity<UserResponse> response = controller.userRegister(request);
@@ -73,7 +73,7 @@ class UserControllerTest {
     @Test
     void login_userNotFound_returnsUnauthorized() {
         UserLoginRequest request = new UserLoginRequest();
-        request.setCorreo("noexiste@correo.com");
+        request.setEmail("noexiste@correo.com");
         request.setPassword("secret");
         when(usuarioService.getUsuarioByCorreo("noexiste@correo.com")).thenReturn(null);
 
@@ -87,7 +87,7 @@ class UserControllerTest {
     @Test
     void login_wrongPassword_returnsUnauthorized() {
         UserLoginRequest request = new UserLoginRequest();
-        request.setCorreo("user@correo.com");
+        request.setEmail("user@correo.com");
         request.setPassword("wrong");
         User usuario = userWithMethod("user@correo.com", "hashed", "SMS", 1L);
         when(usuarioService.getUsuarioByCorreo("user@correo.com")).thenReturn(usuario);
@@ -101,7 +101,7 @@ class UserControllerTest {
     @Test
     void login_userRoleWithSms_returnsTempTokenAndSendsCode() {
         UserLoginRequest request = new UserLoginRequest();
-        request.setCorreo("user@correo.com");
+        request.setEmail("user@correo.com");
         request.setPassword("secret");
         User usuario = userWithMethod("user@correo.com", "hashed", "SMS", 1L);
         when(usuarioService.getUsuarioByCorreo("user@correo.com")).thenReturn(usuario);
@@ -115,8 +115,8 @@ class UserControllerTest {
         UserLoginResponse body = response.getBody();
         assertThat(body).isNotNull();
         assertThat(body.getToken()).isEqualTo("temp-token");
-        assertThat(body.getTipo()).isEqualTo("Bearer_TEMP");
-        assertThat(body.getMetodoAuth()).isEqualTo(1L);
+        assertThat(body.getTokenType()).isEqualTo("Bearer_TEMP");
+        assertThat(body.getAuthMethod()).isEqualTo(1L);
         verify(twoFAService).sendVerificationCode("user@correo.com", "+50688887777");
         verify(jwtService, never()).generateToken(any());
     }
@@ -124,7 +124,7 @@ class UserControllerTest {
     @Test
     void login_userRoleWithVoice_returnsTempTokenWithoutSms() {
         UserLoginRequest request = new UserLoginRequest();
-        request.setCorreo("user@correo.com");
+        request.setEmail("user@correo.com");
         request.setPassword("secret");
         User usuario = userWithMethod("user@correo.com", "hashed", "VOICE", 2L);
         when(usuarioService.getUsuarioByCorreo("user@correo.com")).thenReturn(usuario);
@@ -137,15 +137,15 @@ class UserControllerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         UserLoginResponse body = response.getBody();
         assertThat(body).isNotNull();
-        assertThat(body.getTipo()).isEqualTo("Bearer_TEMP");
-        assertThat(body.getMetodoAuth()).isEqualTo(2L);
+        assertThat(body.getTokenType()).isEqualTo("Bearer_TEMP");
+        assertThat(body.getAuthMethod()).isEqualTo(2L);
         verify(twoFAService, never()).sendVerificationCode(any(), any());
     }
 
     @Test
     void login_adminRole_returnsFullTokenDirectly() {
         UserLoginRequest request = new UserLoginRequest();
-        request.setCorreo("admin@correo.com");
+        request.setEmail("admin@correo.com");
         request.setPassword("secret");
         User usuario = userWithMethod("admin@correo.com", "hashed", "SMS", 1L);
         when(usuarioService.getUsuarioByCorreo("admin@correo.com")).thenReturn(usuario);
@@ -159,8 +159,8 @@ class UserControllerTest {
         UserLoginResponse body = response.getBody();
         assertThat(body).isNotNull();
         assertThat(body.getToken()).isEqualTo("full-token");
-        assertThat(body.getTipo()).isEqualTo("Bearer");
-        assertThat(body.getNombre()).isEqualTo("Rafael");
+        assertThat(body.getTokenType()).isEqualTo("Bearer");
+        assertThat(body.getName()).isEqualTo("Rafael");
         assertThat(body.getRol()).isEqualTo("ADMIN");
         verify(jwtService, never()).generateTempToken(any());
         verify(twoFAService, never()).sendVerificationCode(any(), any());

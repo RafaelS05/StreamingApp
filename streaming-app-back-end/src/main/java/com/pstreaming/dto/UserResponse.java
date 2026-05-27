@@ -6,11 +6,12 @@ import lombok.Data;
 public class UserResponse {
     
     private String idUsuario;
-    private String nombre;
-    private String apellido_1;
-    private String correo;
-    private String telefono;
-    private String estado;
-    private Long metodoAuth;
+    private String name;
+    private String surname;
+    private String email;
+    private String password;
+    private String phone;
+    private String status;
+    private Long authMethod;
 
 }

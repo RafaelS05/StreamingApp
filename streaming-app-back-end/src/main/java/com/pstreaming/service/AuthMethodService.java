@@ -22,8 +22,8 @@ public class AuthMethodService {
     /* Utilities */
     private AuthMethodResponse toResponse(AuthMethod metodoAuth) {
         AuthMethodResponse res = new AuthMethodResponse();
-        res.setIdMetodo(metodoAuth.getIdMethod());
-        res.setNombre(metodoAuth.getName());
+        res.setIdMethod(metodoAuth.getIdMethod());
+        res.setName(metodoAuth.getName());
 
         return res;
     }

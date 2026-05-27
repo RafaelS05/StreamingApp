@@ -10,11 +10,11 @@ Se debe crear una clase UsuariPerfilResponse para devolver la informacion del us
 @Data
 public class UserRegisterRequest {
 
-    private String nombre;
-    private String apellido_1;
-    private String correo;
+    private String name;
+    private String surname;
+    private String email;
     private String password;
-    private String telefono;
-    private Long metodoAuth;
+    private String phone;
+    private Long authMethod;
 
 }

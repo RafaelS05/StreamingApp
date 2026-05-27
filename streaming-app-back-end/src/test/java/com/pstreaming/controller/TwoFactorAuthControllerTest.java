@@ -52,7 +52,7 @@ class TwoFactorAuthControllerTest {
     void verificarSms_invalidTempToken_returnsUnauthorized() {
         SmsVerifyRequest request = new SmsVerifyRequest();
         request.setTempToken("bad-token");
-        request.setCodigo("123456");
+        request.setCode("123456");
         when(jwtService.isTempToken("bad-token")).thenReturn(false);
 
         ResponseEntity<UserLoginResponse> response = controller.verificarSMS(request);
@@ -65,7 +65,7 @@ class TwoFactorAuthControllerTest {
     void verificarSms_wrongCode_returnsUnauthorized() {
         SmsVerifyRequest request = new SmsVerifyRequest();
         request.setTempToken("temp");
-        request.setCodigo("000000");
+        request.setCode("000000");
         when(jwtService.isTempToken("temp")).thenReturn(true);
         when(jwtService.extractUsername("temp")).thenReturn("user@correo.com");
         when(usuarioService.getUsuarioByCorreo("user@correo.com")).thenReturn(user("user@correo.com"));
@@ -81,7 +81,7 @@ class TwoFactorAuthControllerTest {
     void verificarSms_validCode_returnsFullToken() {
         SmsVerifyRequest request = new SmsVerifyRequest();
         request.setTempToken("temp");
-        request.setCodigo("123456");
+        request.setCode("123456");
         User usuario = user("user@correo.com");
         when(jwtService.isTempToken("temp")).thenReturn(true);
         when(jwtService.extractUsername("temp")).thenReturn("user@correo.com");
@@ -96,9 +96,9 @@ class TwoFactorAuthControllerTest {
         UserLoginResponse body = response.getBody();
         assertThat(body).isNotNull();
         assertThat(body.getToken()).isEqualTo("full-token");
-        assertThat(body.getTipo()).isEqualTo("Bearer");
+        assertThat(body.getTokenType()).isEqualTo("Bearer");
         assertThat(body.getIdUsuario()).isEqualTo("uuid-1");
-        assertThat(body.getNombre()).isEqualTo("Rafael");
+        assertThat(body.getName()).isEqualTo("Rafael");
         assertThat(body.getRol()).isEqualTo("USER");
     }
 
@@ -150,7 +150,7 @@ class TwoFactorAuthControllerTest {
         UserLoginResponse body = response.getBody();
         assertThat(body).isNotNull();
         assertThat(body.getToken()).isEqualTo("full-token");
-        assertThat(body.getTipo()).isEqualTo("Bearer");
+        assertThat(body.getTokenType()).isEqualTo("Bearer");
         assertThat(body.getIdUsuario()).isEqualTo("uuid-1");
     }
 }

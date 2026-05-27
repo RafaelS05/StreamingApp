@@ -33,7 +33,7 @@ public class TwoFactorAuthController {
         String correo = jwtService.extractUsername(request.getTempToken());
         User usuario = usuarioService.getUsuarioByCorreo(correo);
 
-        String codigo = request.getCodigo();
+        String codigo = request.getCode();
 
         if (!twoFAService.verifyCode(correo, codigo)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -43,9 +43,9 @@ public class TwoFactorAuthController {
 
         UserLoginResponse res = new UserLoginResponse();
         res.setToken(jwtService.generateToken(userDetailsI));
-        res.setTipo("Bearer");
+        res.setTokenType("Bearer");
         res.setIdUsuario(usuario.getIdUsuario());
-        res.setNombre(usuario.getName());
+        res.setName(usuario.getName());
         res.setRol(usuarioService.getRol(usuario));
 
         return ResponseEntity.ok(res);
@@ -75,9 +75,9 @@ public class TwoFactorAuthController {
 
         UserLoginResponse res = new UserLoginResponse();
         res.setToken(jwtService.generateToken(userDetailsI));
-        res.setTipo("Bearer");
+        res.setTokenType("Bearer");
         res.setIdUsuario(usuario.getIdUsuario());
-        res.setNombre(usuario.getName());
+        res.setName(usuario.getName());
         res.setRol(usuarioService.getRol(usuario));
 
         return ResponseEntity.ok(res);

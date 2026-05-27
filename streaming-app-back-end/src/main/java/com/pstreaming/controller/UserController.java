@@ -34,7 +34,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<UserLoginResponse> userTempLoginPassword(
             @RequestBody UserLoginRequest request) {
-        User usuario = usuarioService.getUsuarioByCorreo(request.getCorreo());
+        User usuario = usuarioService.getUsuarioByCorreo(request.getEmail());
 
         if (usuario == null || !aEncoder.matches(request.getPassword(), usuario.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -46,15 +46,15 @@ public class UserController {
             if ("SMS".equals(usuario.getAuthMethod().getName())) {
                 twoFAService.sendVerificationCode(usuario.getEmail(), usuario.getPhone());
             }
-            res.setMetodoAuth(usuario.getAuthMethod().getIdMethod());
-            res.setTipo("Bearer_TEMP");
+            res.setAuthMethod(usuario.getAuthMethod().getIdMethod());
+            res.setTokenType("Bearer_TEMP");
             return ResponseEntity.ok(res);
         }
 
         UserLoginResponse res = new UserLoginResponse();
         res.setToken(jwtService.generateToken(userDetailsI));
-        res.setTipo("Bearer");
-        res.setNombre(usuario.getName());
+        res.setTokenType("Bearer");
+        res.setName(usuario.getName());
         res.setRol(usuarioService.getRol(usuario));
         return ResponseEntity.ok(res);
     }

@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class AuthMethodResponse {
-    private Long idMetodo;
-    private String nombre;
+    private Long idMethod;
+    private String name;
     
 }

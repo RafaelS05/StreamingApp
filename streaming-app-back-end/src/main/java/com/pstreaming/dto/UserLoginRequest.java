@@ -17,7 +17,7 @@ Se debe crear una clase UsuariPerfilResponse para devolver la informacion del us
 @Data
 public class UserLoginRequest {
     
-    private String correo;
+    private String email;
     private String password;
     
 }

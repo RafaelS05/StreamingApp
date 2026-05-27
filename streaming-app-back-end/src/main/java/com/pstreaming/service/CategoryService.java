@@ -22,8 +22,8 @@ public class CategoryService {
     /* Utilities */
     private CategoryResponse toResponse(Category categoria) {
         CategoryResponse res = new CategoryResponse();
-        res.setIdCategoria(categoria.getIdCategory());
-        res.setNombre(categoria.getName());
+        res.setIdCategory(categoria.getIdCategory());
+        res.setName(categoria.getName());
 
         return res;
     }

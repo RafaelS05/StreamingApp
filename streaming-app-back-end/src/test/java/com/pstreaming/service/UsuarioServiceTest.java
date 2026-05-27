@@ -46,12 +46,12 @@ class UsuarioServiceTest {
 
     private UserRegisterRequest registroRequest() {
         UserRegisterRequest request = new UserRegisterRequest();
-        request.setNombre("Rafael");
-        request.setApellido_1("Solano");
-        request.setCorreo("rafael@correo.com");
+        request.setName("Rafael");
+        request.setSurname("Solano");
+        request.setEmail("rafael@correo.com");
         request.setPassword("plain-password");
-        request.setTelefono("+50688887777");
-        request.setMetodoAuth(1L);
+        request.setPhone("+50688887777");
+        request.setAuthMethod(1L);
         return request;
     }
 
@@ -130,9 +130,9 @@ class UsuarioServiceTest {
         assertThat(persisted.getRol()).isSameAs(rol);
         assertThat(persisted.getRegisterDate()).isNotNull();
 
-        assertThat(response.getCorreo()).isEqualTo("rafael@correo.com");
-        assertThat(response.getEstado()).isEqualTo("ACTIVO");
-        assertThat(response.getMetodoAuth()).isEqualTo(1L);
+        assertThat(response.getEmail()).isEqualTo("rafael@correo.com");
+        assertThat(response.getStatus()).isEqualTo("ACTIVO");
+        assertThat(response.getAuthMethod()).isEqualTo(1L);
     }
 
     // ---------- helpers usados en login ----------

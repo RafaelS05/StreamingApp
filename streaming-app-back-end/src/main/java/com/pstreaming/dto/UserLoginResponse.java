@@ -6,9 +6,9 @@ import lombok.Data;
 public class UserLoginResponse {
     
     private String idUsuario;
-    private String nombre;
+    private String name;
     private String rol;
-    private Long metodoAuth;
+    private Long authMethod;
     private String token;
-    private String tipo;
+    private String tokenType;
 }

@@ -6,10 +6,10 @@ import lombok.*;
 @Data
 public class MovieCreateRequest {
 
-    private String titulo;
-    private LocalDate año;
-    private String descripcion;
-    private Long idCategoria;
-    private Long idEstado;
+    private String title;
+    private LocalDate publishYear;
+    private String description;
+    private Long idCategory;
+    private Long idStatus;
     
 }

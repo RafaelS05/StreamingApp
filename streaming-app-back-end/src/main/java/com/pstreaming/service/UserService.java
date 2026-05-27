@@ -27,7 +27,7 @@ public class UserService {
     @Transactional
     public UserResponse save(UserRegisterRequest request) {
 
-        if (existeByCorreo(request.getCorreo())) {
+        if (existeByCorreo(request.getEmail())) {
             throw new RuntimeException("Este correo ya se encuentra registrado.");
         }
         User user = new User();
@@ -39,13 +39,13 @@ public class UserService {
 
         Rol rol = rolRepository.findByNombre("USER");
 
-        user.setName(request.getNombre());
-        user.setSurname(request.getApellido_1());
-        user.setEmail(request.getCorreo());
+        user.setName(request.getName());
+        user.setSurname(request.getSurname());
+        user.setEmail(request.getEmail());
         user.setPassword(aEncoder.encode(request.getPassword()));
-        user.setPhone(request.getTelefono());
+        user.setPhone(request.getPhone());
 
-        AuthMethod metodo = metodoAuthRepository.findById(request.getMetodoAuth())
+        AuthMethod metodo = metodoAuthRepository.findById(request.getAuthMethod())
                 .orElseThrow(() -> new RuntimeException("Metodo Invalido"));
 
         user.setAuthMethod(metodo);
@@ -93,12 +93,12 @@ public class UserService {
     private UserResponse toResponse(User u) {
         UserResponse res = new UserResponse();
         res.setIdUsuario(u.getIdUsuario());
-        res.setNombre(u.getName());
-        res.setApellido_1(u.getSurname());
-        res.setCorreo(u.getEmail());
-        res.setTelefono(u.getPhone());
-        res.setEstado(u.getStatus().getName());
-        res.setMetodoAuth(u.getAuthMethod().getIdMethod());
+        res.setName(u.getName());
+        res.setSurname(u.getSurname());
+        res.setEmail(u.getEmail());
+        res.setPhone(u.getPhone());
+        res.setStatus(u.getStatus().getName());
+        res.setAuthMethod(u.getAuthMethod().getIdMethod());
 
         return res;
     }

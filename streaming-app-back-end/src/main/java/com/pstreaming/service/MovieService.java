@@ -33,12 +33,12 @@ public class MovieService {
     public MovieResponse saveMovie(MovieCreateRequest rq, MultipartFile imagenFile) {
         Movie saveMovie = new Movie();
         Status estado = estadoRepository.findByNombre("ACTIVO");
-        Category ct = categoriaRepository.findById(rq.getIdCategoria())
+        Category ct = categoriaRepository.findById(rq.getIdCategory())
                 .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
 
-        saveMovie.setTitle(rq.getTitulo());
-        saveMovie.setPublishYear(rq.getAño());
-        saveMovie.setDescription(rq.getDescripcion());
+        saveMovie.setTitle(rq.getTitle());
+        saveMovie.setPublishYear(rq.getPublishYear());
+        saveMovie.setDescription(rq.getDescription());
         saveMovie.setCategory(ct);
         saveMovie.setStatus(estado);
         peliculaRepository.save(saveMovie);
@@ -59,17 +59,17 @@ public class MovieService {
 
         Movie updateMovie = peliculaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pelicula no encontrada"));
-        if (updateRq.getTitulo() != null) {
-            updateMovie.setTitle(updateRq.getTitulo());
+        if (updateRq.getTitle() != null) {
+            updateMovie.setTitle(updateRq.getTitle());
         }
-        if (updateRq.getAño() != null) {
-            updateMovie.setPublishYear(updateRq.getAño());
+        if (updateRq.getPublishYear()!= null) {
+            updateMovie.setPublishYear(updateRq.getPublishYear());
         }
-        if (updateRq.getDescripcion() != null) {
-            updateMovie.setDescription(updateRq.getDescripcion());
+        if (updateRq.getDescription() != null) {
+            updateMovie.setDescription(updateRq.getDescription());
         }
-        if (updateRq.getIdCategoria() != null) {
-            Category ct = categoriaRepository.findById(updateRq.getIdCategoria())
+        if (updateRq.getIdCategory()!= null) {
+            Category ct = categoriaRepository.findById(updateRq.getIdCategory())
                     .orElseThrow(() -> new RuntimeException("Cetgoria no encontrada"));
             updateMovie.setCategory(ct);
         }
@@ -109,13 +109,13 @@ public class MovieService {
     /* Utilities */
     private MovieResponse toResponse(Movie movie) {
         MovieResponse res = new MovieResponse();
-        res.setIdPelicula(movie.getIdMovie());
-        res.setTitulo(movie.getTitle());
-        res.setAño(movie.getPublishYear());
-        res.setDescripcion(movie.getDescription());
-        res.setCategoria(movie.getCategory().getName());
-        res.setRutaImagen(movie.getImage() != null ? movie.getImage().getFirebase() : null);
-        res.setEstado(movie.getStatus().getName());
+        res.setIdMovie(movie.getIdMovie());
+        res.setTitle(movie.getTitle());
+        res.setPublishYear(movie.getPublishYear());
+        res.setDescription(movie.getDescription());
+        res.setCategory(movie.getCategory().getName());
+        res.setUrlImage(movie.getImage() != null ? movie.getImage().getFirebase() : null);
+        res.setStatus(movie.getStatus().getName());
 
         return res;
     }
