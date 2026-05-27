@@ -32,7 +32,7 @@ public class MovieService {
     @Transactional
     public MovieResponse saveMovie(MovieCreateRequest rq, MultipartFile imagenFile) {
         Movie saveMovie = new Movie();
-        Status estado = estadoRepository.findByNombre("ACTIVO");
+        Status estado = estadoRepository.findByName("ACTIVO");
         Category ct = categoriaRepository.findById(rq.getIdCategory())
                 .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
 
@@ -97,7 +97,7 @@ public class MovieService {
     public MovieResponse changeStatus(Long id, String estadoNombre) {
         Movie pelicula = peliculaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pelicula no encontrada"));
-        Status estado = estadoRepository.findByNombre(estadoNombre);
+        Status estado = estadoRepository.findByName(estadoNombre);
         if (estado == null) {
             throw new RuntimeException("Estado no encontrado: " + estadoNombre);
         }

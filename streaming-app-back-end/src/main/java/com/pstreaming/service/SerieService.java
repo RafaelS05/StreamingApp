@@ -32,7 +32,7 @@ public class SerieService {
     @Transactional
     public SerieResponse saveSerie(SerieCreateRequest request, MultipartFile imagenFile) {
         Serie saveSerie = new Serie();
-        Status estado = estadoRepository.findByNombre("ACTIVO");
+        Status estado = estadoRepository.findByName("ACTIVO");
         Category categoria = categoriaRepository.findById(request.getIdCategory())
                 .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
 
@@ -108,7 +108,7 @@ public class SerieService {
     public SerieResponse changeStatus(Long id, String estadoNombre) {
         Serie serie = serieRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Serie no encontrada"));
-        Status estado = estadoRepository.findByNombre(estadoNombre);
+        Status estado = estadoRepository.findByName(estadoNombre);
         if (estado == null) {
             throw new RuntimeException("Estado no encontrado: " + estadoNombre);
         }

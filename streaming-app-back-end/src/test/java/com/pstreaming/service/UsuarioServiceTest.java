@@ -74,7 +74,7 @@ class UsuarioServiceTest {
     @Test
     void save_duplicateCorreo_throws() {
         UserRegisterRequest request = registroRequest();
-        when(usuarioRepository.existsByCorreo("rafael@correo.com")).thenReturn(true);
+        when(usuarioRepository.existsByEmail("rafael@correo.com")).thenReturn(true);
 
         assertThatThrownBy(() -> usuarioService.save(request))
                 .isInstanceOf(RuntimeException.class)
@@ -85,8 +85,8 @@ class UsuarioServiceTest {
     @Test
     void save_missingEstado_throws() {
         UserRegisterRequest request = registroRequest();
-        when(usuarioRepository.existsByCorreo("rafael@correo.com")).thenReturn(false);
-        when(estadoRepository.findByNombre("ACTIVO")).thenReturn(null);
+        when(usuarioRepository.existsByEmail("rafael@correo.com")).thenReturn(false);
+        when(estadoRepository.findByName("ACTIVO")).thenReturn(null);
 
         assertThatThrownBy(() -> usuarioService.save(request))
                 .isInstanceOf(RuntimeException.class)
@@ -97,9 +97,9 @@ class UsuarioServiceTest {
     @Test
     void save_invalidMetodoAuth_throws() {
         UserRegisterRequest request = registroRequest();
-        when(usuarioRepository.existsByCorreo("rafael@correo.com")).thenReturn(false);
-        when(estadoRepository.findByNombre("ACTIVO")).thenReturn(estadoActivo());
-        when(rolRepository.findByNombre("USER")).thenReturn(new Rol());
+        when(usuarioRepository.existsByEmail("rafael@correo.com")).thenReturn(false);
+        when(estadoRepository.findByName("ACTIVO")).thenReturn(estadoActivo());
+        when(rolRepository.findByName("USER")).thenReturn(new Rol());
         when(metodoAuthRepository.findById(1L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> usuarioService.save(request))
@@ -113,9 +113,9 @@ class UsuarioServiceTest {
         UserRegisterRequest request = registroRequest();
         Rol rol = new Rol();
         rol.setName("USER");
-        when(usuarioRepository.existsByCorreo("rafael@correo.com")).thenReturn(false);
-        when(estadoRepository.findByNombre("ACTIVO")).thenReturn(estadoActivo());
-        when(rolRepository.findByNombre("USER")).thenReturn(rol);
+        when(usuarioRepository.existsByEmail("rafael@correo.com")).thenReturn(false);
+        when(estadoRepository.findByName("ACTIVO")).thenReturn(estadoActivo());
+        when(rolRepository.findByName("USER")).thenReturn(rol);
         when(metodoAuthRepository.findById(1L)).thenReturn(Optional.of(metodoSms()));
         when(aEncoder.encode("plain-password")).thenReturn("hashed-password");
 
@@ -140,12 +140,12 @@ class UsuarioServiceTest {
     @Test
     void existeByCorreo_blank_returnsFalseWithoutQuery() {
         assertThat(usuarioService.existeByCorreo("  ")).isFalse();
-        verify(usuarioRepository, never()).existsByCorreo(any());
+        verify(usuarioRepository, never()).existsByEmail(any());
     }
 
     @Test
     void existeByCorreo_trimsAndLowercases() {
-        when(usuarioRepository.existsByCorreo("rafael@correo.com")).thenReturn(true);
+        when(usuarioRepository.existsByEmail("rafael@correo.com")).thenReturn(true);
 
         assertThat(usuarioService.existeByCorreo("  Rafael@Correo.com  ")).isTrue();
     }
@@ -153,13 +153,13 @@ class UsuarioServiceTest {
     @Test
     void getUsuarioByCorreo_blank_returnsNull() {
         assertThat(usuarioService.getUsuarioByCorreo(null)).isNull();
-        verify(usuarioRepository, never()).findByCorreo(any());
+        verify(usuarioRepository, never()).findByEmail(any());
     }
 
     @Test
     void getUsuarioByCorreo_trimsAndLowercases() {
         User usuario = new User();
-        when(usuarioRepository.findByCorreo("rafael@correo.com")).thenReturn(usuario);
+        when(usuarioRepository.findByEmail("rafael@correo.com")).thenReturn(usuario);
 
         assertThat(usuarioService.getUsuarioByCorreo("  Rafael@Correo.com ")).isSameAs(usuario);
     }

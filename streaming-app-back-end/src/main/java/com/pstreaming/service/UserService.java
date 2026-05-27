@@ -31,13 +31,13 @@ public class UserService {
             throw new RuntimeException("Este correo ya se encuentra registrado.");
         }
         User user = new User();
-        Status status = estadoRepository.findByNombre("ACTIVO");
+        Status status = estadoRepository.findByName("ACTIVO");
         if (status == null) {
             throw new RuntimeException("Este usuario no cuenta con un estado definido.");
         }
         user.setStatus(status);
 
-        Rol rol = rolRepository.findByNombre("USER");
+        Rol rol = rolRepository.findByName("USER");
 
         user.setName(request.getName());
         user.setSurname(request.getSurname());
@@ -108,7 +108,7 @@ public class UserService {
         if (email == null || email.trim().isEmpty()) {
             return false;
         }
-        return usuarioRepository.existsByCorreo(email.trim().toLowerCase());
+        return usuarioRepository.existsByEmail(email.trim().toLowerCase());
     }
 
     @Transactional
@@ -116,7 +116,7 @@ public class UserService {
         if (correo == null || correo.trim().isEmpty()) {
             return null;
         }
-        return usuarioRepository.findByCorreo(correo.trim().toLowerCase());
+        return usuarioRepository.findByEmail(correo.trim().toLowerCase());
     }
 
     @Transactional

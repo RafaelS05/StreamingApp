@@ -18,7 +18,7 @@ public class AdviceController {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleRuntime(RuntimeException ex) {
         ErrorRegister log = new ErrorRegister();
-        log.setMenssage(ex.getMessage());
+        log.setMessage(ex.getMessage());
         log.setDateError(LocalDateTime.now());
         errorRepository.save(log);
         

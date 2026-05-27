@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AuthMethodRepository extends JpaRepository<AuthMethod, Long>{
     
-    public AuthMethod findByNombre(String nombre);
+    public AuthMethod findByName(String name);
 }

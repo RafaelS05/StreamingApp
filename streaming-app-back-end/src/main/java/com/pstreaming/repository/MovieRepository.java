@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MovieRepository extends JpaRepository<Movie, Long> {
 
-    public Movie findByTitulo(String titulo);
+    public Movie findByTitle(String title);
     
 }
