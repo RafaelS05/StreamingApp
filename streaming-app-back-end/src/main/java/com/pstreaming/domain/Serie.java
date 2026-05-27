@@ -14,32 +14,32 @@ public class Serie {
     @Column(name = "id_serie")
     private Long idSerie;
 
-    @Column(name = "titulo")
-    private String titulo;
+    @Column(name = "title")
+    private String title;
 
-    @Column(name = "año")
-    private LocalDate año;
+    @Column(name = "publish_year")
+    private LocalDate publishYear;
 
-    @Column(name = "temporadas")
-    private int temporadas;
+    @Column(name = "seasons")
+    private int seasons;
 
-    @Column(name = "episodios")
-    private int episodios;
+    @Column(name = "episodes")
+    private int episodes;
 
-    @Column(name = "descripcion")
-    private String descripcion;
-
-    @ManyToOne
-    @JoinColumn(name = "id_estado", nullable = false)
-    private Estado estado;
+    @Column(name = "description")
+    private String description;
 
     @ManyToOne
-    @JoinColumn(name = "id_categoria", nullable = false)
-    private Categoria categoria;
+    @JoinColumn(name = "id_status", nullable = false)
+    private Status status;
+
+    @ManyToOne
+    @JoinColumn(name = "id_category", nullable = false)
+    private Category category;
 
     // Relación con la tabla imagen — CascadeType.ALL para que al eliminar
     // la serie también se elimine su imagen asociada en la tabla
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_imagen", nullable = true)
-    private Imagen imagen;
+    @JoinColumn(name = "id_image", nullable = true)
+    private Image image;
 }

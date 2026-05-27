@@ -114,7 +114,7 @@ class VozUsuario(base):  # type: ignore[valid-type, misc]
 DATABASE_URL = os.getenv("DATABASE_URL")
 if not DATABASE_URL:
     raise RuntimeError(
-        "DATABASE_URL environment variable is not set. Please configure it in your environment."
+        "DATABASE_URL variable de ambiente no configurada."
     )
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
@@ -143,7 +143,7 @@ async def enroll(
 
         if emb.size == 0:
             raise HTTPException(
-                status_code=500, detail="Error al generar embedding: embedding vacío"
+                status_code=500, detail="Error al generar embedding: vacío"
             )
 
         registro = db.query(VozUsuario).filter_by(id_usuario=usuario_id).first()

@@ -9,9 +9,9 @@ import java.util.List;
 
 public class UserDetailsI implements UserDetails {
     
-    private final Usuario usuario;
+    private final User usuario;
     
-    public UserDetailsI(Usuario usuario){
+    public UserDetailsI(User usuario){
         this.usuario = usuario;
     }
 
@@ -20,7 +20,7 @@ public class UserDetailsI implements UserDetails {
         if (usuario.getRol() == null) {
             return List.of();
         }
-        return List.of(new SimpleGrantedAuthority(usuario.getRol().getNombre()));
+        return List.of(new SimpleGrantedAuthority(usuario.getRol().getName()));
     }
 
     @Override
@@ -30,7 +30,7 @@ public class UserDetailsI implements UserDetails {
 
     @Override
     public String getUsername() {
-        return usuario.getCorreo();
+        return usuario.getEmail();
     }
 
     @Override
@@ -53,7 +53,7 @@ public class UserDetailsI implements UserDetails {
         return true;
     }
 
-    public Usuario getUsuario() {
+    public User getUsuario() {
         return usuario;
     }
 }

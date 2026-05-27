@@ -10,5 +10,5 @@ public class SmsVerifyRequest {
     private String tempToken;
 
     // Código de 6 dígitos que el usuario recibió por SMS y debe ingresar para verificar
-    private String codigo;
+    private String code;
 }

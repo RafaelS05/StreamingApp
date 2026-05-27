@@ -1,12 +1,12 @@
 package com.pstreaming.service;
 
-import com.pstreaming.domain.Usuario;
+import com.pstreaming.domain.User;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TwoFAPolicyService {
 
-    public boolean require2FA(Usuario usuario) {
+    public boolean require2FA(User usuario) {
         return usuario.getRol() == null || usuario.getRol().equals("USER");
     }
     /*

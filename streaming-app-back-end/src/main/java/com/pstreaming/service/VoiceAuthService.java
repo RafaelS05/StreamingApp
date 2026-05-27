@@ -1,6 +1,6 @@
 package com.pstreaming.service;
 
-import com.pstreaming.domain.Usuario;
+import com.pstreaming.domain.User;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -22,7 +22,7 @@ public class VoiceAuthService {
         this.webClient = builder.baseUrl(baseUrl).build();
     }
 
-    public boolean enroll(Usuario usuario, MultipartFile audio) {
+    public boolean enroll(User usuario, MultipartFile audio) {
         LinkedMultiValueMap<String, Object> data = multipart(audio, "audio");
 
         webClient.post()
@@ -36,7 +36,7 @@ public class VoiceAuthService {
         return Boolean.TRUE;
     }
 
-    public boolean verify(Usuario usuario, MultipartFile audio) {
+    public boolean verify(User usuario, MultipartFile audio) {
         LinkedMultiValueMap<String, Object> data = multipart(audio, "audio");
 
         Map<String, Object> res = webClient.post()

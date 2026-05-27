@@ -16,9 +16,9 @@ public class SerieService {
     @Autowired
     private SerieRepository serieRepository;
     @Autowired
-    private CategoriaRepository categoriaRepository;
+    private CategoryRepository categoriaRepository;
     @Autowired
-    private EstadoRepository estadoRepository;
+    private StatusRepository estadoRepository;
     @Autowired
     private FirebaseStorageService firebaseService;
 
@@ -32,25 +32,25 @@ public class SerieService {
     @Transactional
     public SerieResponse saveSerie(SerieCreateRequest request, MultipartFile imagenFile) {
         Serie saveSerie = new Serie();
-        Estado estado = estadoRepository.findByNombre("ACTIVO");
-        Categoria categoria = categoriaRepository.findById(request.getIdCategoria())
+        Status estado = estadoRepository.findByName("ACTIVO");
+        Category categoria = categoriaRepository.findById(request.getIdCategory())
                 .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
 
-        saveSerie.setTitulo(request.getTitulo());
-        saveSerie.setAño(request.getAño());
-        saveSerie.setTemporadas(request.getTemporadas());
-        saveSerie.setEpisodios(request.getEpisodios());
-        saveSerie.setDescripcion(request.getDescripcion());
-        saveSerie.setCategoria(categoria);
-        saveSerie.setEstado(estado);
+        saveSerie.setTitle(request.getTitle());
+        saveSerie.setPublishYear(request.getPublishYear());
+        saveSerie.setSeasons(request.getSeasons());
+        saveSerie.setEpisodes(request.getEpisodes());
+        saveSerie.setDescription(request.getDescription());
+        saveSerie.setCategory(categoria);
+        saveSerie.setStatus(estado);
         serieRepository.save(saveSerie);
 
         if (imagenFile != null && !imagenFile.isEmpty()) {
-            Imagen img = new Imagen();
-            img.setRutaFirebase(firebaseService.cargaImagen(imagenFile, "serie", saveSerie.getIdSerie()));
-            img.setNombreArchivo(imagenFile.getOriginalFilename());
-            img.setFechaCarga(LocalDateTime.now());
-            saveSerie.setImagen(img);
+            Image img = new Image();
+            img.setFirebase(firebaseService.cargaImagen(imagenFile, "serie", saveSerie.getIdSerie()));
+            img.setDocName(imagenFile.getOriginalFilename());
+            img.setUploadDate(LocalDateTime.now());
+            saveSerie.setImage(img);
             serieRepository.save(saveSerie);
         }
         return toResponse(saveSerie);
@@ -60,38 +60,38 @@ public class SerieService {
     public SerieResponse updateSerie(Long id, SerieUpdateRequest updateRequest, MultipartFile imagenFile) {
         Serie updateSerie = serieRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Serie no encontrada"));
-        if (updateRequest.getTitulo() != null) {
-            updateSerie.setTitulo(updateRequest.getTitulo());
+        if (updateRequest.getTitle() != null) {
+            updateSerie.setTitle(updateRequest.getTitle());
         }
 
-        if (updateRequest.getAño() != null) {
-            updateSerie.setAño(updateRequest.getAño());
+        if (updateRequest.getPublishYear() != null) {
+            updateSerie.setPublishYear(updateRequest.getPublishYear());
         }
 
-        if (updateRequest.getTemporadas() != 0) {
-            updateSerie.setTemporadas(updateRequest.getTemporadas());
+        if (updateRequest.getSeasons() != 0) {
+            updateSerie.setSeasons(updateRequest.getSeasons());
         }
 
-        if (updateRequest.getEpisodios() != 0) {
-            updateSerie.setEpisodios(updateRequest.getEpisodios());
+        if (updateRequest.getEpisodes() != 0) {
+            updateSerie.setEpisodes(updateRequest.getEpisodes());
         }
 
-        if (updateRequest.getDescripcion() != null) {
-            updateSerie.setDescripcion(updateRequest.getDescripcion());
+        if (updateRequest.getDescription() != null) {
+            updateSerie.setDescription(updateRequest.getDescription());
         }
 
-        if (updateRequest.getIdCategoria() != null) {
-            Categoria ct = categoriaRepository.findById(updateRequest.getIdCategoria())
-                    .orElseThrow(() -> new RuntimeException("Cetgoria no encontrada"));
-            updateSerie.setCategoria(ct);
+        if (updateRequest.getIdCategory() != null) {
+            Category ct = categoriaRepository.findById(updateRequest.getIdCategory())
+                    .orElseThrow(() -> new RuntimeException("Catgoria no encontrada"));
+            updateSerie.setCategory(ct);
         }
 
         if (imagenFile != null && !imagenFile.isEmpty()) {
-            Imagen img = new Imagen();
-            img.setRutaFirebase(firebaseService.cargaImagen(imagenFile, "serie", updateSerie.getIdSerie()));
-            img.setNombreArchivo(imagenFile.getOriginalFilename());
-            img.setFechaCarga(LocalDateTime.now());
-            updateSerie.setImagen(img);
+            Image img = new Image();
+            img.setFirebase(firebaseService.cargaImagen(imagenFile, "serie", updateSerie.getIdSerie()));
+            img.setDocName(imagenFile.getOriginalFilename());
+            img.setUploadDate(LocalDateTime.now());
+            updateSerie.setImage(img);
         }
         serieRepository.save(updateSerie);
         return toResponse(updateSerie);
@@ -108,11 +108,11 @@ public class SerieService {
     public SerieResponse changeStatus(Long id, String estadoNombre) {
         Serie serie = serieRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Serie no encontrada"));
-        Estado estado = estadoRepository.findByNombre(estadoNombre);
+        Status estado = estadoRepository.findByName(estadoNombre);
         if (estado == null) {
             throw new RuntimeException("Estado no encontrado: " + estadoNombre);
         }
-        serie.setEstado(estado);
+        serie.setStatus(estado);
         serieRepository.save(serie);
         return toResponse(serie);
     }
@@ -121,14 +121,14 @@ public class SerieService {
     private SerieResponse toResponse(Serie serie) {
         SerieResponse res = new SerieResponse();
         res.setIdSerie(serie.getIdSerie());
-        res.setTitulo(serie.getTitulo());
-        res.setTemporadas(serie.getTemporadas());
-        res.setEpisodios(serie.getEpisodios());
-        res.setAño(serie.getAño());
-        res.setDescripcion(serie.getDescripcion());
-        res.setCategoria(serie.getCategoria().getNombre());
-        res.setRutaImagen(serie.getImagen() != null ? serie.getImagen().getRutaFirebase() : null);
-        res.setEstado(serie.getEstado().getNombre());
+        res.setTitle(serie.getTitle());
+        res.setSeasons(serie.getSeasons());
+        res.setEpisodes(serie.getEpisodes());
+        res.setPublishYear(serie.getPublishYear());
+        res.setDescription(serie.getDescription());
+        res.setCategory(serie.getCategory().getName());
+        res.setUrlImage(serie.getImage() != null ? serie.getImage().getFirebase() : null);
+        res.setStatus(serie.getStatus().getName());
         
         return res;
     }

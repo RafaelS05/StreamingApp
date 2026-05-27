@@ -1,6 +1,6 @@
 package com.pstreaming.service;
 
-import com.pstreaming.domain.Usuario;
+import com.pstreaming.domain.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -59,13 +59,13 @@ public class JwtService {
                 .compact();
     }
 
-    public String generateTempToken(Usuario usuario) {
+    public String generateTempToken(User usuario) {
         Date now = new Date();
         Date expireDate = new Date(now.getTime() + jwtTempExpiration);
 
         return Jwts.builder()
-                .subject(usuario.getCorreo())
-                .claim("roles", usuario.getRol().getNombre())
+                .subject(usuario.getEmail())
+                .claim("roles", usuario.getRol().getName())
                 /* Marca este token como temporal, el backend lo valida antes de emitir el JWT definitivo */
                 .claim("scope", "2fa-pending")
                 .issuedAt(now)

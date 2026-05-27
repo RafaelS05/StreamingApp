@@ -19,7 +19,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtService jwtService;
 
     @Autowired
-    private UsuarioService usuarioService;
+    private UserService usuarioService;
 
     @Override
     protected void doFilterInternal(
@@ -51,7 +51,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (correo != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
                 // Busca el usuario en la DB con ese correo
-                Usuario usuario = usuarioService.getUsuarioByCorreo(correo);
+                User usuario = usuarioService.getUsuarioByCorreo(correo);
                 if (usuario == null) {
                     filterChain.doFilter(request, response);
                     return;
