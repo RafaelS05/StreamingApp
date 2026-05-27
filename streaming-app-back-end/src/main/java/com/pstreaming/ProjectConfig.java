@@ -1,5 +1,6 @@
 package com.pstreaming;
 
+import com.pstreaming.controller.OAuth2LoginSuccessHandler;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
@@ -16,27 +17,30 @@ public class ProjectConfig {
 
     @Autowired
     private JwtAuthenticationFilter jwtFilter;
+    @Autowired
+    private OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
-//    @Autowired
-//    private OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sess -> sess
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
-                        "/api/usuario/registro",
-                        "/api/usuario/login/password",
-                        "/api/2fa/verificar-sms",
+                        "/api/user/register",
+                        "/api/user/login",
+                        "/api/2fa/sms",
                         "/api/2fa/voz",
                         "/api/voz/enroll/*",
-                        "/api/metodo-auth"
+                        "/api/metodo-auth",
+                        "/login/oauth2/**",
+                        "/oauth2/**"
                 ).permitAll()
                 .anyRequest().authenticated()
                 )
+                .oauth2Login(oauth -> oauth.successHandler(oAuth2LoginSuccessHandler))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
