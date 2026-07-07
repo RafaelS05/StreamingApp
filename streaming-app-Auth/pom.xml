@@ -11,7 +11,7 @@
     <groupId>com.pstreaming</groupId>
     <artifactId>PlataformaStreaming</artifactId>
     <version>1</version>
-    <name>PlataformaStreaming</name>
+    <name>PlataformaStreaming-Auth</name>
     <description>Demo project with Spring Boot about a Streaming plataform</description>
     <properties>
         <java.version>25</java.version>

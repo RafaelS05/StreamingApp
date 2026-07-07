@@ -1,0 +1,6 @@
+@streaming_app_Gestion_HostAddress = http://localhost:5183
+
+GET {{streaming_app_Gestion_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

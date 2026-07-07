@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>streaming_app_Gestion</RootNamespace>
+    <UserSecretsId>5f6db6b0-79bf-4440-9692-adab3879c5dd</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>.</DockerfileContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.6" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.0-preview1.26124.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.9" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Reviews\Controllers\" />
+    <Folder Include="Reviews\DTO\" />
+    <Folder Include="Reviews\Model\" />
+    <Folder Include="Reviews\Repository\" />
+    <Folder Include="Reviews\Service\" />
+    <Folder Include="Categories\Controllers\" />
+    <Folder Include="Categories\DTO\" />
+    <Folder Include="Categories\Model\" />
+    <Folder Include="Categories\Repository\" />
+    <Folder Include="Categories\Service\" />
+    <Folder Include="Series\Controllers\" />
+    <Folder Include="Series\DTO\" />
+    <Folder Include="Series\Model\" />
+    <Folder Include="Series\Repository\" />
+    <Folder Include="Series\Service\" />
+    <Folder Include="Movies\Controllers\" />
+    <Folder Include="Movies\DTO\" />
+    <Folder Include="Movies\Model\" />
+    <Folder Include="Movies\Repository\" />
+    <Folder Include="Movies\Service\" />
+  </ItemGroup>
+
+</Project>
