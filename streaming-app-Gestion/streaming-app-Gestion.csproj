@@ -28,15 +28,11 @@
     <Folder Include="Reviews\Model\" />
     <Folder Include="Reviews\Repository\" />
     <Folder Include="Reviews\Service\" />
-    <Folder Include="Categories\Controllers\" />
     <Folder Include="Categories\DTO\" />
     <Folder Include="Categories\Model\" />
     <Folder Include="Categories\Repository\" />
     <Folder Include="Categories\Service\" />
     <Folder Include="Series\Controllers\" />
-    <Folder Include="Series\DTO\" />
-    <Folder Include="Series\Model\" />
-    <Folder Include="Series\Repository\" />
     <Folder Include="Series\Service\" />
     <Folder Include="Movies\Controllers\" />
     <Folder Include="Movies\DTO\" />
