@@ -19,5 +19,4 @@ public class EmailService {
         message.setText("Tu código OTP es: " + otp + " \nEl código expirará en 5 minutos.");
         mailSender.send(message);
     }
-    
 }
