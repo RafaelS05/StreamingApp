@@ -33,9 +33,9 @@
     <Folder Include="Categories\Model\" />
     <Folder Include="Categories\Repository\" />
     <Folder Include="Categories\Service\" />
-    <Folder Include="Series\Controllers\" />
     <Folder Include="Series\DTO\" />
     <Folder Include="Series\Model\" />
+    <Folder Include="Series\Controller\" />
     <Folder Include="Series\Repository\" />
     <Folder Include="Series\Service\" />
     <Folder Include="Movies\Controllers\" />
