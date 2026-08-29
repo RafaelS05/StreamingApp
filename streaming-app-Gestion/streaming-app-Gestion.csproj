@@ -11,6 +11,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Series\Controller\**" />
+    <Content Remove="Series\Controller\**" />
+    <EmbeddedResource Remove="Series\Controller\**" />
+    <None Remove="Series\Controller\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.6" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.0-preview1.26124.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
@@ -35,7 +42,6 @@
     <Folder Include="Categories\Service\" />
     <Folder Include="Series\DTO\" />
     <Folder Include="Series\Model\" />
-    <Folder Include="Series\Controller\" />
     <Folder Include="Series\Repository\" />
     <Folder Include="Series\Service\" />
     <Folder Include="Movies\Controllers\" />
