@@ -1,5 +1,6 @@
 package com.pstreaming;
 
+import com.pstreaming.controller.AdviceController;
 import com.pstreaming.controller.OAuth2LoginSuccessHandler;
 
 import java.util.List;
@@ -30,6 +31,11 @@ public class ProjectConfig {
     }
 
     @Bean
+    public AdviceController adviceController() {
+        return new AdviceController();
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
@@ -51,7 +57,7 @@ public class ProjectConfig {
                 )
                 .oauth2Login(oauth -> oauth.successHandler(oAuth2LoginSuccessHandler))
                 .addFilterBefore(rateLimitingFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 
         return http.build();
     }

@@ -30,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ErrorHandler\Service\" />
     <Folder Include="Reviews\Controllers\" />
     <Folder Include="Reviews\DTO\" />
     <Folder Include="Reviews\Model\" />
@@ -48,7 +49,6 @@
     <Folder Include="Movies\DTO\" />
     <Folder Include="Movies\Model\" />
     <Folder Include="Movies\Repository\" />
-    <Folder Include="Movies\Service\" />
   </ItemGroup>
 
 </Project>
