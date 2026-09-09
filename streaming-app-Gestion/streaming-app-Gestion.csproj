@@ -31,7 +31,7 @@
 
   <ItemGroup>
     <Folder Include="ErrorHandler\Service\" />
-    <Folder Include="Image\Controllers\" />
+    <Folder Include="Images\Controllers\" />
     <Folder Include="Reviews\Controllers\" />
     <Folder Include="Reviews\DTO\" />
     <Folder Include="Reviews\Model\" />
@@ -43,7 +43,6 @@
     <Folder Include="Categories\Repository\" />
     <Folder Include="Categories\Service\" />
     <Folder Include="Series\DTO\" />
-    <Folder Include="Series\Model\" />
     <Folder Include="Series\Repository\" />
     <Folder Include="Series\Service\" />
     <Folder Include="Movies\Controllers\" />

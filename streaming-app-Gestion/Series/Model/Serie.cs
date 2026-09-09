@@ -1,6 +1,6 @@
 namespace streaming_app_Gestion.Series.Model
 {
-    public class Series
+    public class Serie
     {
     }
 }
