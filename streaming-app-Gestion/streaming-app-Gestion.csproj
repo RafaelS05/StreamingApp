@@ -31,7 +31,6 @@
 
   <ItemGroup>
     <Folder Include="ErrorHandler\Service\" />
-    <Folder Include="Images\Controllers\" />
     <Folder Include="Reviews\Controllers\" />
     <Folder Include="Reviews\DTO\" />
     <Folder Include="Reviews\Model\" />
