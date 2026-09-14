@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace streaming_app_Gestion.Statuses.Controllers
 {
-    public class StatusController : Controller
+    public class StatusesController : Controller
     {
         // GET: StatusController
         public ActionResult Index()

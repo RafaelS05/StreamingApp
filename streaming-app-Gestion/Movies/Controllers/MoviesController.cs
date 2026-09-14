@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace streaming_app_Gestion.Movies.Controllers
 {
-    public class MovieController : Controller
+    public class MoviesController : Controller
     {
         // GET: MovieController
         public ActionResult Index()

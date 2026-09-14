@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace streaming_app_Gestion.Images.Controllers
 {
-    public class ImageController : Controller
+    public class ImagesController : Controller
     {
         // GET: HomeController
         public ActionResult Index()
