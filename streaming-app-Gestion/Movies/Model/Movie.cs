@@ -5,9 +5,9 @@ namespace streaming_app_Gestion.Movies.Model
     public class Movie
     {
         private int idMovie { get; set; }
-        private String movieName { get; set; } = string.Empty;
-        private String movieDescription { get; set; } = string.Empty;
-        private DateOnly movieReleaseDate { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow);
+        private string movieName { get; set; } = string.Empty;
+        private string movieDescription { get; set; } = string.Empty;
+        private DateOnly movieReleaseDate { get; set; }
 
         [ForeignKey("Image")]
         private int IdImage { get; set; }
