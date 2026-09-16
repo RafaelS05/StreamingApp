@@ -5,6 +5,7 @@ using streaming_app_Gestion.Image.Model;
 using streaming_app_Gestion.Movies.Model;
 using streaming_app_Gestion.Reviews.Model;
 using streaming_app_Gestion.Series.Model;
+using streaming_app_Gestion.Statuses.Model;
 
 namespace streaming_app_Gestion
 {
@@ -21,8 +22,11 @@ namespace streaming_app_Gestion
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Serie> Series { get; set; }
+        public DbSet<Status> Statuses { get; set; }
 
-
+        // Image is not mapped as a DbSet: its entity carries an IFormFile (upload payload),
+        // which EF Core cannot persist. Store only the resolved firebaseUrl if it ever needs a table.
+        //public DbSet<Image> Images { get; set; }
 
         //public DbSet<Subscription> Subscriptions { get; set; }
 
