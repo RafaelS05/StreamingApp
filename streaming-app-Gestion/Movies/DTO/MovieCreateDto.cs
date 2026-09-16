@@ -1,23 +1,29 @@
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Runtime.InteropServices;
+using System.ComponentModel.DataAnnotations;
 
 namespace streaming_app_Gestion.Movies.DTO
 {
     public class MovieCreateDto
     {
-        private string movieName { get; set; } = string.Empty;
-        private string movieDescription { get; set; } = string.Empty;
-        private DateOnly movieReleaseDate { get; set; }
+        [Required]
+        [MaxLength(150)]
+        public string MovieName { get; set; } = string.Empty;
 
-        [ForeignKey("Image")]
-        private int IdImage { get; set; }
+        [Required]
+        [MaxLength(1000)]
+        public string MovieDescription { get; set; } = string.Empty;
 
-        [ForeignKey("Category")]
-        private int IdCategory { get; set; }
-        private string CategoryName { get; set; } = string.Empty;
+        [Required]
+        public DateOnly MovieReleaseDate { get; set; }
 
-        [ForeignKey("Statues")]
-        private int IdStatues { get; set; }
-        private string StatusName { get; set; } = string.Empty;
+        [Required]
+        public IFormFile ImageFile { get; set; } = null!;
+
+        [Required]
+        [Range(1, int.MaxValue)]
+        public int IdCategory { get; set; }
+
+        [Required]
+        [Range(1, int.MaxValue)]
+        public int IdStatues { get; set; }
     }
 }

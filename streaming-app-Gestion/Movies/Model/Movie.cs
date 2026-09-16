@@ -4,21 +4,21 @@ namespace streaming_app_Gestion.Movies.Model
 {
     public class Movie
     {
-        private int idMovie { get; set; }
-        private string movieName { get; set; } = string.Empty;
-        private string movieDescription { get; set; } = string.Empty;
-        private DateOnly movieReleaseDate { get; set; }
+        public int idMovie { get; set; }
+        public string movieName { get; set; } = string.Empty;
+        public string movieDescription { get; set; } = string.Empty;
+        public DateOnly movieReleaseDate { get; set; }
 
         [ForeignKey("Image")]
-        private int IdImage { get; set; }
+        public int IdImage { get; set; }
 
         [ForeignKey("Category")]
-        private int IdCategory { get; set; }
-        private string CategoryName { get; set; } = string.Empty;
+        public int IdCategory { get; set; }
+        public string CategoryName { get; set; } = string.Empty;
 
         [ForeignKey("Statues")]
-        private int IdStatues { get; set; }
-        private string StatusName { get; set; } = string.Empty;
+        public int IdStatues { get; set; }
+        public string StatusName { get; set; } = string.Empty;
 
     }
 }
