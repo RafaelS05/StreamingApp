@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace streaming_app_Gestion.Categories.Controllers
 {
+    [ApiController]
     public class CategoriesController : Controller
     {
         // GET: CategoryController
