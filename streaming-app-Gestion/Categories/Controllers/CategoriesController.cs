@@ -1,27 +1,50 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using streaming_app_Gestion.Categories.Service;
+using streaming_app_Gestion.Categories.DTO;
 
 namespace streaming_app_Gestion.Categories.Controllers
 {
     [ApiController]
+    [Route("api/v1/[controller]")]
     public class CategoriesController : Controller
     {
-        // GET: CategoryController
-        public ActionResult Index()
+        private readonly ICategoryService _categoriesService;
+
+        public CategoriesController(ICategoryService categoriesService)
         {
-            return View();
+            _categoriesService = categoriesService;
         }
 
-        // GET: CategoryController/Details/5
-        public ActionResult Details(int id)
+        [HttpGet]
+        // GET: CategoryController
+        //Asigno el valor de task ya que se debe ejecutar una "tarea"
+        //Con el ActionResult<List para generar una lista en base a
+        //Un objeto deaseado en este caso el CategoryResponse
+        public async Task<ActionResult<List<CategoryResponseDto>>> CategoriesList(CancellationToken ct)
         {
-            return View();
+            //Creo la variable sobre la cual llamar el servicio que tiene capa de servicio para obtener lo deaseado, esto aplica
+            //Sobre todos los metodos que tiene la interfaz
+            var category = _categoriesService.GetAllCategoriesAsync(ct);
+
+            //Valida que las categories no sean null o si no encuentra
+            //De esto devuelve el OK con el contenido de categories el cual llama el metodo de GetAll
+            return category is null ? NotFound() : Ok(category);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<CategoryResponseDto>> CategoriesID(int id, CancellationToken ct)
+        {
+            var category = await _categoriesService.GetCategoryByIdAsync(id, ct);
+
+            return category is null ? NotFound() : Ok(category);
         }
 
         // GET: CategoryController/Create
-        public ActionResult Create()
+        public async Task<ActionResult<CategoryCreateDto>> CreateCategories(CancellationToken ct)
         {
-            return View();
+            var category = await _categoriesService.CreateCategoryAsync(ct);
+
         }
 
         // POST: CategoryController/Create
