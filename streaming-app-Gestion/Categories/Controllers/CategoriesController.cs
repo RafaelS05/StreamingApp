@@ -25,7 +25,7 @@ namespace streaming_app_Gestion.Categories.Controllers
         {
             //Creo la variable sobre la cual llamar el servicio que tiene capa de servicio para obtener lo deaseado, esto aplica
             //Sobre todos los metodos que tiene la interfaz
-            var category = _categoriesService.GetAllCategoriesAsync(ct);
+            var category = await _categoriesService.GetAllCategoriesAsync(ct);
 
             //Valida que las categories no sean null o si no encuentra
             //De esto devuelve el OK con el contenido de categories el cual llama el metodo de GetAll
@@ -40,68 +40,76 @@ namespace streaming_app_Gestion.Categories.Controllers
             return category is null ? NotFound() : Ok(category);
         }
 
-        // GET: CategoryController/Create
-        public async Task<ActionResult<CategoryCreateDto>> CreateCategories(CancellationToken ct)
-        {
-            var category = await _categoriesService.CreateCategoryAsync(ct);
-
-        }
-
         // POST: CategoryController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult<CategoryResponseDto>> CreateCategory([FromBody] CategoryCreateDto categoryCreateDto //FromBody indica que el objeto se va a recibir desde el cuerpo de la solicitud HTTP
+                                                                                                                           //y se va a deserializar automáticamente en un objeto de tipo CategoryCreateDto
+            , CancellationToken ct)
+        {
+            //Dentro del try catch se llama al metodo de la capa de servicio para crear la categoria, si todo sale bien devuelve el CreatedAtAction con http(201) con el id de la categoria creada
+            try
+            {
+                var category = await _categoriesService.CreateCategoryAsync(categoryCreateDto, ct);
+
+                return CreatedAtAction(nameof(CategoriesID), new { id = category.IdCategory }, category);
+            }
+            //Si hay un error de argumento, devuelve un BadRequest con el mensaje de error
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            //Si hay un error general, devuelve un StatusCode con el mensaje de error
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Error creating new category" });
+            }
+        }
+
+        // POST: CategoryController/Update/
+        [HttpPut("{id}")]
+        public async Task<ActionResult<CategoryResponseDto>> UpdateCategory(int id, [FromBody] CategoryUpdateDto categoryUpdateDto, CancellationToken ct)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var category = await _categoriesService.UpdateCategoryAsync(id, categoryUpdateDto, ct);
+
+                return category is null ? NotFound() : Ok(category);
             }
-            catch
+            catch (ArgumentException ex)
             {
-                return View();
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Error creating new category" });
             }
         }
 
-        // GET: CategoryController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
 
-        // POST: CategoryController/Edit/5
+        // POST: CategoryController/Delete/
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        //Por implementar ya que hace borrado total, lo que se puede hacer es un borrado logico, es decir cambiar el estado de la categoria a inactivo y no eliminarla de la base de datos
+        public async Task<ActionResult<CategoryResponseDto>> Delete(int id, CancellationToken ct)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var category = await _categoriesService.DeleteCategoryAsync(id, ct);    
+
+                return Ok(category);
             }
-            catch
+            catch (ArgumentException ex)
             {
-                return View();
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "Error creating new category" });
             }
         }
 
-        // GET: CategoryController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: CategoryController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //[ValidateAntiForgeryToken] Este atributo se utiliza para proteger contra ataques de falsificación de solicitudes entre sitios (CSRF).
+        //Se asegura de que la solicitud provenga de una fuente confiable y no de un atacante externo.
+        //Al incluir este atributo, se requiere que la solicitud incluya un token de verificación válido, lo que ayuda a prevenir ataques maliciosos.
+        //SOLO SE USA EN MVC, NO EN API REST
     }
 }
